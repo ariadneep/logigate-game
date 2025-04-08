@@ -45,21 +45,22 @@ public:
      * @brief convertSignal - sets the output signal after checking the
      * two input pulses and performing a boolean operation on them based
      * on the Type of the gate.
+     * @param first - the signal of the wire in the gate's first slot
+     * @param second - the signal of the wire in the gate's second input slot.
      */
-    void convertSignal();
+    void convertSignal(bool first, bool second);
+
+    /**
+     * @brief convertSignal
+     * @param input
+     */
+    void convertSignal(bool input);
 
     /**
      * @brief getSignal - returns the output signal
      * @return
      */
     bool getSignal();
-
-    /**
-     * @brief getIsDead - should be false when one or zero of the
-     * input slots are empty, true when both are connected to
-     * wires connected to the ROOT Nodes.
-     */
-    bool isDead;
 
 private:
     /**
