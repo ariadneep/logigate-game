@@ -51,14 +51,15 @@ public:
     void convertSignal(bool first, bool second);
 
     /**
-     * @brief convertSignal
-     * @param input
+     * @brief convertSignal - sets the output signal to an opertion
+     * based on a compatible gate Type when given only one input.
+     * @param input - the boolean signal sent in by the input wire.
      */
     void convertSignal(bool input);
 
     /**
      * @brief getSignal - returns the output signal
-     * @return
+     * @return the current signal the inputs merge into.
      */
     bool getSignal();
 
