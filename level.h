@@ -8,18 +8,21 @@ enum class Component {
     WIRE_RIGHTTOP, WIRE_RIGHTBOTTOM, WIRE_RIGHTLEFT, WIRE_RIGHTEND
 };
 
-class Level : public QObject
-{
-    Q_OBJECT
-public:
-    explicit Level(int width, QObject *parent = nullptr);
-    ~Level();
-private:
-    const int WIDTH;
-    Component* grid;
-    QString description;
+class Level : public QObject {
 
-signals:
+    Q_OBJECT
+
+    public:
+        explicit Level(int width, QObject *parent = nullptr);
+        ~Level();
+
+    private:
+        const int WIDTH;
+        Component* grid;
+        QString description;
+
+    signals:
+
 };
 
 #endif // LEVEL_H
