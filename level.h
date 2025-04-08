@@ -41,10 +41,10 @@ private:
      */
     QString description;
 
-    /**
-     * @brief levelNum - the id associated with this specific level
-     */
-    const int levelNum;
+    // /**
+    //  * @brief levelNum - the id associated with this specific level
+    //  */
+    // const int levelNum;
 
 signals:
 
