@@ -23,20 +23,56 @@ class Gate : public GridComponent {
 public:
     /**
      * @brief Gate - Makes a Gate object.
+     * @param type - AND, OR, or NOT gate.
      * @param parent - the parent object
      */
-    explicit Gate(QObject *parent = nullptr);
+    explicit Gate(Type type, QObject *parent = nullptr);
 
     /**
      * Destructor for the Gate class.
      */
     ~Gate();
 
+    /**
+     * @brief getType - returns either Type::AND if this gate
+     * represents an AND gate, Type::OR if this gate represents
+     * an OR gate, or Type::NOT if this gate represents a NOT gate.
+     * @return a gate Type
+     */
+    Type getType();
+
+    /**
+     * @brief convertSignal - sets the output signal after checking the
+     * two input pulses and performing a boolean operation on them based
+     * on the Type of the gate.
+     */
+    void convertSignal();
+
+    /**
+     * @brief getSignal - returns the output signal
+     * @return
+     */
+    bool getSignal();
+
+    /**
+     * @brief getIsDead - should be false when one or zero of the
+     * input slots are empty, true when both are connected to
+     * wires connected to the ROOT Nodes.
+     */
+    bool isDead;
+
 private:
     /**
-     * @brief gateType - if it's an and, or, or not gate.
+     * @brief gateType - whether this object represents
+     * an AND, OR, or NOT gate.
      */
     Type gateType;
+
+    /**
+     * @brief outputSignal - the signal currently output
+     * by this logic gate. False when the gate is dead,
+     */
+    bool outputSignal;
 
 };
 

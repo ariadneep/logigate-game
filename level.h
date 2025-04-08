@@ -44,7 +44,7 @@ private:
     /**
      * @brief levelNum - the id associated with this specific level
      */
-    const int levelNum;
+    // const int levelNum;
 
 signals:
 

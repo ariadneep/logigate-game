@@ -31,6 +31,7 @@ public:
      * @param parent - the parent object.
      */
     explicit Node(QObject *parent = nullptr);
+
     /**
      * Destructor for the Node class.
      */
