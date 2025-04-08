@@ -3,3 +3,7 @@
 Wire::Wire(QObject *parent)
     : GridComponent{parent}
 {}
+
+Wire::~Wire() {
+
+}

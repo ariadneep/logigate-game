@@ -3,3 +3,7 @@
 Obstacle::Obstacle(QObject *parent)
     : GridComponent{parent}
 {}
+
+Obstacle::~Obstacle() {
+
+}

@@ -3,3 +3,7 @@
 GridComponent::GridComponent(QObject *parent)
     : QObject{parent}
 {}
+
+GridComponent::~GridComponent() {
+
+}

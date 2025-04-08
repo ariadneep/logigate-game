@@ -4,15 +4,12 @@ enum class Component;
 
 Level::Level(int width, QObject *parent)
     : QObject{parent}
-    , WIDTH(width)
-{
-    grid = new Component[WIDTH];
+    , WIDTH(width) {
+
 }
 
-Level::
-
 Level::~Level() {
-    delete[] grid;
+
 }
 
 

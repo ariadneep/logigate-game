@@ -1,3 +1,13 @@
+/**
+ * This class controls the UI for the EduGame application, as well
+ * as UI-model connections.
+ *
+ * @authors Max Donaldson, Jason Khong,
+ * Ariadne Petroulakis, Evan Tucker, and Ian Weller
+ *
+ * @version 7 April 2025
+ */
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -13,12 +23,20 @@ class MainWindow : public QMainWindow {
 
     Q_OBJECT
 
-    public:
-        MainWindow(QWidget *parent = nullptr);
-        ~MainWindow();
+public:
+    /**
+     * @brief MainWindow - creates a main window object.
+     * @param parent - the parent object
+     */
+    MainWindow(QWidget *parent = nullptr);
 
-    private:
-        Ui::MainWindow *ui;
+    /**
+     * MainWindow destructor.
+     */
+    ~MainWindow();
+
+private:
+    Ui::MainWindow *ui;
 
 };
 #endif // MAINWINDOW_H

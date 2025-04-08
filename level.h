@@ -1,27 +1,52 @@
+/**
+ * This class represents a level. A level should have all the
+ * necessary components that change from level to level.
+ *
+ * @authors Max Donaldson, Jason Khong,
+ * Ariadne Petroulakis, Evan Tucker, and Ian Weller
+ *
+ * @version 7 April 2025
+ */
+
 #ifndef LEVEL_H
 #define LEVEL_H
 
 #include <QObject>
 
-enum class Component {
-    WIRE_TOPRIGHT, WIRE_TOPBOTTOM, WIRE_TOPLEFT, WIRE_TOPEND,
-    WIRE_RIGHTTOP, WIRE_RIGHTBOTTOM, WIRE_RIGHTLEFT, WIRE_RIGHTEND
-};
-
 class Level : public QObject {
 
     Q_OBJECT
 
-    public:
-        explicit Level(int width, QObject *parent = nullptr);
-        ~Level();
+public:
+    /**
+     * @brief Level - creates an Obstacle object
+     * @param parent - the parent object.
+     */
+    explicit Level(int width, QObject *parent = nullptr);
 
-    private:
-        const int WIDTH;
-        Component* grid;
-        QString description;
+    /**
+     * Destructor for the level class.
+     */
+    ~Level();
 
-    signals:
+private:
+    /**
+     * @brief WIDTH the width of the level.
+     */
+    const int WIDTH;
+
+    /**
+     * @brief Gate - Makes a Gate object.
+     * @param parent - the parent object
+     */
+    QString description;
+
+    /**
+     * @brief levelNum - the id associated with this specific level
+     */
+    const int levelNum;
+
+signals:
 
 };
 

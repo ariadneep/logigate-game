@@ -3,3 +3,7 @@
 Gate::Gate(QObject *parent)
     : GridComponent{parent}
 {}
+
+Gate::~Gate() {
+
+}

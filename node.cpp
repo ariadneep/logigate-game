@@ -3,3 +3,7 @@
 Node::Node(QObject *parent)
     : GridComponent{parent}
 {}
+
+Node::~Node() {
+
+}
