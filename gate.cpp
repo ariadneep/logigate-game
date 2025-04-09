@@ -1,7 +1,7 @@
 #include "gate.h"
 
-Gate::Gate(Type type, QObject *parent)
-    : GridComponent{parent}, gateType(type) {
+Gate::Gate(Operator type, QObject *parent)
+    : GridComponent{parent}, gateOperator(type) {
     outputSignal = false;
 }
 
@@ -9,19 +9,19 @@ Gate::~Gate() {
 
 }
 
-Type Gate::getType() {
-    return gateType;
+Operator Gate::getOperator() {
+    return gateOperator;
 }
 
 QString Gate::convertSignal(bool firstSignal, bool secondSignal, QString firstID, QString secondID) {
     bool newOutput;
     QString newID = firstID.append(secondID);
     //calls the specific helper method based on the Type
-    switch(gateType) {
-    case Type::AND:
+    switch(gateOperator) {
+    case Operator::AND:
         newOutput = firstSignal && secondSignal;
         break;
-    case Type::OR:
+    case Operator::OR:
         newOutput = firstSignal || secondSignal;
         break;
     default:
@@ -37,8 +37,8 @@ QString Gate::convertSignal(bool input, QString id) {
     bool newOutput;
 
     //calls the specific helper method based on the Type
-    switch(gateType) {
-    case Type::NOT:
+    switch(gateOperator) {
+    case Operator::NOT:
         newOutput = !input;
         break;
     default:
@@ -55,3 +55,6 @@ bool Gate::getSignal() {
 }
 
 
+GridComponent::Type Gate::getType() {
+    return GridComponent::Type::GATE;
+}

@@ -7,3 +7,7 @@ Node::Node(QObject *parent)
 Node::~Node() {
 
 }
+
+GridComponent::Type Node::getType() {
+    return GridComponent::Type::NODE;
+}

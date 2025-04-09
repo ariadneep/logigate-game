@@ -15,6 +15,7 @@
 #include <QGraphicsScene>
 #include <Box2D/Box2D.h>
 #include "confettieffect.h"
+
 #include "gridcomponent.h"
 
 class Level : public QObject {

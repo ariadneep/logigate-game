@@ -37,6 +37,13 @@ public:
      */
     ~Node();
 
+    /**
+     * @brief getType - Returns the type of GridComponent object this is as an enum.
+     * By default, this is NODE.
+     * @return A Operator enum.
+     */
+    GridComponent::Type getType() override;
+
 };
 
 #endif // NODE_H
