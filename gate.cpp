@@ -55,6 +55,6 @@ bool Gate::getSignal() {
 }
 
 
-GridComponent::Type GridComponent::getType() {
+GridComponent::Type Gate::getType() {
     return GridComponent::Type::GATE;
 }

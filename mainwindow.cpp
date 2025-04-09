@@ -15,6 +15,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete currentLevel;
+  
     gameBoardX = 0;
     gameBoardY = 0;
     newPosition = true;
@@ -56,8 +57,10 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event) {
 void MainWindow::mousePressEvent(QMouseEvent *event) {
     double mouseX = event->position().x();
     double mouseY = event->position().y();
+
     int oldGameBoardX = gameBoardX;
     int oldGameBoardY = gameBoardY;
+  
     QLabel* gameBoard = ui->gameBoard;
 
     if (isInGameBoard(mouseX, mouseY)) {
@@ -80,6 +83,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
         qDebug() << "MouseY = " << gameBoardY;
         //tool->useTool(sprite, canvasX, canvasY);
         newPosition = false;
+
     }
 }
 
