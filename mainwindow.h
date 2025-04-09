@@ -13,6 +13,7 @@
 
 #include <QMainWindow>
 #include <QMouseEvent>
+#include "level.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -65,6 +66,8 @@ private:
     int gameBoardX;
     int gameBoardY;
     bool newPosition;
+
+    Level* currentLevel;
 
     /**
      * @brief isInGameBoard - Boolean statement to declare whether or not an x-y position
