@@ -45,7 +45,6 @@ public:
     */
     void spawnConfetti();
 
-private:
     /**
      * @brief drawWire - Places a wire at the grid coordinates depending on the context
      * of the coordinates.
@@ -85,6 +84,8 @@ private:
      * @brief isVictory - Determines whether the player has won.
      */
     bool isVictory;
+
+    /**
      * @brief grid - Stores the grid components in a level. Stored as a 1d array that
      * finds coordinates with (y * WIDTH + x).
      */
