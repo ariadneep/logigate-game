@@ -7,3 +7,7 @@ Wire::Wire(QObject *parent)
 Wire::~Wire() {
 
 }
+
+GridComponent::Type Wire::getType() {
+    return GridComponent::Type::WIRE;
+}

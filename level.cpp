@@ -15,7 +15,7 @@ Level::~Level() {
 
 void Level::drawWire(int x, int y) {
     GridComponent* currentComponent = getGridComponent(x, y);
-
+    GridComponent::Type currentType = currentComponent->getType();
 }
 
 GridComponent* Level::getGridComponent(int x, int y) {

@@ -45,6 +45,13 @@ public:
      */
     ~Wire();
 
+    /**
+     * @brief getType - Returns the type of GridComponent object this is as an enum.
+     * By default, this is WIRE.
+     * @return A Operator enum.
+     */
+    GridComponent::Type getType() override;
+
 private:
     /**
      * @brief tag - represents the wire ID that this wire is a part of.
