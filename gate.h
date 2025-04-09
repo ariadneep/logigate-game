@@ -42,26 +42,32 @@ public:
     Type getType();
 
     /**
-     * @brief convertSignal - sets the output signal after checking the
-     * two input pulses and performing a boolean operation on them based
-     * on the Type of the gate.
-     * @param first - the signal of the wire in the gate's first slot
-     * @param second - the signal of the wire in the gate's second input slot.
-     */
-    void convertSignal(bool first, bool second);
-
-    /**
-     * @brief convertSignal - sets the output signal to an opertion
-     * based on a compatible gate Type when given only one input.
-     * @param input - the boolean signal sent in by the input wire.
-     */
-    void convertSignal(bool input);
-
-    /**
      * @brief getSignal - returns the output signal
      * @return the current signal the inputs merge into.
      */
     bool getSignal();
+
+    /**
+     * @brief convertSignal - sets the output signal after checking the
+     * two input pulses and performing a boolean operation on them based
+     * on the Type of the gate.
+     * @param firstSignal - the signal of the wire in the gate's first slot
+     * @param secondSignal - the signal of the wire in the gate's second input slot.
+     * @param firstID - the ID linked with the first signal.
+     * @param secondID - the ID linked with the second signal.
+     * @return - the new, concatenated ID of the resulting signal conversion/transformation.
+     */
+    QString convertSignal(bool firstSignal, bool secondSignal, QString firstID, QString secondID);
+
+    /**
+     * @brief convertSignal - sets the output signal to an opertion
+     * based on a compatible gate Type when given only one input. Keeps
+     * track of the ID of the input passed into it.
+     * @param input - the boolean signal sent in by the input wire.
+     * @param id - the ID associated with the input signal.
+     * @return the unchanged ID of the resulting signal conversion/transformation.
+     */
+    QString convertSignal(bool input, QString id);
 
 private:
     /**

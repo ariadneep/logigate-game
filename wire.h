@@ -47,9 +47,9 @@ public:
 
 private:
     /**
-     * @brief id - represents the wire ID that this wire is a part of.
+     * @brief tag - represents the wire ID that this wire is a part of.
      */
-    int id;
+    QString tag;
 
     /**
      * @brief wireSignal - represents the current signal

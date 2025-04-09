@@ -13,26 +13,27 @@ Type Gate::getType() {
     return gateType;
 }
 
-void Gate::convertSignal(bool first, bool second) {
+QString Gate::convertSignal(bool firstSignal, bool secondSignal, QString firstID, QString secondID) {
     bool newOutput;
-
+    QString newID = firstID.append(secondID);
     //calls the specific helper method based on the Type
     switch(gateType) {
     case Type::AND:
-        newOutput = first && second;
+        newOutput = firstSignal && secondSignal;
         break;
     case Type::OR:
-        newOutput = first || second;
+        newOutput = firstSignal || secondSignal;
         break;
     default:
-        return;
+        return newID;
     }
 
     //sets outputSignal to the resulting boolean.
     outputSignal = newOutput;
+    return newID;
 }
 
-void Gate::convertSignal(bool input) {
+QString Gate::convertSignal(bool input, QString id) {
     bool newOutput;
 
     //calls the specific helper method based on the Type
@@ -41,11 +42,12 @@ void Gate::convertSignal(bool input) {
         newOutput = !input;
         break;
     default:
-        return;
+        return id;
     }
 
     //sets outputSignal to the resulting boolean.
     outputSignal = newOutput;
+    return id;
 }
 
 bool Gate::getSignal() {
