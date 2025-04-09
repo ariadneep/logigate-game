@@ -6,11 +6,16 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setMouseTracking(true);
+    // CHANGE
+    currentLevel = new Level(this);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete currentLevel;
+  
     gameBoardX = 0;
     gameBoardY = 0;
     newPosition = true;
@@ -26,26 +31,24 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event) {
     QLabel* gameBoard = ui->gameBoard;
 
     // If the mouse is moved into bounds -> Update canvas coordinates
-    if (mouseX > gameBoard->pos().x() && mouseX < gameBoard->width() + gameBoard->pos().x() &&
-        mouseY > gameBoard->pos().y() && mouseY < gameBoard->height() + gameBoard->pos().y()) {
+    if (isInGameBoard(mouseX, mouseY)) {
         // Normalize
         mouseX = mouseX - gameBoard->pos().x();
         mouseY = mouseY - gameBoard->pos().y();
 
         // Project into Canvas Coords
         // TODO: add in a divisor of the level's width
-        gameBoardX = (int)(mouseX / (gameBoard->width()));
-        gameBoardY = (int)(mouseY / (gameBoard->width()));
+        gameBoardX = (int)(mouseX / (gameBoard->width() / currentLevel->WIDTH));
+        gameBoardY = (int)(mouseY / (gameBoard->height() / currentLevel->HEIGHT));
 
         //check if the mouse has already been moved into this space before
         if (gameBoardX != oldGameBoardX || gameBoardY != oldGameBoardY)
             newPosition = true;
-
-        qDebug() << "Moving! MouseX = " << mouseX;
-        qDebug() << "Moving! MouseY = " << mouseY;
     }
 
     if (newPosition) {
+        qDebug() << "Moving! MouseX = " << gameBoardX;
+        qDebug() << "Moving! MouseY = " << gameBoardY;
         //tool->useTool(sprite, canvasX, canvasY);
         newPosition = false;
     }
@@ -54,6 +57,10 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event) {
 void MainWindow::mousePressEvent(QMouseEvent *event) {
     double mouseX = event->position().x();
     double mouseY = event->position().y();
+
+    int oldGameBoardX = gameBoardX;
+    int oldGameBoardY = gameBoardY;
+  
     QLabel* gameBoard = ui->gameBoard;
 
     if (isInGameBoard(mouseX, mouseY)) {
@@ -61,14 +68,22 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
         mouseY = mouseY - gameBoard->pos().y();
 
         // TODO: add in a divisor of the level's width
-        gameBoardX = (int)(mouseX / (gameBoard->width()));
-        gameBoardY = (int)(mouseY / (gameBoard->width()));
+        gameBoardX = (int)(mouseX / (gameBoard->width() / currentLevel->WIDTH));
+        gameBoardY = (int)(mouseY / (gameBoard->height() / currentLevel->HEIGHT));
 
+        //tool->useTool(sprite, canvasX, canvasY);
+        if (gameBoardX != oldGameBoardX || gameBoardY != oldGameBoardY)
+            newPosition = true;
+        else
+            newPosition = false;
+    }
+
+    if (newPosition) {
+        qDebug() << "MouseX = " << gameBoardX;
+        qDebug() << "MouseY = " << gameBoardY;
         //tool->useTool(sprite, canvasX, canvasY);
         newPosition = false;
 
-        qDebug() << "MouseX = " << mouseX;
-        qDebug() << "MouseY = " << mouseY;
     }
 }
 

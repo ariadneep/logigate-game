@@ -15,20 +15,20 @@
 #include <QGraphicsScene>
 #include <Box2D/Box2D.h>
 #include "confettieffect.h"
+#include "gridcomponent.h"
 
 class Level : public QObject {
 
     Q_OBJECT
 
+
 public:
     /**
-     * @brief Level - creates an Obstacle object
      * @param parent - the parent object.
      * @param graphicsScene - The graphics scene
      * @param box2DWorld - The Box2D world.
      */
-    // explicit Level(int width, QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent = nullptr);
-        explicit Level(int width, QObject *parent = nullptr);
+    explicit Level(QObject *parent = nullptr);
 
     /**
      * Destructor for the level class.
@@ -47,13 +47,27 @@ public:
 
 private:
     /**
-     * @brief WIDTH the width of the level.
+     * @brief drawWire - Places a wire at the grid coordinates depending on the context
+     * of the coordinates.
+     * @param x - X position on the game grid.
+     * @param y - Y position on the game grid.
      */
-    const int WIDTH;
+    void drawWire(int x, int y);
 
     /**
-     * @brief Gate - Makes a Gate object.
-     * @param parent - the parent object
+     * @brief WIDTH - The width of the level.
+     */
+    static const int WIDTH = 12;
+
+    /**
+     * @brief HEIGHT - The height of the level.
+     */
+    static const int HEIGHT = 8;
+
+private:
+
+    /**
+     * @brief description - The prefacing paragraph for the level.
      */
     QString description;
 
@@ -71,6 +85,15 @@ private:
      * @brief isVictory - Determines whether the player has won.
      */
     bool isVictory;
+     * @brief grid - Stores the grid components in a level. Stored as a 1d array that
+     * finds coordinates with (y * WIDTH + x).
+     */
+    GridComponent* grid;
+  
+    /**
+     *@brief Returns the grid component at the specified x, y position. 
+     */
+    GridComponent* getGridComponent(int x, int y);
 
     // /**
     //  * @brief levelNum - the id associated with this specific level
