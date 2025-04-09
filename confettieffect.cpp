@@ -13,7 +13,7 @@
 #include <QPainter>
 #include <QRandomGenerator>
 
-ConfettiEffect::ConfettiEffect(float xPos, float yPos, b2World* box2DWorld) : xPos(xPos), yPos(yPos), confettiOpacity(1.0f) {
+ConfettiEffect::ConfettiEffect(float xPos, float yPos, b2World* box2DWorld) : xPos(xPos), yPos(yPos) {
     confettiColor = QColor(
         QRandomGenerator::global()->bounded(256),
         QRandomGenerator::global()->bounded(256),
@@ -41,13 +41,14 @@ ConfettiEffect::ConfettiEffect(float xPos, float yPos, b2World* box2DWorld) : xP
 Confetti::Confetti(QGraphicsScene* graphicsScene, b2World* box2DWorld) : graphicsScene(graphicsScene), box2DWorld(box2DWorld), existingConfetti(0) {
     for(int i = 0; i < 30; i++) {
         confettiParticles[i] = nullptr;
-        confettiOpacities[i] = 0.0f;
+        rectItems[i] = nullptr;
     }
 }
 
 Confetti::~Confetti() {
     for(int i = 0; i < existingConfetti; i++) {
         delete confettiParticles[i];
+        delete rectItems[i];
     }
 }
 
@@ -61,7 +62,7 @@ void Confetti::spawnConfetti() {
         confettiRect->setBrush(confettiParticle->confettiColor);
         graphicsScene->addItem(confettiRect);
         confettiParticles[i] = confettiParticle;
-        confettiOpacities[i] = 1.0f;
+        rectItems[i] = confettiRect;
         existingConfetti++;
     }
 }

@@ -42,11 +42,6 @@ public:
     QColor confettiColor;
 
     /**
-     * @brief confettiOpacity - Manages the opacity of the confetti particle.
-     */
-    float confettiOpacity;
-
-    /**
      * @brief box2DBody - The Box2D body
      */
     b2Body* box2DBody;
