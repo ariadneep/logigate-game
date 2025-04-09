@@ -12,6 +12,9 @@
 #define LEVEL_H
 
 #include <QObject>
+#include <QGraphicsScene>
+#include <Box2D/Box2D.h>
+#include "confettieffect.h"
 #include "gridcomponent.h"
 
 class Level : public QObject {
@@ -22,6 +25,8 @@ class Level : public QObject {
 public:
     /**
      * @param parent - the parent object.
+     * @param graphicsScene - The graphics scene
+     * @param box2DWorld - The Box2D world.
      */
     explicit Level(QObject *parent = nullptr);
 
@@ -30,6 +35,17 @@ public:
      */
     ~Level();
 
+    /**
+    * @brief victory - Occurs when victory condition happens.
+    */
+    void victory();
+
+    /**
+    * @brief spawnConfetti - spawns confetti upon victory.
+    */
+    void spawnConfetti();
+
+private:
     /**
      * @brief drawWire - Places a wire at the grid coordinates depending on the context
      * of the coordinates.
@@ -56,11 +72,27 @@ private:
     QString description;
 
     /**
+     * @brief graphicsScene - The scene for handling confetti.
+     */
+    QGraphicsScene* graphicsScene;
+
+    /**
+     * @brief confetti - The confetti instance.
+     */
+    Confetti* confetti;
+
+    /**
+     * @brief isVictory - Determines whether the player has won.
+     */
+    bool isVictory;
      * @brief grid - Stores the grid components in a level. Stored as a 1d array that
      * finds coordinates with (y * WIDTH + x).
      */
     GridComponent* grid;
-
+  
+    /**
+     *@brief Returns the grid component at the specified x, y position. 
+     */
     GridComponent* getGridComponent(int x, int y);
 
     // /**

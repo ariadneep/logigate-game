@@ -13,6 +13,8 @@
 
 #include <QMainWindow>
 #include <QMouseEvent>
+#include <Box2D/Box2D.h>
+#include <QGraphicsScene>
 #include "level.h"
 
 QT_BEGIN_NAMESPACE
@@ -77,5 +79,22 @@ private:
      * @return True if the mouse is inside of the QLabel (board game) widget.
      */
     bool isInGameBoard(int x, int y);
+
+    /**
+     * @brief GraphicsScene - The graphics scene.
+     */
+    QGraphicsScene* GraphicsScene;
+
+    /**
+     * @brief box2DWorld - The Box2D world.
+     */
+    b2World* box2DWorld;
+
+    /**
+     * @brief box2DBody - The Box2D body.
+     */
+    b2Body* box2DBody;
+
+
 };
 #endif // MAINWINDOW_H
