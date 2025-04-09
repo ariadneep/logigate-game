@@ -7,3 +7,7 @@ Obstacle::Obstacle(QObject *parent)
 Obstacle::~Obstacle() {
 
 }
+
+GridComponent::Type Obstacle::getType() {
+    return GridComponent::Type::OBSTACLE;
+}

@@ -14,7 +14,7 @@
 #include <QObject>
 #include "gridcomponent.h"
 
-enum class Type {
+enum class Operator {
     AND, OR, NOT
 };
 
@@ -24,9 +24,9 @@ public:
     /**
      * @brief Gate - Makes a Gate object.
      * @param type - AND, OR, or NOT gate.
-     * @param parent - the parent object
+     * @param parent - The parent object
      */
-    explicit Gate(Type type, QObject *parent = nullptr);
+    explicit Gate(Operator type, QObject *parent = nullptr);
 
     /**
      * Destructor for the Gate class.
@@ -34,12 +34,12 @@ public:
     ~Gate();
 
     /**
-     * @brief getType - returns either Type::AND if this gate
-     * represents an AND gate, Type::OR if this gate represents
-     * an OR gate, or Type::NOT if this gate represents a NOT gate.
-     * @return a gate Type
+     * @brief getOperator - Returns either Operator::AND if this gate
+     * represents an AND gate, Operator::OR if this gate represents
+     * an OR gate, or Operator::NOT if this gate represents a NOT gate.
+     * @return A gate Type
      */
-    Type getType();
+    Operator getOperator();
 
     /**
      * @brief getSignal - returns the output signal
@@ -69,12 +69,19 @@ public:
      */
     QString convertSignal(bool input, QString id);
 
+    /**
+     * @brief getType - Returns the type of GridComponent object this is as an enum.
+     * By default, this is GATE.
+     * @return A Operator enum.
+     */
+    GridComponent::Type getType() override;
+
 private:
     /**
-     * @brief gateType - whether this object represents
+     * @brief gateOperator - whether this object represents
      * an AND, OR, or NOT gate.
      */
-    Type gateType;
+    Operator gateOperator;
 
     /**
      * @brief outputSignal - the signal currently output

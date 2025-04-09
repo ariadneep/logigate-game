@@ -30,6 +30,15 @@ public:
      */
     ~GridComponent();
 
+    enum class Type {WIRE, GATE, NODE, OBSTACLE, EMPTY};
+
+    /**
+     * @brief getType - Returns the type of GridComponent object this is as an enum.
+     * By default, this is EMPTY.
+     * @return A Operator enum.
+     */
+    virtual GridComponent::Type getType();
+
 signals:
 
 };
