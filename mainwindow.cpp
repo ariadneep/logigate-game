@@ -10,6 +10,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     setMouseTracking(true);
 
+    gameBoardX = 0;
+    gameBoardY = 0;
+    newPosition = true;
+
     /*
      * SETTING UP BOX2D
      */
@@ -17,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     graphicsView = new QGraphicsView(graphicsScene, this);
     graphicsView->setFixedSize(800,600);
     graphicsScene->setSceneRect(-400, -300, 800, 600);
-    setCentralWidget(graphicsView);
+    graphicsView->setStyleSheet("background: transparent");
 
     b2Vec2 gravity(0.0f, 9.8f);
     box2DWorld = new b2World(gravity);
@@ -47,10 +51,6 @@ MainWindow::~MainWindow()
     delete box2DWorld;
     delete graphicsScene;
     delete graphicsView;
-  
-    gameBoardX = 0;
-    gameBoardY = 0;
-    newPosition = true;
 }
 
 void MainWindow::updateWorld() {
@@ -85,7 +85,6 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event) {
         mouseY = mouseY - gameBoard->pos().y();
 
         // Project into Canvas Coords
-        // TODO: add in a divisor of the level's width
         gameBoardX = (int)(mouseX / (gameBoard->width() / currentLevel->WIDTH));
         gameBoardY = (int)(mouseY / (gameBoard->height() / currentLevel->HEIGHT));
 
