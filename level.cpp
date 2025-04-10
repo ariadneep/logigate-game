@@ -3,14 +3,16 @@
 enum class Component;
 class Wire;
 
-Level::Level(QObject *parent)
-    : QObject{parent} {
+Level::Level(int width, QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent)
+    : QObject{parent}, graphicsScene(graphicsScene), box2DWorld(box2DWorld), isVictory(false) {
     //levelNum = 0;
     grid = new GridComponent[WIDTH * HEIGHT];
+    confetti = new Confetti(graphicsScene, box2DWorld);
 }
 
 Level::~Level() {
     delete[] grid;
+    delete confetti;
 }
 
 void Level::drawWire(int x, int y) {
@@ -19,5 +21,19 @@ void Level::drawWire(int x, int y) {
 }
 
 GridComponent* Level::getGridComponent(int x, int y) {
-    return &grid[y * WIDTH * x];
+    return &grid[y * WIDTH + x];
+}
+
+void Level::victory() {
+    if(isVictory) {
+        spawnConfetti();
+    }
+}
+
+void Level::spawnConfetti() {
+    confetti->spawnConfetti();
+}
+
+void Level::updateLevel() {
+    confetti->updateConfetti();
 }

@@ -25,11 +25,12 @@ class Level : public QObject {
 
 public:
     /**
-     * @param parent - the parent object.
+     * @param width - The width of the level.
      * @param graphicsScene - The graphics scene
      * @param box2DWorld - The Box2D world.
+     * @param parent - The parent object.
      */
-    explicit Level(QObject *parent = nullptr);
+    explicit Level(int width, QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent = nullptr);
 
     /**
      * Destructor for the level class.
@@ -45,6 +46,11 @@ public:
     * @brief spawnConfetti - spawns confetti upon victory.
     */
     void spawnConfetti();
+
+    /**
+     * @brief updateLevel - Updates the level.
+     */
+    void updateLevel();
 
     /**
      * @brief drawWire - Places a wire at the grid coordinates depending on the context
@@ -75,6 +81,11 @@ private:
      * @brief graphicsScene - The scene for handling confetti.
      */
     QGraphicsScene* graphicsScene;
+
+    /**
+     * @brief box2DWorld - The Box2D World.
+     */
+    b2World* box2DWorld;
 
     /**
      * @brief confetti - The confetti instance.
