@@ -46,11 +46,46 @@ public:
     ~Wire();
 
     /**
-     * @brief getType - Returns the type of GridComponent object this is as an enum.
-     * By default, this is WIRE.
-     * @return A Operator enum.
+     * @brief getTag
+     * @return
      */
-    GridComponent::Type getType() override;
+    QString getTag();
+
+    /**
+     * @brief setTag
+     * @param newTag
+     */
+    void setTag(QString newTag);
+
+    /**
+     * @brief isFullyConnected - Checks to see if the wire is connected to another component
+     * or not.
+     * @return Boolean representation of the connection verification.
+     */
+    bool isFullyConnected();
+
+    /**
+     * @brief getHeadConnection
+     * @return
+     */
+    Wire* getHeadConnection();
+
+    /**
+     * @brief setHeadConnection
+     */
+    void setHeadConnection(Wire* newConnection);
+
+    /**
+     * @brief getTailConnection
+     * @return
+     */
+    Wire* getTailConnection();
+
+    /**
+     * @brief setTailConnection
+     * @param newConnection
+     */
+    void setTailConnection(Wire* newConnection);
 
 private:
     /**
@@ -87,6 +122,16 @@ private:
      * false if this is the middle of a straight segemnt of the wire.
      */
     bool isHead;
+
+    /**
+     * @brief headConnection
+     */
+    Wire* headConnection;
+
+    /**
+     * @brief headConnection
+     */
+    Wire* tailConnection;
 
 };
 

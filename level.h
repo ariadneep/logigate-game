@@ -16,12 +16,14 @@
 #include <Box2D/Box2D.h>
 #include "confettieffect.h"
 
-#include "gridcomponent.h"
+#include "wire.h"
+#include "gate.h"
+#include "node.h"
+#include "obstacle.h"
 
 class Level : public QObject {
 
     Q_OBJECT
-
 
 public:
     /**
@@ -52,7 +54,7 @@ public:
      * @param x - X position on the game grid.
      * @param y - Y position on the game grid.
      */
-    void drawWire(int x, int y);
+    void drawWire(int x, int y, QString tag);
 
     /**
      * @brief WIDTH - The width of the level.
@@ -63,6 +65,45 @@ public:
      * @brief HEIGHT - The height of the level.
      */
     static const int HEIGHT = 8;
+
+    /**
+     * @brief getWire
+     * @param x
+     * @param y
+     * @return
+     */
+    Wire* getWire(int x, int y);
+
+    /**
+     * @brief setWire TEMP METHOD, REMOVE LATER
+     * @param x
+     * @param y
+     */
+    void setWire(int x, int y, QString tag);
+
+    /**
+     * @brief getGate
+     * @param x
+     * @param y
+     * @return
+     */
+    Gate* getGate(int x, int y);
+
+    /**
+     * @brief getNode
+     * @param x
+     * @param y
+     * @return
+     */
+    Node* getNode(int x, int y);
+
+    /**
+     * @brief getObstacle
+     * @param x
+     * @param y
+     * @return
+     */
+    Obstacle* getObstacle(int x, int y);
 
 private:
 
@@ -87,15 +128,34 @@ private:
     bool isVictory;
 
     /**
-     * @brief grid - Stores the grid components in a level. Stored as a 1d array that
-     * finds coordinates with (y * WIDTH + x).
+     * @brief wireGrid
      */
-    GridComponent* grid;
-  
+    Wire* wireGrid[WIDTH * HEIGHT];
+
     /**
-     *@brief Returns the grid component at the specified x, y position. 
+     * @brief gateGrid
      */
-    GridComponent* getGridComponent(int x, int y);
+    Gate* gateGrid;
+
+    /**
+     * @brief nodeGrid
+     */
+    Node* nodeGrid;
+
+    /**
+     * @brief obstacleGrid
+     */
+    Obstacle* obstacleGrid;
+
+    /**
+     * @brief wireCheck - Private helper to reduce the redundency in the wireDraw method.
+     * If the checks fail, then the code returns with nothing executed. Checks to see
+     * if there is a wire at the space, if it has the same tag as the current tag, and
+     * if the checked space is connected to another wire already.
+     * @param currentWire - The space of the wire to be updated.
+     * @param checkingWire - The space of the wire to retrieve context from.
+     */
+    void wireCheck(Wire* currentWire, Wire* checkingWire);
 
     // /**
     //  * @brief levelNum - the id associated with this specific level
@@ -103,7 +163,7 @@ private:
     // const int levelNum;
 
 signals:
-
+    void update();
 };
 
 #endif // LEVEL_H

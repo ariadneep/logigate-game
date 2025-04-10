@@ -7,8 +7,11 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     setMouseTracking(true);
-    // CHANGE
+
+    // \/ CHANGE \/
     currentLevel = new Level(this);
+    currentTag = "a";
+    currentLevel->setWire(0, 0, currentTag);
 }
 
 MainWindow::~MainWindow()
@@ -46,10 +49,9 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event) {
             newPosition = true;
     }
 
+    // If this is a new position for the mouse, then attempt to draw a wire.
     if (newPosition) {
-        qDebug() << "Moving! MouseX = " << gameBoardX;
-        qDebug() << "Moving! MouseY = " << gameBoardY;
-        //tool->useTool(sprite, canvasX, canvasY);
+        currentLevel->drawWire(gameBoardX, gameBoardY, currentTag);
         newPosition = false;
     }
 }
@@ -79,8 +81,6 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
     }
 
     if (newPosition) {
-        qDebug() << "MouseX = " << gameBoardX;
-        qDebug() << "MouseY = " << gameBoardY;
         //tool->useTool(sprite, canvasX, canvasY);
         newPosition = false;
 

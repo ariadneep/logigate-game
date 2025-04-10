@@ -69,6 +69,7 @@ private:
     int gameBoardX;
     int gameBoardY;
     bool newPosition;
+    QString currentTag;
 
     Level* currentLevel;
 
@@ -95,7 +96,5 @@ private:
      * @brief box2DBody - The Box2D body.
      */
     b2Body* box2DBody;
-
-
 };
 #endif // MAINWINDOW_H
