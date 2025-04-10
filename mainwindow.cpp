@@ -153,4 +153,5 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
 
     qDebug() << "Mouse released; sending signal from MAIN to MODEL to save new version.";
     //emit saveNewVersion(sprite);
+    //hi aridadles!
 }
