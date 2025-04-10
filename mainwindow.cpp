@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     setMouseTracking(true);
+    ui->gameBoard->setMouseTracking(true);
 
     gameBoardX = 0;
     gameBoardY = 0;
@@ -22,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
     graphicsView->setFixedSize(800,600);
     graphicsScene->setSceneRect(-400, -300, 800, 600);
     graphicsView->setStyleSheet("background: transparent");
+    graphicsView->setAttribute(Qt::WA_TransparentForMouseEvents);
+
 
     b2Vec2 gravity(0.0f, 9.8f);
     box2DWorld = new b2World(gravity);
