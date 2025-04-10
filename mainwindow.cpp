@@ -1,24 +1,72 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QGraphicsView>
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::MainWindow), box2DWorld(nullptr), box2DBody(nullptr), timer(new QTimer(this)), frameCount(0)
 {
     ui->setupUi(this);
     setMouseTracking(true);
-    // CHANGE
-    currentLevel = new Level(this);
+
+    /*
+     * SETTING UP BOX2D
+     */
+    graphicsScene = new QGraphicsScene(this);
+    graphicsView = new QGraphicsView(graphicsScene, this);
+    graphicsView->setFixedSize(800,600);
+    graphicsScene->setSceneRect(-400, -300, 800, 600);
+    setCentralWidget(graphicsView);
+
+    b2Vec2 gravity(0.0f, 9.8f);
+    box2DWorld = new b2World(gravity);
+
+    b2BodyDef groundBodyDef;
+    groundBodyDef.position.Set(0.0f, 4.0f);
+    b2Body* groundBody = box2DWorld->CreateBody(&groundBodyDef);
+    b2PolygonShape groundBox;
+    groundBox.SetAsBox(50.0f, 0.1f);
+    groundBody->CreateFixture(&groundBox, 0.0f);
+
+    currentLevel = new Level(800, graphicsScene, box2DWorld, this);
+
+    // Confetti instance
+    confetti = new Confetti(graphicsScene, box2DWorld);
+
+    // World timer
+    connect(timer, &QTimer::timeout, this, &MainWindow::updateWorld);
+    timer->start(10);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
     delete currentLevel;
+    delete confetti;
+    delete box2DWorld;
+    delete graphicsScene;
+    delete graphicsView;
   
     gameBoardX = 0;
     gameBoardY = 0;
     newPosition = true;
+}
+
+void MainWindow::updateWorld() {
+    box2DWorld->Step(1.0f / 60.0f, 6, 2);
+
+    frameCount++;
+    if(frameCount == 100) {
+        confetti->spawnConfetti();
+    }
+
+    confetti->updateConfetti();
+
+    graphicsScene->update();
+    graphicsView->update();
+    graphicsView->viewport()->update();
+    graphicsView->viewport()->repaint();
 }
 
 // MOUSE EVENTS

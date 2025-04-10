@@ -50,6 +50,12 @@ protected:
      */
     void mouseReleaseEvent(QMouseEvent *event);
 
+private slots:
+    /**
+     * @brief updateWorld - Updates the world when events trigger.
+     */
+    void updateWorld();
+
 public:
     /**
      * @brief MainWindow - creates a main window object.
@@ -70,6 +76,9 @@ private:
     int gameBoardY;
     bool newPosition;
 
+    /**
+     * @brief currentLevel - The current level.
+     */
     Level* currentLevel;
 
     /**
@@ -82,9 +91,14 @@ private:
     bool isInGameBoard(int x, int y);
 
     /**
-     * @brief GraphicsScene - The graphics scene.
+     * @brief graphicsScene - The graphics scene.
      */
-    QGraphicsScene* GraphicsScene;
+    QGraphicsScene* graphicsScene;
+
+    /**
+     * @brief graphicsView - The graphics view.
+     */
+    QGraphicsView* graphicsView;
 
     /**
      * @brief box2DWorld - The Box2D world.
@@ -96,6 +110,21 @@ private:
      */
     b2Body* box2DBody;
 
+    /**
+     * @brief confetti - An instance of the confetti class.
+     */
+    Confetti* confetti;
 
+    /**
+     * @brief timer - Manages event triggers and steps.
+     */
+    QTimer* timer;
+
+    /**
+     * @brief isVictory - Determines if the player has won the game.
+     */
+    bool isVictory;
+
+    int frameCount;
 };
 #endif // MAINWINDOW_H

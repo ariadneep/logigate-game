@@ -6,6 +6,10 @@
  * https://www.qt.io/blog/2010/02/26/qt-box2d-is-easy#:~:text=This%20example%20shows%20how%20to%20create%20a%20body%2C,simply%20don%27t%20move.%20By%20default%2C%20bodies%20are%20static.
  * https://www.qt.io/blog/2010/02/26/qt-box2d-is-easy
  * https://doc.qt.io/qt-6/qgraphicsscene.html
+ *
+ * For rendering and display:
+ * https://runebook.dev/en/articles/qt/qgraphicsscene
+ * https://stackoverflow.com/questions/50253360/how-to-set-central-widget-fill-in-the-whole-main-window-in-qt
  */
 
 #include "confettieffect.h"
@@ -71,8 +75,10 @@ void Confetti::updateConfetti() {
     for(int i = 0; i < 30; i++) {
         ConfettiEffect* confettiParticle = confettiParticles[i];
         QGraphicsRectItem* graphicRects = rectItems[i];
-        confettiParticle->xPos = confettiParticle->box2DBody->GetPosition().x * 30.0f;
-        confettiParticle->yPos = confettiParticle->box2DBody->GetPosition().y * 30.0f;
-        graphicRects->setPos(confettiParticle->xPos, confettiParticle->yPos);
+        if(confettiParticle && graphicRects) {
+            confettiParticle->xPos = confettiParticle->box2DBody->GetPosition().x * 30.0f;
+            confettiParticle->yPos = confettiParticle->box2DBody->GetPosition().y * 30.0f;
+            graphicRects->setPos(confettiParticle->xPos, confettiParticle->yPos);
+        }
     }
 }
