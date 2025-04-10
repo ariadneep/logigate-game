@@ -43,6 +43,10 @@ void Level::drawWire(int x, int y, QString tag) {
             wireGrid[y * WIDTH + x] = currentWire;
             qDebug() << "Head: " << (currentWire->getHeadConnection() != nullptr)
                     << " Tail: " << (currentWire->getTailConnection() != nullptr);
+
+            // Alters the sprite of the head:
+            if (upWire->getDirection() == Direction::EW)
+                upWire->setDirection(Direction::SW);
         }
 
         // Check the right component:
@@ -57,6 +61,9 @@ void Level::drawWire(int x, int y, QString tag) {
             wireGrid[y * WIDTH + x] = currentWire;
             qDebug() << "Head: " << (currentWire->getHeadConnection() != nullptr)
                      << " Tail: " << (currentWire->getTailConnection() != nullptr);
+
+            if (rightWire->getDirection() == Direction::NS)
+                rightWire->setDirection(Direction::NW);
         }
 
         // Check the below component:
@@ -71,6 +78,8 @@ void Level::drawWire(int x, int y, QString tag) {
             wireGrid[y * WIDTH + x] = currentWire;
             qDebug() << "Head: " << (currentWire->getHeadConnection() != nullptr)
                      << " Tail: " << (currentWire->getTailConnection() != nullptr);
+            if (downWire->getDirection() == Direction::EW)
+                downWire->setDirection(Direction::NE);
         }
 
         // Check the left component:
@@ -85,6 +94,8 @@ void Level::drawWire(int x, int y, QString tag) {
             wireGrid[y * WIDTH + x] = currentWire;
             qDebug() << "Head: " << (currentWire->getHeadConnection() != nullptr)
                      << " Tail: " << (currentWire->getTailConnection() != nullptr);
+            if (leftWire->getDirection() == Direction::NS)
+                leftWire->setDirection(Direction::NE);
         }
 
         // add checks for gates
