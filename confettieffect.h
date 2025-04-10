@@ -73,6 +73,11 @@ public:
      */
     void updateConfetti();
 
+    /**
+     * @brief clearConfetti - Clears confetti when called.
+     */
+    void clearConfetti();
+
 private:
     /**
      * @brief graphicsScene - Manages the scene where confetti particles spawn.

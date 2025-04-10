@@ -68,6 +68,12 @@ public:
      */
     ~MainWindow();
 
+    /**
+     * @brief changeLevel - Handles the event when the level is changed.
+     * @param width - The width of the level.
+     */
+    void changeLevel(int width);
+
 private:
     Ui::MainWindow *ui;
 
@@ -111,20 +117,13 @@ private:
     b2Body* box2DBody;
 
     /**
-     * @brief confetti - An instance of the confetti class.
-     */
-    Confetti* confetti;
-
-    /**
      * @brief timer - Manages event triggers and steps.
      */
     QTimer* timer;
 
     /**
-     * @brief isVictory - Determines if the player has won the game.
+     * @brief frameCount - Manages QTimer step counts.
      */
-    bool isVictory;
-
     int frameCount;
 };
 #endif // MAINWINDOW_H

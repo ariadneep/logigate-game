@@ -25,7 +25,11 @@ GridComponent* Level::getGridComponent(int x, int y) {
 }
 
 void Level::victory() {
-    if(isVictory) {
+    /*
+     * TESTING PURPOSES, CHANGE LATER.
+     */
+    if(!isVictory) {
+        isVictory = true;
         spawnConfetti();
     }
 }
@@ -35,5 +39,12 @@ void Level::spawnConfetti() {
 }
 
 void Level::updateLevel() {
-    confetti->updateConfetti();
+    if (isVictory) {
+        confetti->updateConfetti();
+    }
+}
+
+void Level::removeConfetti() {
+    confetti->clearConfetti();
+    isVictory = false;
 }

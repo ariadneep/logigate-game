@@ -26,7 +26,7 @@ ConfettiEffect::ConfettiEffect(float xPos, float yPos, b2World* box2DWorld) : xP
 
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
-    bodyDef.position.Set(xPos / 30.0f, yPos / 30.0f);
+    bodyDef.position.Set(xPos / 30.0f, (yPos / 30.0f) - 7.5);
     box2DBody = box2DWorld->CreateBody(&bodyDef);
 
     b2PolygonShape box2DShape;
@@ -60,7 +60,7 @@ void Confetti::spawnConfetti() {
     //Spawn confetti at the center of the screen.
     for(int i = 0; i < 30; i++) {
         ConfettiEffect* confettiParticle = new ConfettiEffect(0, 0, box2DWorld);
-        QGraphicsRectItem* confettiRect = new QGraphicsRectItem(-5, -2.5, 10, 5);
+        QGraphicsRectItem* confettiRect = new QGraphicsRectItem(-2.5, -1.25, 5, 2.5);
 
         confettiRect->setPos(0, 0);
         confettiRect->setBrush(confettiParticle->confettiColor);
@@ -81,4 +81,23 @@ void Confetti::updateConfetti() {
             graphicRects->setPos(confettiParticle->xPos, confettiParticle->yPos);
         }
     }
+}
+
+void Confetti::clearConfetti() {
+    for(int i = 0; i < existingConfetti; i++) {
+        if(rectItems[i]) {
+            graphicsScene->removeItem(rectItems[i]);
+            delete rectItems[i];
+            rectItems[i] = nullptr;
+        }
+        if(confettiParticles[i]) {
+            if(confettiParticles[i]->box2DBody) {
+                box2DWorld->DestroyBody(confettiParticles[i]->box2DBody);
+                confettiParticles[i]->box2DBody = nullptr;
+            }
+            delete confettiParticles[i];
+            confettiParticles[i] = nullptr;
+        }
+    }
+    existingConfetti = 0;
 }

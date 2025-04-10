@@ -53,6 +53,11 @@ public:
     void updateLevel();
 
     /**
+     * @brief removeConfetti - Removes the confetti upon level change.
+     */
+    void removeConfetti();
+
+    /**
      * @brief drawWire - Places a wire at the grid coordinates depending on the context
      * of the coordinates.
      * @param x - X position on the game grid.
