@@ -5,6 +5,7 @@ Wire::Wire(QObject *parent)
 {
     headConnection = nullptr;
     tailConnection = nullptr;
+    direction = Direction::NONE;
 }
 
 Wire::~Wire() {
@@ -39,4 +40,12 @@ Wire* Wire::getTailConnection() {
 void Wire::setTailConnection(Wire* newWire) {
     delete tailConnection;
     tailConnection = newWire;
+}
+
+Direction Wire::getDirection() {
+    return direction;
+}
+
+void Wire::setDirection(Direction newDirection) {
+    direction = newDirection;
 }

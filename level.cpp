@@ -23,10 +23,9 @@ void Level::drawWire(int x, int y, QString tag) {
 
     Wire* currentWire = getWire(x, y);
 
-    qDebug() << "Got wire";
-
     if (currentWire == nullptr) {
-        qDebug() << "wire is null";
+        qDebug() << "empty space, attempting to place wire";
+
         Wire* upWire = getWire(x, y - 1);
         Wire* rightWire = getWire(x + 1, y);
         Wire* downWire = getWire(x, y + 1);
@@ -40,6 +39,8 @@ void Level::drawWire(int x, int y, QString tag) {
             currentWire = new Wire();
             currentWire->setTag(tag);
             currentWire->setHeadConnection(upWire);
+            currentWire->setDirection(Direction::NS);
+            wireGrid[y * WIDTH + x] = currentWire;
             qDebug() << "Head: " << (currentWire->getHeadConnection() != nullptr)
                     << " Tail: " << (currentWire->getTailConnection() != nullptr);
         }
@@ -52,6 +53,8 @@ void Level::drawWire(int x, int y, QString tag) {
             currentWire = new Wire();
             currentWire->setTag(tag);
             currentWire->setHeadConnection(rightWire);
+            currentWire->setDirection(Direction::EW);
+            wireGrid[y * WIDTH + x] = currentWire;
             qDebug() << "Head: " << (currentWire->getHeadConnection() != nullptr)
                      << " Tail: " << (currentWire->getTailConnection() != nullptr);
         }
@@ -64,6 +67,8 @@ void Level::drawWire(int x, int y, QString tag) {
             currentWire = new Wire();
             currentWire->setTag(tag);
             currentWire->setHeadConnection(downWire);
+            currentWire->setDirection(Direction::NS);
+            wireGrid[y * WIDTH + x] = currentWire;
             qDebug() << "Head: " << (currentWire->getHeadConnection() != nullptr)
                      << " Tail: " << (currentWire->getTailConnection() != nullptr);
         }
@@ -76,6 +81,8 @@ void Level::drawWire(int x, int y, QString tag) {
             currentWire = new Wire();
             currentWire->setTag(tag);
             currentWire->setHeadConnection(leftWire);
+            currentWire->setDirection(Direction::EW);
+            wireGrid[y * WIDTH + x] = currentWire;
             qDebug() << "Head: " << (currentWire->getHeadConnection() != nullptr)
                      << " Tail: " << (currentWire->getTailConnection() != nullptr);
         }
@@ -103,5 +110,5 @@ void Level::setWire(int x, int y, QString tag) {
     Wire* addWire = new Wire();
     addWire->setHeadConnection(addWire);
     addWire->setTag(tag);
-    wireGrid[y * WIDTH * x] = addWire;
+    wireGrid[y * WIDTH + x] = addWire;
 }

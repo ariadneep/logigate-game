@@ -19,7 +19,7 @@
  * the wire is coming from/is facing.
  *
  * VETICAL represents top to bottom
- * HORIZONTAL represents left to right.
+ * EW represents left to right.
  *
  * NONE represents a single unconnected point.
  *
@@ -28,7 +28,7 @@
  * second represnts the horizontal half.
  */
 enum class Direction {
-    NONE, VERTICAL, HORIZONTAL, NW, NE, SW, SE
+    NONE, NS, EW, NW, NE, SW, SE
 };
 
 class Wire : public GridComponent {
@@ -87,6 +87,18 @@ public:
      */
     void setTailConnection(Wire* newConnection);
 
+    /**
+     * @brief getDirection
+     * @return
+     */
+    Direction getDirection();
+
+    /**
+     * @brief setDirection
+     * @param newDirection
+     */
+    void setDirection(Direction newDirection);
+
 private:
     /**
      * @brief tag - represents the wire ID that this wire is a part of.
@@ -132,6 +144,11 @@ private:
      * @brief headConnection
      */
     Wire* tailConnection;
+
+    /**
+     * @brief direction
+     */
+    Direction direction;
 
 };
 
