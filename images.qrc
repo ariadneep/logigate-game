@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/sprites">
+        <file>grid-12x8.png</file>
+    </qresource>
+</RCC>

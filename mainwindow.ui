@@ -30,10 +30,11 @@
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">border: 1px solid black; </string>
+     <string notr="true">border: 0px rgb(155, 158, 176); 
+border-image: url(:/sprites/grid-12x8.png);</string>
     </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string/>
     </property>
    </widget>
   </widget>
