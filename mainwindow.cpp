@@ -14,6 +14,11 @@ MainWindow::MainWindow(QWidget *parent)
     gameBoardX = 0;
     gameBoardY = 0;
     newPosition = true;
+      
+      // \/ CHANGE \/
+    currentLevel = new Level(this);
+    currentTag = "a";
+    currentLevel->setWire(0, 0, currentTag);
 
     /*
      * SETTING UP BOX2D
@@ -99,6 +104,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event) {
         mouseY = mouseY - gameBoard->pos().y();
 
         // Project into Canvas Coords
+        // TODO: add in a divisor of the level's width
         gameBoardX = (int)(mouseX / (gameBoard->width() / currentLevel->WIDTH));
         gameBoardY = (int)(mouseY / (gameBoard->height() / currentLevel->HEIGHT));
 
@@ -107,10 +113,9 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event) {
             newPosition = true;
     }
 
+    // If this is a new position for the mouse, then attempt to draw a wire.
     if (newPosition) {
-        qDebug() << "Moving! MouseX = " << gameBoardX;
-        qDebug() << "Moving! MouseY = " << gameBoardY;
-        //tool->useTool(sprite, canvasX, canvasY);
+        currentLevel->drawWire(gameBoardX, gameBoardY, currentTag);
         newPosition = false;
     }
 }
@@ -140,8 +145,6 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
     }
 
     if (newPosition) {
-        qDebug() << "MouseX = " << gameBoardX;
-        qDebug() << "MouseY = " << gameBoardY;
         //tool->useTool(sprite, canvasX, canvasY);
         newPosition = false;
 
