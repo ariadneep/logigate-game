@@ -30,16 +30,13 @@ MainWindow::MainWindow(QWidget *parent)
     box2DWorld = new b2World(gravity);
 
     b2BodyDef groundBodyDef;
-    groundBodyDef.position.Set(0.0f, 4.0f);
+    groundBodyDef.position.Set(0.0f, 5.6f);
     b2Body* groundBody = box2DWorld->CreateBody(&groundBodyDef);
     b2PolygonShape groundBox;
-    groundBox.SetAsBox(50.0f, 0.1f);
+    groundBox.SetAsBox(9.5f, 0.1f);
     groundBody->CreateFixture(&groundBox, 0.0f);
 
     currentLevel = new Level(800, graphicsScene, box2DWorld, this);
-
-    // Confetti instance
-    confetti = new Confetti(graphicsScene, box2DWorld);
 
     // World timer
     connect(timer, &QTimer::timeout, this, &MainWindow::updateWorld);
@@ -50,7 +47,6 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete currentLevel;
-    delete confetti;
     delete box2DWorld;
     delete graphicsScene;
     delete graphicsView;
@@ -61,15 +57,30 @@ void MainWindow::updateWorld() {
 
     frameCount++;
     if(frameCount == 100) {
-        confetti->spawnConfetti();
+        currentLevel->victory();
     }
 
-    confetti->updateConfetti();
+    /*
+    * CHANGE THIS IN THE FUTURE FOR WHEN LEVEL CHANGES.
+    */
+    if(frameCount == 500) {
+        currentLevel->removeConfetti();
+    }
+
+    currentLevel->updateLevel();
 
     graphicsScene->update();
     graphicsView->update();
     graphicsView->viewport()->update();
     graphicsView->viewport()->repaint();
+}
+
+void MainWindow::changeLevel(int width) {
+    if(currentLevel) {
+        currentLevel->removeConfetti();
+        delete currentLevel;
+    }
+    currentLevel = new Level(width, graphicsScene, box2DWorld, this);
 }
 
 // MOUSE EVENTS
