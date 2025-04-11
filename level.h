@@ -27,11 +27,12 @@ class Level : public QObject {
 
 public:
     /**
-     * @param parent - the parent object.
+     * @brief Level - Default constructor.
      * @param graphicsScene - The graphics scene
      * @param box2DWorld - The Box2D world.
+     * @param parent - the parent object.
      */
-    explicit Level(QObject *parent = nullptr);
+    explicit Level(QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent);
 
     /**
      * Destructor for the level class.
@@ -105,12 +106,27 @@ public:
      */
     Obstacle* getObstacle(int x, int y);
 
+    /**
+     * @brief updateLevel
+     */
+    void updateLevel();
+
+    /**
+     * @brief removeConfetti
+     */
+    void removeConfetti();
+
 private:
 
     /**
      * @brief description - The prefacing paragraph for the level.
      */
     QString description;
+
+    /**
+     * @brief box2DWorld - The Box2D World.
+     */
+    b2World* box2DWorld;
 
     /**
      * @brief graphicsScene - The scene for handling confetti.

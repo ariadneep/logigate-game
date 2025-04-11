@@ -14,11 +14,6 @@ MainWindow::MainWindow(QWidget *parent)
     gameBoardX = 0;
     gameBoardY = 0;
     newPosition = true;
-      
-      // \/ CHANGE \/
-    currentLevel = new Level(this);
-    currentTag = "a";
-    currentLevel->setWire(0, 0, currentTag);
 
     /*
      * SETTING UP BOX2D
@@ -41,7 +36,11 @@ MainWindow::MainWindow(QWidget *parent)
     groundBox.SetAsBox(9.5f, 0.1f);
     groundBody->CreateFixture(&groundBox, 0.0f);
 
-    currentLevel = new Level(800, graphicsScene, box2DWorld, this);
+    currentLevel = new Level(graphicsScene, box2DWorld, this);
+
+    // \/ CHANGE \/
+    currentTag = "a";
+    currentLevel->setWire(0, 0, currentTag);
 
     // World timer
     connect(timer, &QTimer::timeout, this, &MainWindow::updateWorld);
@@ -80,12 +79,12 @@ void MainWindow::updateWorld() {
     graphicsView->viewport()->repaint();
 }
 
-void MainWindow::changeLevel(int width) {
+void MainWindow::changeLevel() {
     if(currentLevel) {
         currentLevel->removeConfetti();
         delete currentLevel;
     }
-    currentLevel = new Level(width, graphicsScene, box2DWorld, this);
+    currentLevel = new Level(graphicsScene, box2DWorld, this);
 }
 
 // MOUSE EVENTS
@@ -145,7 +144,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
     }
 
     if (newPosition) {
-        //tool->useTool(sprite, canvasX, canvasY);
+        currentLevel->drawWire(gameBoardX, gameBoardY, currentTag);
         newPosition = false;
 
     }

@@ -5,7 +5,7 @@
 enum class Component;
 class Wire;
 
-Level::Level(int width, QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent)
+Level::Level(QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent)
     : QObject{parent}, graphicsScene(graphicsScene), box2DWorld(box2DWorld), isVictory(false) {
     //levelNum = 0;
     confetti = new Confetti(graphicsScene, box2DWorld);

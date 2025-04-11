@@ -62,6 +62,11 @@ public:
      */
     ~MainWindow();
 
+    /**
+     * @brief changeLevel - Handles the event where the level is changed.
+     */
+    void changeLevel();
+
 private slots:
     /**
      * @brief updateWorld - Updates the world when events trigger.
@@ -90,9 +95,14 @@ private:
     bool isInGameBoard(int x, int y);
 
     /**
-     * @brief GraphicsScene - The graphics scene.
+     * @brief graphicsScene - The graphics scene.
      */
-    QGraphicsScene* GraphicsScene;
+    QGraphicsScene* graphicsScene;
+
+    /**
+     * @brief graphicsView - The graphics view.
+     */
+    QGraphicsView* graphicsView;
 
     /**
      * @brief box2DWorld - The Box2D world.
