@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/sprites">
+        <file>grid-12x8.png</file>
+        <file>red-button-wire-e.png</file>
+        <file>red-button-wire-n.png</file>
+        <file>red-button-wire-s.png</file>
+        <file>red-button-wire-w.png</file>
+        <file>red-wire-ew.png</file>
+        <file>red-wire-ne.png</file>
+        <file>red-wire-ns.png</file>
+        <file>red-wire-nw.png</file>
+        <file>red-wire-se.png</file>
+        <file>red-wire-sw.png</file>
+    </qresource>
+</RCC>

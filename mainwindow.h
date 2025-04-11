@@ -62,6 +62,13 @@ public:
      */
     ~MainWindow();
 
+private slots:
+    /**
+     * @brief updateWorld - Updates the world when events trigger.
+     */
+    void updateWorld();
+
+
 private:
     Ui::MainWindow *ui;
 
@@ -96,5 +103,15 @@ private:
      * @brief box2DBody - The Box2D body.
      */
     b2Body* box2DBody;
+    
+    /**
+     * @brief timer - Manages event triggers and steps.
+     */
+    QTimer* timer;
+
+    /**
+     * @brief frameCount - Manages QTimer step counts.
+     */
+    int frameCount;
 };
 #endif // MAINWINDOW_H

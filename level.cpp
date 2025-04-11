@@ -1,12 +1,14 @@
+
 #include "level.h"
 #include "wire.h"
 
 enum class Component;
 class Wire;
 
-Level::Level(QObject *parent)
-    : QObject{parent} {
-
+Level::Level(int width, QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent)
+    : QObject{parent}, graphicsScene(graphicsScene), box2DWorld(box2DWorld), isVictory(false) {
+    //levelNum = 0;
+    confetti = new Confetti(graphicsScene, box2DWorld);
     // Initializes the grids to nullptrs.
     for (int i = 0; i < WIDTH * HEIGHT; i++)
         wireGrid[i] = nullptr;
@@ -15,6 +17,7 @@ Level::Level(QObject *parent)
 Level::~Level() {
     for (int i = 0; i < WIDTH * HEIGHT; i++)
         delete wireGrid[i];
+    delete confetti;
 }
 
 void Level::drawWire(int x, int y, QString tag) {
@@ -122,4 +125,29 @@ void Level::setWire(int x, int y, QString tag) {
     addWire->setHeadConnection(addWire);
     addWire->setTag(tag);
     wireGrid[y * WIDTH + x] = addWire;
+}
+
+void Level::victory() {
+    /*
+     * TESTING PURPOSES, CHANGE LATER.
+     */
+    if(!isVictory) {
+        isVictory = true;
+        spawnConfetti();
+    }
+}
+
+void Level::spawnConfetti() {
+    confetti->spawnConfetti();
+}
+
+void Level::updateLevel() {
+    if (isVictory) {
+        confetti->updateConfetti();
+    }
+}
+
+void Level::removeConfetti() {
+    confetti->clearConfetti();
+    isVictory = false;
 }

@@ -136,3 +136,6 @@ DISTFILES += \
     Box2D/Box2DConfig.cmake \
     Box2D/CMakeLists.txt \
     Box2D/CMakeLists.txt
+
+RESOURCES += \
+    images.qrc

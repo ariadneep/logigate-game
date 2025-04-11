@@ -1,3 +1,4 @@
+
 #include "gate.h"
 
 Gate::Gate(Operator type, QObject *parent)
