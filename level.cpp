@@ -34,6 +34,13 @@ void Level::drawWire(int x, int y, QString tag) {
         Wire* downWire = getWire(x, y + 1);
         Wire* leftWire = getWire(x - 1, y);
 
+        qDebug() << "nullptr: " << nullptr;
+        if (upWire) {
+            qDebug() << "upwire fully connected: " << upWire->isFullyConnected();
+            qDebug() << "upwire head: " << upWire->getHeadConnection();
+            qDebug() << "upwire tail: " << upWire->getTailConnection();
+        }
+
         // Check the above component:
         if (upWire != nullptr && upWire->getTag() == tag
             && !upWire->isFullyConnected()) {
@@ -44,6 +51,7 @@ void Level::drawWire(int x, int y, QString tag) {
             currentWire->setHeadConnection(upWire);
             currentWire->setDirection(Direction::NS);
             wireGrid[y * WIDTH + x] = currentWire;
+            upWire->setTailConnection(currentWire);
             qDebug() << "Head: " << (currentWire->getHeadConnection() != nullptr)
                     << " Tail: " << (currentWire->getTailConnection() != nullptr);
 
@@ -62,6 +70,7 @@ void Level::drawWire(int x, int y, QString tag) {
             currentWire->setHeadConnection(rightWire);
             currentWire->setDirection(Direction::EW);
             wireGrid[y * WIDTH + x] = currentWire;
+            rightWire->setTailConnection(currentWire);
             qDebug() << "Head: " << (currentWire->getHeadConnection() != nullptr)
                      << " Tail: " << (currentWire->getTailConnection() != nullptr);
 
@@ -79,6 +88,7 @@ void Level::drawWire(int x, int y, QString tag) {
             currentWire->setHeadConnection(downWire);
             currentWire->setDirection(Direction::NS);
             wireGrid[y * WIDTH + x] = currentWire;
+            downWire->setTailConnection(currentWire);
             qDebug() << "Head: " << (currentWire->getHeadConnection() != nullptr)
                      << " Tail: " << (currentWire->getTailConnection() != nullptr);
             if (downWire->getDirection() == Direction::EW)
@@ -95,6 +105,7 @@ void Level::drawWire(int x, int y, QString tag) {
             currentWire->setHeadConnection(leftWire);
             currentWire->setDirection(Direction::EW);
             wireGrid[y * WIDTH + x] = currentWire;
+            leftWire->setTailConnection(currentWire);
             qDebug() << "Head: " << (currentWire->getHeadConnection() != nullptr)
                      << " Tail: " << (currentWire->getTailConnection() != nullptr);
             if (leftWire->getDirection() == Direction::NS)
