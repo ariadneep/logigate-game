@@ -50,12 +50,6 @@ protected:
      */
     void mouseReleaseEvent(QMouseEvent *event);
 
-private slots:
-    /**
-     * @brief updateWorld - Updates the world when events trigger.
-     */
-    void updateWorld();
-
 public:
     /**
      * @brief MainWindow - creates a main window object.
@@ -69,10 +63,16 @@ public:
     ~MainWindow();
 
     /**
-     * @brief changeLevel - Handles the event when the level is changed.
-     * @param width - The width of the level.
+     * @brief changeLevel - Handles the event where the level is changed.
      */
-    void changeLevel(int width);
+    void changeLevel();
+
+private slots:
+    /**
+     * @brief updateWorld - Updates the world when events trigger.
+     */
+    void updateWorld();
+
 
 private:
     Ui::MainWindow *ui;
@@ -81,10 +81,8 @@ private:
     int gameBoardX;
     int gameBoardY;
     bool newPosition;
+    QString currentTag;
 
-    /**
-     * @brief currentLevel - The current level.
-     */
     Level* currentLevel;
 
     /**
@@ -115,7 +113,7 @@ private:
      * @brief box2DBody - The Box2D body.
      */
     b2Body* box2DBody;
-
+    
     /**
      * @brief timer - Manages event triggers and steps.
      */
