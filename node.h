@@ -17,9 +17,11 @@
 #define NODE_H
 
 #include <QObject>
+#include <QGraphicsPixmapItem>
+#include <QGraphicsScene>
 #include "gridcomponent.h"
 
-enum class Type {
+enum class NodeType {
     ROOT, END
 };
 
@@ -27,10 +29,15 @@ class Node : public GridComponent {
 
 public:
     /**
-     * @brief Node - creates a Node object
-     * @param parent - the parent object.
+     * @brief Node - Creates a Node object
+     * @param tag - The input node.
+     * @param nodeType - Determines if it is the ROOT or END of the node.
+     * @param graphicsScene - The QGraphicsScene for adding sprites.
+     * @param xPos - The x-coordinate of the grid.
+     * @param yPos - the y-coordinate of the grid.
+     * @param parent - The parent object.
      */
-    explicit Node(QObject *parent = nullptr);
+    explicit Node(QString& tag, NodeType nodeType, QGraphicsScene* graphicsScene, int xPos, int yPos, QObject *parent = nullptr);
 
     /**
      * Destructor for the Node class.
@@ -44,6 +51,80 @@ public:
      */
     GridComponent::Type getType() override;
 
+    /**
+     * @brief getTag - The node's tag.
+     * @return A QString representing the tag.
+     */
+    QString getTag();
+
+    /**
+     * @brief getSignal - The signal value of the node.
+     * @return A bool representing the signal.
+     */
+    bool getSignal();
+
+    /**
+     * @brief setSignal - Set's the value of the node's signal.
+     * @param signal - A bool representing the signal value.
+     */
+    void setSignal(bool signal);
+
+    /**
+     * @brief getNodeType - The type of the node.
+     * @return A Type representing whether the node is a ROOT or END.
+     */
+    NodeType getNodeType();
+
+    /**
+     * @brief checkSignal - Determines the END value of a node.
+     * @param tag - The tag to compare against the input node.
+     * @param signal - The input node's value.
+     * @return A bool representing if the tags match and it is an end node.
+     */
+    bool checkSignal(QString& tag, bool signal);
+
+    /**
+     * @brief getX - The node's x-coordinate in the grid.
+     * @return The x-coordinate of the node.
+     */
+    int getX();
+
+    /**
+     * @brief getY - The node's y-coordinate in the grid.
+     * @return The y-coordinate of the node.
+     */
+    int getY();
+
+private:
+    /**
+     * @brief tag - The input node type.
+     */
+    QString tag;
+
+    /**
+     * @brief signal - The signal value of a node.
+     */
+    bool signal;
+
+    /**
+     * @brief nodeType - Determines if it is a ROOT or END node.
+     */
+    NodeType nodeType;
+
+    /**
+     * @brief sprite - The sprite of the node.
+     */
+    QGraphicsPixmapItem* sprite;
+
+    /**
+     * @brief xPos - The node's x-coordinate in the grid.
+     */
+    int xPos;
+
+    /**
+     * @brief yPos - The node's y-coordinate in the grid.
+     */
+    int yPos;
 };
 
 #endif // NODE_H
