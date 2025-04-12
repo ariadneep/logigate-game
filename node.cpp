@@ -1,3 +1,5 @@
+#include "node.h"
+
 Node::Node(QString& tag, NodeType nodeType, QGraphicsScene* graphicsScene, int xPos, int yPos, QObject *parent)
     : GridComponent{parent}, tag(tag), signal(false), nodeType(nodeType), sprite(nullptr), xPos(xPos), yPos(yPos)
 {
@@ -20,7 +22,7 @@ Node::Node(QString& tag, NodeType nodeType, QGraphicsScene* graphicsScene, int x
 }
 
 Node::~Node() {
-
+    delete sprite;
 }
 
 GridComponent::Type Node::getType() {
