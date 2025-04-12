@@ -17,6 +17,8 @@
 #define NODE_H
 
 #include <QObject>
+#include <QGraphicsPixmapItem>
+#include <QGraphicsScene>
 #include "gridcomponent.h"
 
 enum class NodeType {
@@ -30,9 +32,12 @@ public:
      * @brief Node - Creates a Node object
      * @param tag - The input node.
      * @param nodeType - Determines if it is the ROOT or END of the node.
+     * @param graphicsScene - The QGraphicsScene for adding sprites.
+     * @param xPos - The x-coordinate of the grid.
+     * @param yPos - the y-coordinate of the grid.
      * @param parent - The parent object.
      */
-    explicit Node(QString& tag, NodeType nodeType, QObject *parent = nullptr);
+    explicit Node(QString& tag, NodeType nodeType, QGraphicsScene* graphicsScene, int xPos, int yPos, QObject *parent = nullptr);
 
     /**
      * Destructor for the Node class.
@@ -78,6 +83,18 @@ public:
      */
     bool checkSignal(QString& tag, bool signal);
 
+    /**
+     * @brief getX - The node's x-coordinate in the grid.
+     * @return The x-coordinate of the node.
+     */
+    int getX();
+
+    /**
+     * @brief getY - The node's y-coordinate in the grid.
+     * @return The y-coordinate of the node.
+     */
+    int getY();
+
 private:
     /**
      * @brief tag - The input node type.
@@ -93,6 +110,21 @@ private:
      * @brief nodeType - Determines if it is a ROOT or END node.
      */
     NodeType nodeType;
+
+    /**
+     * @brief sprite - The sprite of the node.
+     */
+    QGraphicsPixmapItem* sprite;
+
+    /**
+     * @brief xPos - The node's x-coordinate in the grid.
+     */
+    int xPos;
+
+    /**
+     * @brief yPos - The node's y-coordinate in the grid.
+     */
+    int yPos;
 };
 
 #endif // NODE_H
