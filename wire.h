@@ -19,7 +19,7 @@
  * the wire is coming from/is facing.
  *
  * VETICAL represents top to bottom
- * HORIZONTAL represents left to right.
+ * EW represents left to right.
  *
  * NONE represents a single unconnected point.
  *
@@ -28,7 +28,7 @@
  * second represnts the horizontal half.
  */
 enum class Direction {
-    NONE, VERTICAL, HORIZONTAL, NW, NE, SW, SE
+    NONE, NS, EW, NW, NE, SW, SE
 };
 
 class Wire : public GridComponent {
@@ -46,11 +46,58 @@ public:
     ~Wire();
 
     /**
-     * @brief getType - Returns the type of GridComponent object this is as an enum.
-     * By default, this is WIRE.
-     * @return A Operator enum.
+     * @brief getTag
+     * @return
      */
-    GridComponent::Type getType() override;
+    QString getTag();
+
+    /**
+     * @brief setTag
+     * @param newTag
+     */
+    void setTag(QString newTag);
+
+    /**
+     * @brief isFullyConnected - Checks to see if the wire is connected to another component
+     * or not.
+     * @return Boolean representation of the connection verification.
+     */
+    bool isFullyConnected();
+
+    /**
+     * @brief getHeadConnection
+     * @return
+     */
+    Wire* getHeadConnection();
+
+    /**
+     * @brief setHeadConnection
+     */
+    void setHeadConnection(Wire* newConnection);
+
+    /**
+     * @brief getTailConnection
+     * @return
+     */
+    Wire* getTailConnection();
+
+    /**
+     * @brief setTailConnection
+     * @param newConnection
+     */
+    void setTailConnection(Wire* newConnection);
+
+    /**
+     * @brief getDirection
+     * @return
+     */
+    Direction getDirection();
+
+    /**
+     * @brief setDirection
+     * @param newDirection
+     */
+    void setDirection(Direction newDirection);
 
 private:
     /**
@@ -87,6 +134,21 @@ private:
      * false if this is the middle of a straight segemnt of the wire.
      */
     bool isHead;
+
+    /**
+     * @brief headConnection
+     */
+    Wire* headConnection;
+
+    /**
+     * @brief headConnection
+     */
+    Wire* tailConnection;
+
+    /**
+     * @brief direction
+     */
+    Direction direction;
 
 };
 

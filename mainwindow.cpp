@@ -36,7 +36,11 @@ MainWindow::MainWindow(QWidget *parent)
     groundBox.SetAsBox(9.5f, 0.1f);
     groundBody->CreateFixture(&groundBox, 0.0f);
 
-    currentLevel = new Level(800, graphicsScene, box2DWorld, this);
+    currentLevel = new Level(graphicsScene, box2DWorld, this);
+
+    // \/ CHANGE \/
+    currentTag = "a";
+    currentLevel->setWire(0, 0, currentTag);
 
     // World timer
     connect(timer, &QTimer::timeout, this, &MainWindow::updateWorld);
@@ -75,12 +79,12 @@ void MainWindow::updateWorld() {
     graphicsView->viewport()->repaint();
 }
 
-void MainWindow::changeLevel(int width) {
+void MainWindow::changeLevel() {
     if(currentLevel) {
         currentLevel->removeConfetti();
         delete currentLevel;
     }
-    currentLevel = new Level(width, graphicsScene, box2DWorld, this);
+    currentLevel = new Level(graphicsScene, box2DWorld, this);
 }
 
 // MOUSE EVENTS
@@ -99,6 +103,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event) {
         mouseY = mouseY - gameBoard->pos().y();
 
         // Project into Canvas Coords
+        // TODO: add in a divisor of the level's width
         gameBoardX = (int)(mouseX / (gameBoard->width() / currentLevel->WIDTH));
         gameBoardY = (int)(mouseY / (gameBoard->height() / currentLevel->HEIGHT));
 
@@ -107,10 +112,9 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event) {
             newPosition = true;
     }
 
+    // If this is a new position for the mouse, then attempt to draw a wire.
     if (newPosition) {
-        qDebug() << "Moving! MouseX = " << gameBoardX;
-        qDebug() << "Moving! MouseY = " << gameBoardY;
-        //tool->useTool(sprite, canvasX, canvasY);
+        currentLevel->drawWire(gameBoardX, gameBoardY, currentTag);
         newPosition = false;
     }
 }
@@ -140,11 +144,8 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
     }
 
     if (newPosition) {
-        qDebug() << "MouseX = " << gameBoardX;
-        qDebug() << "MouseY = " << gameBoardY;
-        //tool->useTool(sprite, canvasX, canvasY);
+        currentLevel->drawWire(gameBoardX, gameBoardY, currentTag);
         newPosition = false;
-
     }
 }
 

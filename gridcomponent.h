@@ -28,7 +28,7 @@ public:
     /**
      * Destructor for the Gate class.
      */
-    ~GridComponent();
+    virtual ~GridComponent();
 
     enum class Type {WIRE, GATE, NODE, OBSTACLE, EMPTY};
 
