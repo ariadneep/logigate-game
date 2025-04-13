@@ -131,6 +131,18 @@ Wire* Level::getWire(int x, int y) {
     return wireGrid[y * WIDTH + x];
 }
 
+Gate* Level::getGate(int x, int y) {
+    return nullptr;
+}
+
+Node* Level::getNode(int x, int y) {
+    return nullptr;
+}
+
+Obstacle* Level::getObstacle(int x, int y) {
+    return nullptr;
+}
+
 void Level::setWire(int x, int y, QString tag) {
     Wire* addWire = new Wire();
     addWire->setHeadConnection(addWire);

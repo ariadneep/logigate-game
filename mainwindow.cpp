@@ -79,6 +79,40 @@ void MainWindow::updateWorld() {
     graphicsView->viewport()->repaint();
 }
 
+void MainWindow::repaint() {
+    qDebug() << "repainting the board";
+
+    //checks for components at each box on the board.
+    for(int x = 0; x < currentLevel->WIDTH; x++) {
+        for( int y = 0; y < currentLevel->HEIGHT; y++) {
+            if(currentLevel->getWire(x, y))
+                paintWire(x, y);
+            if(currentLevel->getGate(x, y))
+                paintGate(x, y);
+            if(currentLevel->getNode(x, y))
+                paintNode(x, y);
+            if(currentLevel->getObstacle(x, y))
+                paintObstacle(x, y);
+        }
+    }
+}
+
+void MainWindow::paintWire(int x, int y) {
+    qDebug() << "this is a wire!";
+}
+
+void MainWindow::paintGate(int x, int y) {
+
+}
+
+void MainWindow::paintNode(int x, int y) {
+
+}
+
+void MainWindow::paintObstacle(int x, int y) {
+
+}
+
 void MainWindow::changeLevel() {
     if(currentLevel) {
         currentLevel->removeConfetti();
@@ -116,6 +150,9 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event) {
     if (newPosition) {
         currentLevel->drawWire(gameBoardX, gameBoardY, currentTag);
         newPosition = false;
+
+        //redraw the board.
+        repaint();
     }
 }
 
@@ -146,6 +183,8 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
     if (newPosition) {
         currentLevel->drawWire(gameBoardX, gameBoardY, currentTag);
         newPosition = false;
+
+        repaint();
     }
 }
 
@@ -163,6 +202,5 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
     if(!isInGameBoard(mouseX, mouseY))
         return;
 
-    qDebug() << "Mouse released; sending signal from MAIN to MODEL to save new version.";
-    //emit saveNewVersion(sprite);
+    qDebug() << "Mouse released";
 }

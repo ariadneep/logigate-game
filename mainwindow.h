@@ -75,14 +75,62 @@ private slots:
 
 
 private:
+    /**
+     * @brief ui - Represents the UI with all the components.
+     */
     Ui::MainWindow *ui;
 
     //gameBoard positions
     int gameBoardX;
     int gameBoardY;
     bool newPosition;
+
+    /**
+     * @brief repaint - Redraws the whole board based on the current level's data.
+     *  Reflects backend updates in the frontend.
+     */
+    void repaint();
+
+    /**
+     * @brief paintWire - paints a Wire with the appropriate attributes at the
+     * given x, y position.
+     * @param x - the horizontal grid square index to draw the wire on.
+     * @param y - the vertical grid square index to draw the wire on.
+     */
+    void paintWire(int x, int y);
+
+    /**
+     * @brief paintGate - paints a Gate with the appropriate attributes at the
+     * given x, y position.
+     * @param x - the horizontal grid square index to draw the gate on.
+     * @param y - the vertical grid square index to draw the gate on.
+     */
+    void paintGate(int x, int y);
+
+    /**
+     * @brief paintNode - paints a node with the appropriate attributes at the
+     * given x, y position.
+     * @param x - the horizontal grid square index to draw the node on.
+     * @param y - the vertical grid square index to draw the node on.
+     */
+    void paintNode(int x, int y);
+
+    /**
+     * @brief paintObstacle - paints an obstacle with the appropriate attributes at the
+     * given x, y position.
+     * @param x - the horizontal grid square index to draw the obstacle on.
+     * @param y - the vertical grid square index to draw the obstacle on.
+     */
+    void paintObstacle(int x, int y);
+
+    /**
+     * @brief currentTag - The tag associated with the current wire being drawn.
+     */
     QString currentTag;
 
+    /**
+     * @brief currentLevel - The level currently being played on.
+     */
     Level* currentLevel;
 
     /**
