@@ -124,37 +124,74 @@ void MainWindow::loadWirePixmaps() {
 void MainWindow::repaint() {
     qDebug() << "repainting the board";
 
+    //Pointers to hold values of
+    Wire* currentWire;
+    Gate* currentGate;
+    Node* currentNode;
+    Obstacle* currentObstacle;
+
     //checks for components at each box on the board.
     for(int x = 0; x < currentLevel->WIDTH; x++) {
         for( int y = 0; y < currentLevel->HEIGHT; y++) {
-            if(currentLevel->getWire(x, y))
-                paintWire(x, y);
-            if(currentLevel->getGate(x, y))
+
+            currentWire = currentLevel->getWire(x, y);
+            currentGate = currentLevel->getGate(x, y);
+            currentNode = currentLevel->getNode(x, y);
+            currentObstacle = currentLevel->getObstacle(x, y);
+
+            if(currentWire)
+                paintWire(x, y, currentWire->getDirection(), currentWire->getTag());
+            if(currentGate)
                 paintGate(x, y);
-            if(currentLevel->getNode(x, y))
+            if(currentNode)
                 paintNode(x, y);
-            if(currentLevel->getObstacle(x, y))
+            if(currentObstacle)
                 paintObstacle(x, y);
         }
     }
+
 }
 
-void MainWindow::paintWire(int x, int y) {
-    Wire* wire = currentLevel->getWire(x, y);
-    Direction direction = wire->getDirection();
+void MainWindow::paintWire(int x, int y, Direction direction, QString tag) {
+    // Set default color. This color is retained if the tag is not A or B.
     QString color = "green";
+
+    //TODO: temporary. Wire keeps returning a NONE direction??
+    direction = Direction::EW;
+
+    // Holds the current wire texture to be drawn.
     QPixmap wirePixmap;
 
-    //change the color to red if the wire tag is A
-    if(wire && !wire->getTag().isNull() && wire->getTag() == "A")
+    // Change the color to red if the wire tag is A or blue if the wire tag is B.
+    if(!tag.isNull() && tag.toUpper() == "A")
         color = "red";
-    //change the color to blue if the wire tag is B
-    else if(wire && !wire->getTag().isNull() && wire->getTag() == "B")
+    else if(!tag.isNull() && tag.toUpper() == "B")
         color = "blue";
 
-    qDebug() << "this is a " << color << "wire!";
+    // Grab the UI measurements for scaling.
+    int boxWidth = ui->gameBoard->width() / currentLevel->WIDTH;
+    int boxHeight = ui->gameBoard->height() / currentLevel->HEIGHT;
+    int uiX = x * boxWidth;
+    int uiY = y * boxHeight;
 
-    wirePixmap = wirePixmaps.value({direction, color});
+    // Set the current wire texture, scaled relative to the.
+    wirePixmap = wirePixmaps.value({direction, color}).scaled(
+        boxWidth, boxHeight,
+        Qt::KeepAspectRatio,
+        Qt::FastTransformation);
+
+    //TODO: this returns NONE when direction is not set by default.
+    //qDebug() << "Is direction NONE? " << (direction == Direction::NONE);
+
+
+    // Set up the painter and link to wireLayer.
+    QPainter wirePainter(&wireLayer);
+
+    // Draw to the painter.
+    wirePainter.drawPixmap(uiX, uiY, boxWidth, boxHeight, wirePixmap);
+
+    // Draw to the UI.
+    ui->gameBoard->setPixmap(wireLayer);
 
 }
 

@@ -116,7 +116,7 @@ private:
      * @param x - the horizontal grid square index to draw the wire on.
      * @param y - the vertical grid square index to draw the wire on.
      */
-    void paintWire(int x, int y);
+    void paintWire(int x, int y, Direction direction, QString tag);
 
     /**
      * @brief paintGate - paints a Gate with the appropriate attributes at the
