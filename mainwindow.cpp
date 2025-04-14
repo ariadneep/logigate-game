@@ -124,7 +124,10 @@ void MainWindow::loadWirePixmaps() {
 void MainWindow::repaint() {
     qDebug() << "repainting the board";
 
-    //Pointers to hold values of
+    //Must remove everything already in the wire layer.
+    wireLayer.fill(Qt::transparent);
+
+    //Pointers to hold values of the different grid objects.
     Wire* currentWire;
     Gate* currentGate;
     Node* currentNode;
