@@ -173,6 +173,8 @@ private:
      */
     void wireCheck(Wire* currentWire, Wire* checkingWire);
 
+    void removeTail(int x, int y, Wire* currentWire);
+
     // /**
     //  * @brief levelNum - the id associated with this specific level
     //  */

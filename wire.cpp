@@ -43,10 +43,10 @@ void Wire::setTailConnection(Wire* newWire) {
     tailConnection = newWire;
 }
 
-Direction Wire::getDirection() {
+Wire::Direction Wire::getDirection() {
     return direction;
 }
 
-void Wire::setDirection(Direction newDirection) {
+void Wire::setDirection(Wire::Direction newDirection) {
     direction = newDirection;
 }
