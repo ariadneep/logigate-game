@@ -156,9 +156,6 @@ void MainWindow::paintWire(int x, int y, Direction direction, QString tag) {
     // Set default color. This color is retained if the tag is not A or B.
     QString color = "green";
 
-    //TODO: temporary. Wire keeps returning a NONE direction??
-    direction = Direction::EW;
-
     // Holds the current wire texture to be drawn.
     QPixmap wirePixmap;
 
@@ -179,9 +176,6 @@ void MainWindow::paintWire(int x, int y, Direction direction, QString tag) {
         boxWidth, boxHeight,
         Qt::KeepAspectRatio,
         Qt::FastTransformation);
-
-    //TODO: this returns NONE when direction is not set by default.
-    //qDebug() << "Is direction NONE? " << (direction == Direction::NONE);
 
 
     // Set up the painter and link to wireLayer.
