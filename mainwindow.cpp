@@ -15,9 +15,24 @@ MainWindow::MainWindow(QWidget *parent)
     gameBoardY = 0;
     newPosition = true;
 
-    /*
-     * SETTING UP BOX2D
-     */
+    // Initialize pixmaps
+    loadWirePixmaps();
+    int boardWidth = ui->gameBoard->width();
+    int boardHeight = ui->gameBoard->height();
+
+    wireLayer = QPixmap(boardWidth, boardHeight);
+    gateLayer = QPixmap(boardWidth, boardHeight);
+    nodeLayer = QPixmap(boardWidth, boardHeight);
+    obstacleLayer = QPixmap(boardWidth, boardHeight);
+    backgroundLayer = QPixmap(":/sprites/grid-12x8.png");
+
+    wireLayer.fill(Qt::transparent);
+    gateLayer.fill(Qt::transparent);
+    nodeLayer.fill(Qt::transparent);
+    obstacleLayer.fill(Qt::transparent);
+
+
+    // SETTING UP BOX2D
     graphicsScene = new QGraphicsScene(this);
     graphicsView = new QGraphicsView(graphicsScene, this);
     graphicsView->setFixedSize(800,600);
@@ -79,6 +94,33 @@ void MainWindow::updateWorld() {
     graphicsView->viewport()->repaint();
 }
 
+void MainWindow::loadWirePixmaps() {
+    //bue wires
+    wirePixmaps.insert({Direction::EW, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_EW.png"));
+    wirePixmaps.insert({Direction::NE, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_NE.png"));
+    wirePixmaps.insert({Direction::NS, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_NS.png"));
+    wirePixmaps.insert({Direction::NW, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_NW.png"));
+    wirePixmaps.insert({Direction::SE, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_SE.png"));
+    wirePixmaps.insert({Direction::SW, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_SW.png"));
+
+    //red wires
+    wirePixmaps.insert({Direction::EW, "red"}, QPixmap(":/sprites/red_wires/red_wire_EW.png"));
+    wirePixmaps.insert({Direction::NE, "red"}, QPixmap(":/sprites/red_wires/red_wire_NE.png"));
+    wirePixmaps.insert({Direction::NS, "red"}, QPixmap(":/sprites/red_wires/red_wire_NS.png"));
+    wirePixmaps.insert({Direction::NW, "red"}, QPixmap(":/sprites/red_wires/red_wire_NW.png"));
+    wirePixmaps.insert({Direction::SE, "red"}, QPixmap(":/sprites/red_wires/red_wire_SE.png"));
+    wirePixmaps.insert({Direction::SW, "red"}, QPixmap(":/sprites/red_wires/red_wire_SW.png"));
+
+    //greed wires
+    wirePixmaps.insert({Direction::EW, "green"}, QPixmap(":/sprites/green_wires/green_wire_EW.png"));
+    wirePixmaps.insert({Direction::NE, "green"}, QPixmap(":/sprites/green_wires/green_wire_NE.png"));
+    wirePixmaps.insert({Direction::NS, "green"}, QPixmap(":/sprites/green_wires/green_wire_NS.png"));
+    wirePixmaps.insert({Direction::NW, "green"}, QPixmap(":/sprites/green_wires/green_wire_NW.png"));
+    wirePixmaps.insert({Direction::SE, "green"}, QPixmap(":/sprites/green_wires/green_wire_SE.png"));
+    wirePixmaps.insert({Direction::SW, "green"}, QPixmap(":/sprites/green_wires/green_wire_SW.png"));
+
+}
+
 void MainWindow::repaint() {
     qDebug() << "repainting the board";
 
@@ -98,7 +140,22 @@ void MainWindow::repaint() {
 }
 
 void MainWindow::paintWire(int x, int y) {
-    qDebug() << "this is a wire!";
+    Wire* wire = currentLevel->getWire(x, y);
+    Direction direction = wire->getDirection();
+    QString color = "green";
+    QPixmap wirePixmap;
+
+    //change the color to red if the wire tag is A
+    if(wire && !wire->getTag().isNull() && wire->getTag() == "A")
+        color = "red";
+    //change the color to blue if the wire tag is B
+    else if(wire && !wire->getTag().isNull() && wire->getTag() == "B")
+        color = "blue";
+
+    qDebug() << "this is a " << color << "wire!";
+
+    wirePixmap = wirePixmaps.value({direction, color});
+
 }
 
 void MainWindow::paintGate(int x, int y) {

@@ -85,6 +85,25 @@ private:
     int gameBoardY;
     bool newPosition;
 
+    //pixmap layers
+    QPixmap wireLayer;
+    QPixmap gateLayer;
+    QPixmap nodeLayer;
+    QPixmap obstacleLayer;
+    QPixmap backgroundLayer;
+
+    /**
+     * @brief wirePixmaps - Holds the wire pixmaps with direction-color pairs as keys
+     * and image Pixmaps as values.
+     */
+    QHash<QPair<Direction, QString>, QPixmap> wirePixmaps;
+
+    /**
+     * @brief loadWirePixmaps - Helper method to load all the pixmaps
+     * for the wires.
+     */
+    void loadWirePixmaps();
+
     /**
      * @brief repaint - Redraws the whole board based on the current level's data.
      *  Reflects backend updates in the frontend.

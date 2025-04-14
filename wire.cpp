@@ -6,6 +6,7 @@ Wire::Wire(QObject *parent)
     headConnection = nullptr;
     tailConnection = nullptr;
     direction = Direction::NONE;
+    tag = "";
 }
 
 Wire::~Wire() {
