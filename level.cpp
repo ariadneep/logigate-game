@@ -34,6 +34,14 @@ void Level::drawWire(int x, int y, QString tag) {
         Wire* downWire = getWire(x, y + 1);
         Wire* leftWire = getWire(x - 1, y);
 
+        // Debugging:
+        if (upWire != nullptr) {
+            qDebug() << "upWire != nullptr passed";
+            if (upWire->getTag() == tag) {
+                qDebug() << "upWire->getTag() == tag passed";
+            }
+        }
+
         // Check the above component:
         if (upWire != nullptr && upWire->getTag() == tag
             && !upWire->isFullyConnected()) {
@@ -154,6 +162,8 @@ void Level::drawWire(int x, int y, QString tag) {
                 break;
             }
         }
+        else
+            qDebug() << "No new wire. Return.";
 
         // add checks for gates
     }
@@ -161,21 +171,33 @@ void Level::drawWire(int x, int y, QString tag) {
 
         // Is this wire directly connected to an incomplete end?
         // If so, "go back" one wire.
-        if (currentWire->getTailConnection() == nullptr) {
-            Wire* tempPointer = currentWire;
-            currentWire = currentWire->getHeadConnection();
-            currentWire->setTailConnection(nullptr);
-            wireGrid[y * WIDTH + x] = nullptr;
-            delete tempPointer;
+        if (currentWire->getTailConnection()->getTailConnection() == nullptr) {
+            qDebug() << "deleted wire at " << x << ", " << y;
+            removeTail(x, y, currentWire);
         }
     }
 
     qDebug() << "//////////////";
 }
 
+void Level::removeTail(int x, int y, Wire* currentWire) {
+    Wire* markedWire = currentWire->getTailConnection();
+    if (getWire(x, y - 1) == markedWire)
+        wireGrid[(y - 1) * WIDTH + x] = nullptr;
+    else if (getWire(x + 1, y) == markedWire)
+        wireGrid[y * WIDTH + (x + 1)] = nullptr;
+    else if (getWire(x, y + 1) == markedWire)
+        wireGrid[(y + 1) * WIDTH + x] = nullptr;
+    else if (getWire(x - 1, y) == markedWire)
+        wireGrid[y * WIDTH + (x - 1)] = nullptr;
+
+    currentWire->setTailConnection(nullptr);
+}
+
 Wire* Level::getWire(int x, int y) {
     if (x < 0 || x > WIDTH || y < 0 || y > HEIGHT)
         return nullptr;
+    qDebug() << "getWire done";
     return wireGrid[y * WIDTH + x];
 }
 
