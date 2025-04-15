@@ -56,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent)
     // \/ CHANGE \/
     currentTag = "a";
     currentLevel->setWire(0, 0, currentTag);
+    currentLevel->setNode(0, 3, currentTag);
 
     // World timer
     connect(timer, &QTimer::timeout, this, &MainWindow::updateWorld);
