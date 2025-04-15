@@ -195,15 +195,11 @@ private:
      */
     void wireCheck(Wire* currentWire, Wire* checkingWire);
 
+    void wireConnect(int x, int y, QString tag, Wire* currentWire);
+
+    void wireRemove(Wire* currentWire);
+
     void setWire(int x, int y, Wire* newWire);
-  
-    /**
-     * @brief removeTail
-     * @param x
-     * @param y
-     * @param currentWire
-     */
-    void removeTail(int x, int y, Wire* currentWire);
 
     /**
      * @brief addGate - Adds a gate at the specified x and y position into the level.
