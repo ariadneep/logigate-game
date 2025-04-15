@@ -20,10 +20,12 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
 #include "gridcomponent.h"
+#include "wire.h"
 
 enum class NodeType {
     ROOT, END
 };
+
 
 class Node : public GridComponent {
 
@@ -37,7 +39,7 @@ public:
      * @param yPos - the y-coordinate of the grid.
      * @param parent - The parent object.
      */
-    explicit Node(QString& tag, NodeType nodeType, QGraphicsScene* graphicsScene, int xPos, int yPos, QObject *parent = nullptr);
+    explicit Node(QObject *parent = nullptr);
 
     /**
      * Destructor for the Node class.
@@ -50,6 +52,12 @@ public:
      * @return A Operator enum.
      */
     GridComponent::Type getType() override;
+
+    /**
+     * @brief setTag
+     * @param newTag
+     */
+    void setTag(QString newTag);
 
     /**
      * @brief getTag - The node's tag.
@@ -117,14 +125,9 @@ private:
     QGraphicsPixmapItem* sprite;
 
     /**
-     * @brief xPos - The node's x-coordinate in the grid.
+     * @brief direction
      */
-    int xPos;
-
-    /**
-     * @brief yPos - The node's y-coordinate in the grid.
-     */
-    int yPos;
+    Direction direction;
 };
 
 #endif // NODE_H

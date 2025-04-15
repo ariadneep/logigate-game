@@ -1,24 +1,30 @@
 #include "node.h"
 
-Node::Node(QString& tag, NodeType nodeType, QGraphicsScene* graphicsScene, int xPos, int yPos, QObject *parent)
-    : GridComponent{parent}, tag(tag), signal(false), nodeType(nodeType), sprite(nullptr), xPos(xPos), yPos(yPos)
+Node::Node(QObject *parent)
+    : GridComponent{parent}
 {
-    QString spritePath;
-    if (nodeType == NodeType::ROOT) {
-        if(tag == "A") {
-            spritePath = ":/sprites/Sprites/red_wires/red_button_down.png";
-        }
-        if(tag == "B") {
-            //BLUE WIRE PATH HERE
-        }
-    }
+    signal = true;
+    // current code has been commented out because it used parameters that got deleted --
+    // I'm not too sure how to make this working again without adding back some of the params
+
+    // QString spritePath;
+    // if (nodeType == NodeType::ROOT) {
+    //     if(tag == "A") {
+    //         spritePath = ":/sprites/Sprites/red_wires/red_button_down.png";
+    //     }
+    //     if(tag == "B") {
+    //         //BLUE WIRE PATH HERE
+    //     }
+    // }
+
+
 
     /*
      * Add the sprite into the scene at the grid x and y-coordinates.
      */
-    sprite = new QGraphicsPixmapItem(QPixmap(spritePath));
-    sprite->setPos(xPos, yPos);
-    graphicsScene->addItem(sprite);
+    // sprite = new QGraphicsPixmapItem(QPixmap(spritePath));
+    // sprite->setPos(xPos, yPos);
+    // graphicsScene->addItem(sprite);
 }
 
 Node::~Node() {
@@ -27,6 +33,10 @@ Node::~Node() {
 
 GridComponent::Type Node::getType() {
     return GridComponent::Type::NODE;
+}
+
+void Node::setTag(QString newTag) {
+    tag = newTag;
 }
 
 QString Node::getTag() {
@@ -49,6 +59,5 @@ bool Node::checkSignal(QString& tag, bool signal) {
     if(nodeType != NodeType::END) {
         return false;
     }
-
     return (tag == this->tag && signal);
 }

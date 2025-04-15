@@ -99,6 +99,18 @@ public:
      */
     void setDirection(Direction newDirection);
 
+    /**
+     * @brief getSignal - gets the signal
+     * @return Boolean value of signal
+     */
+    bool getSignal();
+
+    /**
+     * @brief setSignal
+     * @param newSignal
+     */
+    void setSignal(bool newSignal);
+
 private:
     /**
      * @brief tag - represents the wire ID that this wire is a part of.
@@ -150,6 +162,11 @@ private:
      */
     Direction direction;
 
+    /**
+     * @brief signal - The signal value of a wire (i.e. if the wire has
+     * been hit with a NOT block)
+     */
+    bool signal;
 };
 
 #endif // WIRE_H

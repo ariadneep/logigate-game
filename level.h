@@ -99,12 +99,28 @@ public:
     Node* getNode(int x, int y);
 
     /**
+     * @brief setNode TEMP METHOD, REMOVE LATER
+     * @param x
+     * @param y
+     */
+    void setNode(int x, int y, QString tag);
+
+    /**
      * @brief getObstacle
      * @param x
      * @param y
      * @return
      */
     Obstacle* getObstacle(int x, int y);
+
+    /**
+     * @brief This Checks the surrounding nodes and then applies
+     * the needed transformations to the pointer wire
+     * @param x
+     * @param y
+     * @param currentWire
+     */
+    void nodeCheck(int x, int y, Wire* currentWire);
 
     /**
      * @brief updateLevel
@@ -156,7 +172,7 @@ private:
     /**
      * @brief nodeGrid
      */
-    Node* nodeGrid;
+    Node* nodeGrid[WIDTH * HEIGHT];
 
     /**
      * @brief obstacleGrid
