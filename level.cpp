@@ -5,18 +5,29 @@
 enum class Component;
 class Wire;
 
-Level::Level(QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent)
-    : QObject{parent}, graphicsScene(graphicsScene), box2DWorld(box2DWorld), isVictory(false) {
-    //levelNum = 0;
+Level::Level(int levelNum, QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent)
+    : QObject{parent},box2DWorld(box2DWorld), graphicsScene(graphicsScene), isVictory(false) {
+
     confetti = new Confetti(graphicsScene, box2DWorld);
     // Initializes the grids to nullptrs.
-    for (int i = 0; i < WIDTH * HEIGHT; i++)
+    for (int i = 0; i < WIDTH * HEIGHT; i++) {
         wireGrid[i] = nullptr;
+        gateGrid[i] = nullptr;
+        nodeGrid[i] = nullptr;
+        obstacleGrid[i] = nullptr;
+    }
+
+    //Setup the level based on the chosen level.
+    levelSetup(levelNum);
 }
 
 Level::~Level() {
-    for (int i = 0; i < WIDTH * HEIGHT; i++)
+    for (int i = 0; i < WIDTH * HEIGHT; i++) {
         delete wireGrid[i];
+        delete gateGrid[i];
+        delete nodeGrid[i];
+        delete obstacleGrid[i];
+    }
     delete confetti;
 }
 
@@ -25,8 +36,9 @@ void Level::drawWire(int x, int y, QString tag) {
     qDebug() << "Checked at (" << x << ", " << y << ")";
 
     Wire* currentWire = getWire(x, y);
+    Node* currentNode = getNode(x, y);
 
-    if (currentWire == nullptr) {
+    if (currentWire == nullptr && currentNode == nullptr) {
 
         if (x < 0 || x > WIDTH || y < 0 || y > HEIGHT)
             return;
@@ -37,7 +49,7 @@ void Level::drawWire(int x, int y, QString tag) {
         Wire* rightWire = getWire(x + 1, y);
         Wire* downWire = getWire(x, y + 1);
         Wire* leftWire = getWire(x - 1, y);
-
+      
         // Debugging:
         if (upWire != nullptr) {
             qDebug() << "upWire != nullptr passed";
@@ -51,6 +63,7 @@ void Level::drawWire(int x, int y, QString tag) {
             && !upWire->isFullyConnected()) {
 
             qDebug() << "Created new wire, connected to above.";
+            nodeCheck(x, y, upWire);
             currentWire = new Wire();
             currentWire->setTag(tag);
             currentWire->setHeadConnection(upWire);
@@ -79,6 +92,7 @@ void Level::drawWire(int x, int y, QString tag) {
         else if (rightWire != nullptr && rightWire->getTag() == tag
                    && !rightWire->isFullyConnected()) {
 
+            nodeCheck(x, y, rightWire);
             qDebug() << "Created new wire, connected to right.";
             currentWire = new Wire();
             currentWire->setTag(tag);
@@ -108,6 +122,10 @@ void Level::drawWire(int x, int y, QString tag) {
         else if (downWire != nullptr && downWire->getTag() == tag
                    && !downWire->isFullyConnected()) {
 
+            // run node check, and see if there's a node to connect to.
+            if(nodeCheck(x, y, downWire)){
+                victory();
+            }
             qDebug() << "Created new wire, connected to below.";
             currentWire = new Wire();
             currentWire->setTag(tag);
@@ -136,8 +154,10 @@ void Level::drawWire(int x, int y, QString tag) {
         // Check the left component:
         else if (leftWire != nullptr && leftWire->getTag() == tag
                    && !leftWire->isFullyConnected()) {
-
             qDebug() << "Created new wire, connected to left.";
+            nodeCheck(x, y, leftWire);
+
+
             currentWire = new Wire();
             currentWire->setTag(tag);
             currentWire->setHeadConnection(leftWire);
@@ -167,7 +187,6 @@ void Level::drawWire(int x, int y, QString tag) {
         // add checks for gates
     }
     else {
-
         // Is this wire directly connected to an incomplete end?
         // If so, "go back" one wire.
         if (currentWire->getTailConnection() != nullptr
@@ -201,10 +220,63 @@ void Level::drawWire(int x, int y, QString tag) {
     qDebug() << "//////////////";
 }
 
+bool Level::nodeCheck(int x, int y, Wire* currentWire) {
+    Node* upNode = getNode(x, y - 1);
+    Node* rightNode = getNode(x + 1, y);
+    Node* downNode = getNode(x, y + 1);
+    Node* leftNode = getNode(x - 1, y);
+
+    QString currentTag = currentWire->getTag();
+    bool currentSignal = currentWire->getSignal();
+    bool wasChanged = false;
+
+    if (upNode != nullptr && upNode->getTag() == currentTag && upNode->getSignal() == currentSignal) {
+        qDebug() << "Node detected above, and meets all requirements to link!";
+        upNode->setConnected(true);
+        // TODO: ACTUALLY SET UP CONNECTION
+        wasChanged = true;
+    }
+    else if (downNode != nullptr && downNode->getTag() == currentTag && downNode->getSignal() == currentSignal) {
+        qDebug() << "Node detected below, and meets all requirements to link!";
+        downNode->setConnected(true);
+        // TODO: ACTUALLY SET UP CONNECTION
+        wasChanged = true;
+    }
+    else if (rightNode != nullptr && rightNode->getTag() == currentTag && rightNode->getSignal() == currentSignal) {
+        qDebug() << "Node detected to the right, and meets all requirements to link!";
+        rightNode->setConnected(true);
+        // TODO: ACTUALLY SET UP CONNECTION
+        wasChanged = true;
+    }
+    else if (leftNode != nullptr && leftNode->getTag() == currentTag && leftNode->getSignal() == currentSignal) {
+        qDebug() << "Node detected to the left, and meets all requirements to link!";
+        leftNode->setConnected(true);
+        // TODO: ACTUALLY SET UP CONNECTION
+        wasChanged = true;
+    }
+    // return wasChanged -- meaning this method will return true if the wire happened to
+    // connect to a node.
+    return wasChanged;
+ }
+
+void Level::removeTail(int x, int y, Wire* currentWire) {
+    Wire* markedWire = currentWire->getTailConnection();
+    if (getWire(x, y - 1) == markedWire)
+        wireGrid[(y - 1) * WIDTH + x] = nullptr;
+    else if (getWire(x + 1, y) == markedWire)
+        wireGrid[y * WIDTH + (x + 1)] = nullptr;
+    else if (getWire(x, y + 1) == markedWire)
+        wireGrid[(y + 1) * WIDTH + x] = nullptr;
+    else if (getWire(x - 1, y) == markedWire)
+        wireGrid[y * WIDTH + (x - 1)] = nullptr;
+
+    currentWire->setTailConnection(nullptr);
+}
+
 Wire* Level::getWire(int x, int y) {
-    if (x < 0 || x > WIDTH || y < 0 || y > HEIGHT)
+    if (x < 0 || x > WIDTH || y < 0 || y > HEIGHT) {
         return nullptr;
-    qDebug() << "getWire done";
+    }
     return wireGrid[y * WIDTH + x];
 }
 
@@ -215,15 +287,24 @@ void Level::setWire(int x, int y, Wire* newWire) {
 }
 
 Gate* Level::getGate(int x, int y) {
-    return nullptr;
+    if (x < 0 || x > WIDTH || y < 0 || y > HEIGHT) {
+        return nullptr;
+    }
+    return gateGrid[y * WIDTH + x];
 }
 
 Node* Level::getNode(int x, int y) {
-    return nullptr;
+    if (x < 0 || x > WIDTH || y < 0 || y > HEIGHT) {
+        return nullptr;
+    }
+    return nodeGrid[y * WIDTH + x];
 }
 
 Obstacle* Level::getObstacle(int x, int y) {
-    return nullptr;
+    if (x < 0 || x > WIDTH || y < 0 || y > HEIGHT) {
+        return nullptr;
+    }
+    return obstacleGrid[y * WIDTH + x];
 }
 
 void Level::setWireTemp(int x, int y, QString tag) {
@@ -233,13 +314,27 @@ void Level::setWireTemp(int x, int y, QString tag) {
     wireGrid[y * WIDTH + x] = addWire;
 }
 
+void Level::setNode(int x, int y, QString tag) {
+    Node* newNode = new Node();
+    newNode->setTag(tag);
+    nodeGrid[y * WIDTH + x] = newNode;
+}
+
 void Level::victory() {
     /*
-     * TESTING PURPOSES, CHANGE LATER.
+     * erm... should we change this to say "victoryCheck"?
+     * probably
      */
-    if(!isVictory) {
-        isVictory = true;
+    bool victory = true;
+    for (int i = 0; i < WIDTH * HEIGHT; i++) {
+        if (nodeGrid[i] != nullptr && nodeGrid[i]->getConnected() == false) {
+            qDebug() << "was false!";
+            victory = false;
+        }
+    }
+    if(victory) {
         spawnConfetti();
+        isVictory = true;
     }
 }
 
@@ -248,12 +343,97 @@ void Level::spawnConfetti() {
 }
 
 void Level::updateLevel() {
+    /*
+     * TODO: Change method to implement level-start up procedures such as
+     * where nodes and wires will be in level.
+     * Idea: Potentially delete method and move code into victory()?
+     */
     if (isVictory) {
         confetti->updateConfetti();
     }
 }
 
+void Level::levelSetup(int levelNum) {
+    if (levelNum == 1) {
+        /*
+         * TODO: Determine what our level setup will be for each level and use
+         * addObstacle, addNode, etc, to set up the level on the grid.
+         */
+    }
+
+    if(levelNum == 2) {
+
+    }
+
+    if(levelNum == 3) {
+
+    }
+
+    /*
+     * And ETC, based on how many levels we decide to have there will be more if-statements
+     * with hardcoded grid values of where to place obstacles, nodes, and etc.
+     */
+}
+
 void Level::removeConfetti() {
     confetti->clearConfetti();
     isVictory = false;
+}
+
+void Level::clearLevel() {
+    removeConfetti();
+
+    for(int i = 0; i < WIDTH * HEIGHT; i++) {
+        if (wireGrid[i]) {
+            delete wireGrid[i];
+            wireGrid[i] = nullptr;
+        }
+
+        if(gateGrid[i]) {
+            delete gateGrid[i];
+            gateGrid[i] = nullptr;
+        }
+
+        if(nodeGrid[i]) {
+            delete nodeGrid[i];
+            nodeGrid[i] = nullptr;
+        }
+
+        if(obstacleGrid[i]) {
+            delete obstacleGrid[i];
+            obstacleGrid[i] = nullptr;
+        }
+    }
+
+    isVictory = false;
+}
+
+
+void Level::addGate(int x, int y, Operator gateType) {
+    if(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
+        if(gateGrid[y * WIDTH + x] == nullptr) {
+            gateGrid[y * WIDTH + x] = new Gate(gateType, this);
+        }
+    }
+}
+
+void Level::addNode(int x, int y, QString& tag, NodeType nodeType, bool signal) {
+    if(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
+        if(nodeGrid[y * WIDTH + x] == nullptr) {
+            nodeGrid[y * WIDTH + x] = new Node(this);
+            // TODO: refactor parameters;
+            // nodeGrid[y * WIDTH + x] = new Node(tag, nodeType, graphicsScene, x, y, this);
+            if(nodeType == NodeType::ROOT) {
+                nodeGrid[y * WIDTH + x]->setSignal(signal);
+            }
+        }
+    }
+}
+
+void Level::addObstacle(int x, int y) {
+    if(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
+        if(obstacleGrid[y * WIDTH + x] == nullptr) {
+            obstacleGrid[y * WIDTH + x] = new Obstacle(this);
+        }
+    }
 }
