@@ -18,7 +18,8 @@ MainWindow::MainWindow(QWidget *parent)
     // Initialize pixmaps
     loadWirePixmaps();
     loadNodePixmaps();
-
+    loadGatePixmaps();
+    
     int boardWidth = ui->gameBoard->width();
     int boardHeight = ui->gameBoard->height();
 
@@ -161,7 +162,7 @@ void MainWindow::repaint() {
             if(currentWire)
                 paintWire(x, y, currentWire->getDirection(), currentWire->getTag());
             if(currentGate)
-                paintGate(x, y);
+                paintGate(x, y, currentGate->getOperator());
             if(currentNode)
                 paintNode(x, y, currentNode->getTag());
             if(currentObstacle)
@@ -207,8 +208,40 @@ void MainWindow::paintWire(int x, int y, Wire::Direction direction, QString tag)
 
 }
 
-void MainWindow::paintGate(int x, int y) {
 
+void MainWindow::loadGatePixmaps() {
+    //greed AND gates
+    gatePixmaps.insert({Operator::AND, "green"}, QPixmap(":/sprites/green_wires/and_bottom_blue.png"));
+    gatePixmaps.insert({Operator::AND, "green"}, QPixmap(":/sprites/green_wires/and_bottom_noconnection.png"));
+    gatePixmaps.insert({Operator::AND, "green"}, QPixmap(":/sprites/green_wires/and_top_noconnection.png"));
+    gatePixmaps.insert({Operator::AND, "green"}, QPixmap(":/sprites/green_wires/and_top_red.png"));
+
+}
+
+void MainWindow::paintGate(int x, int y, Operator op) {
+    // Holds the current gate texture to be drawn.
+    QPixmap gatePixmap;
+    // Grab the UI measurements for scaling.
+    int boxWidth = ui->gameBoard->width() / currentLevel->WIDTH;
+    int boxHeight = ui->gameBoard->height() / currentLevel->HEIGHT;
+    int uiX = x * boxWidth;
+    int uiY = y * boxHeight;
+
+    // Set the current gate texture, scaled relative to the.
+    gatePixmap = gatePixmaps.value({op, "AND"}).scaled(
+        boxWidth, boxHeight,
+        Qt::KeepAspectRatio,
+        Qt::FastTransformation);
+
+
+    // Set up the painter and link to wireLayer.
+    QPainter wirePainter(&wireLayer);
+
+    // Draw to the painter.
+    wirePainter.drawPixmap(uiX, uiY, boxWidth, boxHeight, gatePixmap);
+
+    // Draw to the UI.
+    ui->gameBoard->setPixmap(wireLayer);
 }
 
 void MainWindow::paintNode(int x, int y, QString tag) {

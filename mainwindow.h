@@ -105,6 +105,10 @@ private:
      */
     QHash<QString, QPixmap> nodePixmaps;
 
+     * @brief wirePixmaps - Holds the Gate pixmaps with direction-color pairs as keys
+     * and image Pixmaps as values.
+     */
+    QHash<QPair<Operator, QString>, QPixmap> gatePixmaps;
 
     /**
      * @brief loadWirePixmaps - Helper method to load all the pixmaps
@@ -117,6 +121,11 @@ private:
      * for the nodes.
      */
     void loadNodePixmaps();
+
+    /**
+     * @brief loadGatePixmaps - Hellper method to load all the gates to pixmaps
+     */
+    void loadGatePixmaps();
 
     /**
      * @brief repaint - Redraws the whole board based on the current level's data.
@@ -140,7 +149,7 @@ private:
      * @param x - the horizontal grid square index to draw the gate on.
      * @param y - the vertical grid square index to draw the gate on.
      */
-    void paintGate(int x, int y);
+    void paintGate(int x, int y, Operator op);
 
     /**
      * @brief paintNode - paints a node with the appropriate attributes at the
