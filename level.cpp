@@ -5,18 +5,29 @@
 enum class Component;
 class Wire;
 
-Level::Level(QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent)
-    : QObject{parent}, graphicsScene(graphicsScene), box2DWorld(box2DWorld), isVictory(false) {
-    //levelNum = 0;
+Level::Level(int levelNum, QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent)
+    : QObject{parent},box2DWorld(box2DWorld), graphicsScene(graphicsScene), isVictory(false) {
+
     confetti = new Confetti(graphicsScene, box2DWorld);
     // Initializes the grids to nullptrs.
-    for (int i = 0; i < WIDTH * HEIGHT; i++)
+    for (int i = 0; i < WIDTH * HEIGHT; i++) {
         wireGrid[i] = nullptr;
+        gateGrid[i] = nullptr;
+        nodeGrid[i] = nullptr;
+        obstacleGrid[i] = nullptr;
+    }
+
+    //Setup the level based on the chosen level.
+    levelSetup(levelNum);
 }
 
 Level::~Level() {
-    for (int i = 0; i < WIDTH * HEIGHT; i++)
+    for (int i = 0; i < WIDTH * HEIGHT; i++) {
         delete wireGrid[i];
+        delete gateGrid[i];
+        delete nodeGrid[i];
+        delete obstacleGrid[i];
+    }
     delete confetti;
 }
 
@@ -195,22 +206,32 @@ void Level::removeTail(int x, int y, Wire* currentWire) {
 }
 
 Wire* Level::getWire(int x, int y) {
-    if (x < 0 || x > WIDTH || y < 0 || y > HEIGHT)
+    if (x < 0 || x > WIDTH || y < 0 || y > HEIGHT) {
         return nullptr;
+    }
     qDebug() << "getWire done";
     return wireGrid[y * WIDTH + x];
 }
 
 Gate* Level::getGate(int x, int y) {
-    return nullptr;
+    if (x < 0 || x > WIDTH || y < 0 || y > HEIGHT) {
+        return nullptr;
+    }
+    return gateGrid[y * WIDTH + x];
 }
 
 Node* Level::getNode(int x, int y) {
-    return nullptr;
+    if (x < 0 || x > WIDTH || y < 0 || y > HEIGHT) {
+        return nullptr;
+    }
+    return nodeGrid[y * WIDTH + x];
 }
 
 Obstacle* Level::getObstacle(int x, int y) {
-    return nullptr;
+    if (x < 0 || x > WIDTH || y < 0 || y > HEIGHT) {
+        return nullptr;
+    }
+    return obstacleGrid[y * WIDTH + x];
 }
 
 void Level::setWire(int x, int y, QString tag) {
@@ -235,12 +256,95 @@ void Level::spawnConfetti() {
 }
 
 void Level::updateLevel() {
+    /*
+     * TODO: Change method to implement level-start up procedures such as
+     * where nodes and wires will be in level.
+     * Idea: Potentially delete method and move code into victory()?
+     */
     if (isVictory) {
         confetti->updateConfetti();
     }
 }
 
+void Level::levelSetup(int levelNum) {
+    if (levelNum == 1) {
+        /*
+         * TODO: Determine what our level setup will be for each level and use
+         * addObstacle, addNode, etc, to set up the level on the grid.
+         */
+    }
+
+    if(levelNum == 2) {
+
+    }
+
+    if(levelNum == 3) {
+
+    }
+
+    /*
+     * And ETC, based on how many levels we decide to have there will be more if-statements
+     * with hardcoded grid values of where to place obstacles, nodes, and etc.
+     */
+}
+
 void Level::removeConfetti() {
     confetti->clearConfetti();
     isVictory = false;
+}
+
+void Level::clearLevel() {
+    removeConfetti();
+
+    for(int i = 0; i < WIDTH * HEIGHT; i++) {
+        if (wireGrid[i]) {
+            delete wireGrid[i];
+            wireGrid[i] = nullptr;
+        }
+
+        if(gateGrid[i]) {
+            delete gateGrid[i];
+            gateGrid[i] = nullptr;
+        }
+
+        if(nodeGrid[i]) {
+            delete nodeGrid[i];
+            nodeGrid[i] = nullptr;
+        }
+
+        if(obstacleGrid[i]) {
+            delete obstacleGrid[i];
+            obstacleGrid[i] = nullptr;
+        }
+    }
+
+    isVictory = false;
+}
+
+
+void Level::addGate(int x, int y, Operator gateType) {
+    if(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
+        if(gateGrid[y * WIDTH + x] == nullptr) {
+            gateGrid[y * WIDTH + x] = new Gate(gateType, this);
+        }
+    }
+}
+
+void Level::addNode(int x, int y, QString& tag, NodeType nodeType, bool signal) {
+    if(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
+        if(nodeGrid[y * WIDTH + x] == nullptr) {
+            nodeGrid[y * WIDTH + x] = new Node(tag, nodeType, graphicsScene, x, y, this);
+            if(nodeType == NodeType::ROOT) {
+                nodeGrid[y * WIDTH + x]->setSignal(signal);
+            }
+        }
+    }
+}
+
+void Level::addObstacle(int x, int y) {
+    if(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
+        if(obstacleGrid[y * WIDTH + x] == nullptr) {
+            obstacleGrid[y * WIDTH + x] = new Obstacle(this);
+        }
+    }
 }

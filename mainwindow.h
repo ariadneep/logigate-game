@@ -190,5 +190,10 @@ private:
      * @brief frameCount - Manages QTimer step counts.
      */
     int frameCount;
+
+    /**
+     * @brief levelNum - The current level.
+     */
+    int levelNum;
 };
 #endif // MAINWINDOW_H

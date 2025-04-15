@@ -5,7 +5,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow), box2DWorld(nullptr), box2DBody(nullptr), timer(new QTimer(this)), frameCount(0)
+    , ui(new Ui::MainWindow), box2DWorld(nullptr), box2DBody(nullptr), timer(new QTimer(this)), frameCount(0), levelNum(0)
 {
     ui->setupUi(this);
     setMouseTracking(true);
@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent)
     groundBox.SetAsBox(9.5f, 0.1f);
     groundBody->CreateFixture(&groundBox, 0.0f);
 
-    currentLevel = new Level(graphicsScene, box2DWorld, this);
+    currentLevel = new Level(levelNum, graphicsScene, box2DWorld, this);
 
     // \/ CHANGE \/
     currentTag = "a";
@@ -206,10 +206,12 @@ void MainWindow::paintObstacle(int x, int y) {
 
 void MainWindow::changeLevel() {
     if(currentLevel) {
-        currentLevel->removeConfetti();
+        currentLevel->clearLevel();
         delete currentLevel;
     }
-    currentLevel = new Level(graphicsScene, box2DWorld, this);
+    currentLevel = new Level(levelNum, graphicsScene, box2DWorld, this);
+
+    repaint();
 }
 
 // MOUSE EVENTS
