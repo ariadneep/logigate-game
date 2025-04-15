@@ -13,6 +13,7 @@
 
 #include <QObject>
 #include "gridcomponent.h"
+#include "node.h"
 
 /**
  * @brief The Direction enum should hold the direction
@@ -27,6 +28,8 @@
  * The first letter represents the vertical half and the
  * second represnts the horizontal half.
  */
+
+class Node;
 
 class Wire : public GridComponent {
 
@@ -101,6 +104,18 @@ public:
      */
     void setDirection(Direction newDirection);
 
+    /**
+     * @brief getSignal - gets the signal
+     * @return Boolean value of signal
+     */
+    bool getSignal();
+
+    /**
+     * @brief setSignal
+     * @param newSignal
+     */
+    void setSignal(bool newSignal);
+
 private:
     /**
      * @brief tag - represents the wire ID that this wire is a part of.
@@ -152,6 +167,18 @@ private:
      */
     Direction direction;
 
+    /**
+     * @brief signal - The signal value of a wire (i.e. if the wire has
+     * been hit with a NOT block)
+     */
+    bool signal;
+
+    /**
+     * @brief nodeEndConnection - this is a pointer to the end node connection, so
+     * it can be easily accessed in the wire class (in case you needed to move the
+     * wire and disconnect the node it was connected to)
+     */
+    Node* nodeEndConnection;
 };
 
 #endif // WIRE_H
