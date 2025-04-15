@@ -8,10 +8,12 @@ Wire::Wire(QObject *parent)
     headConnection = nullptr;
     tailConnection = nullptr;
     direction = Direction::NONE;
+
     // TODO: this signal means that the value the wire has is true
     // this might not always be true (i.e. if the wire starts from a
     // NOT gate
     signal = true;
+    tag = "";
 }
 
 Wire::~Wire() {
@@ -57,11 +59,11 @@ void Wire::setTailConnection(Wire* newWire) {
     tailConnection = newWire;
 }
 
-Direction Wire::getDirection() {
+Wire::Direction Wire::getDirection() {
     return direction;
 }
 
-void Wire::setDirection(Direction newDirection) {
+void Wire::setDirection(Wire::Direction newDirection) {
     direction = newDirection;
 }
 

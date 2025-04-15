@@ -5,7 +5,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow), box2DWorld(nullptr), box2DBody(nullptr), timer(new QTimer(this)), frameCount(0)
+    , ui(new Ui::MainWindow), box2DWorld(nullptr), box2DBody(nullptr), timer(new QTimer(this)), frameCount(0), levelNum(0)
 {
     ui->setupUi(this);
     setMouseTracking(true);
@@ -15,9 +15,24 @@ MainWindow::MainWindow(QWidget *parent)
     gameBoardY = 0;
     newPosition = true;
 
-    /*
-     * SETTING UP BOX2D
-     */
+    // Initialize pixmaps
+    loadWirePixmaps();
+    int boardWidth = ui->gameBoard->width();
+    int boardHeight = ui->gameBoard->height();
+
+    wireLayer = QPixmap(boardWidth, boardHeight);
+    gateLayer = QPixmap(boardWidth, boardHeight);
+    nodeLayer = QPixmap(boardWidth, boardHeight);
+    obstacleLayer = QPixmap(boardWidth, boardHeight);
+    backgroundLayer = QPixmap(":/sprites/grid-12x8.png");
+
+    wireLayer.fill(Qt::transparent);
+    gateLayer.fill(Qt::transparent);
+    nodeLayer.fill(Qt::transparent);
+    obstacleLayer.fill(Qt::transparent);
+
+
+    // SETTING UP BOX2D
     graphicsScene = new QGraphicsScene(this);
     graphicsView = new QGraphicsView(graphicsScene, this);
     graphicsView->setFixedSize(800,600);
@@ -36,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent)
     groundBox.SetAsBox(9.5f, 0.1f);
     groundBody->CreateFixture(&groundBox, 0.0f);
 
-    currentLevel = new Level(graphicsScene, box2DWorld, this);
+    currentLevel = new Level(levelNum, graphicsScene, box2DWorld, this);
 
     // \/ CHANGE \/
     currentTag = "a";
@@ -80,12 +95,124 @@ void MainWindow::updateWorld() {
     graphicsView->viewport()->repaint();
 }
 
+void MainWindow::loadWirePixmaps() {
+    //bue wires
+    wirePixmaps.insert({Wire::Direction::EW, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_EW.png"));
+    wirePixmaps.insert({Wire::Direction::NE, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_NE.png"));
+    wirePixmaps.insert({Wire::Direction::NS, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_NS.png"));
+    wirePixmaps.insert({Wire::Direction::NW, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_NW.png"));
+    wirePixmaps.insert({Wire::Direction::SE, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_SE.png"));
+    wirePixmaps.insert({Wire::Direction::SW, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_SW.png"));
+
+    //red wires
+    wirePixmaps.insert({Wire::Direction::EW, "red"}, QPixmap(":/sprites/red_wires/red_wire_EW.png"));
+    wirePixmaps.insert({Wire::Direction::NE, "red"}, QPixmap(":/sprites/red_wires/red_wire_NE.png"));
+    wirePixmaps.insert({Wire::Direction::NS, "red"}, QPixmap(":/sprites/red_wires/red_wire_NS.png"));
+    wirePixmaps.insert({Wire::Direction::NW, "red"}, QPixmap(":/sprites/red_wires/red_wire_NW.png"));
+    wirePixmaps.insert({Wire::Direction::SE, "red"}, QPixmap(":/sprites/red_wires/red_wire_SE.png"));
+    wirePixmaps.insert({Wire::Direction::SW, "red"}, QPixmap(":/sprites/red_wires/red_wire_SW.png"));
+
+    //greed wires
+    wirePixmaps.insert({Wire::Direction::EW, "green"}, QPixmap(":/sprites/green_wires/green_wire_EW.png"));
+    wirePixmaps.insert({Wire::Direction::NE, "green"}, QPixmap(":/sprites/green_wires/green_wire_NE.png"));
+    wirePixmaps.insert({Wire::Direction::NS, "green"}, QPixmap(":/sprites/green_wires/green_wire_NS.png"));
+    wirePixmaps.insert({Wire::Direction::NW, "green"}, QPixmap(":/sprites/green_wires/green_wire_NW.png"));
+    wirePixmaps.insert({Wire::Direction::SE, "green"}, QPixmap(":/sprites/green_wires/green_wire_SE.png"));
+    wirePixmaps.insert({Wire::Direction::SW, "green"}, QPixmap(":/sprites/green_wires/green_wire_SW.png"));
+
+}
+
+void MainWindow::repaint() {
+    qDebug() << "repainting the board";
+
+    //Must remove everything already in the wire layer.
+    wireLayer.fill(Qt::transparent);
+
+    //Pointers to hold values of the different grid objects.
+    Wire* currentWire;
+    Gate* currentGate;
+    Node* currentNode;
+    Obstacle* currentObstacle;
+
+    //checks for components at each box on the board.
+    for(int x = 0; x < currentLevel->WIDTH; x++) {
+        for( int y = 0; y < currentLevel->HEIGHT; y++) {
+
+            currentWire = currentLevel->getWire(x, y);
+            currentGate = currentLevel->getGate(x, y);
+            currentNode = currentLevel->getNode(x, y);
+            currentObstacle = currentLevel->getObstacle(x, y);
+
+            if(currentWire)
+                paintWire(x, y, currentWire->getDirection(), currentWire->getTag());
+            if(currentGate)
+                paintGate(x, y);
+            if(currentNode)
+                paintNode(x, y);
+            if(currentObstacle)
+                paintObstacle(x, y);
+        }
+    }
+
+}
+
+void MainWindow::paintWire(int x, int y, Wire::Direction direction, QString tag) {
+    // Set default color. This color is retained if the tag is not A or B.
+    QString color = "green";
+
+    // Holds the current wire texture to be drawn.
+    QPixmap wirePixmap;
+
+    // Change the color to red if the wire tag is A or blue if the wire tag is B.
+    if(!tag.isNull() && tag.toUpper() == "A")
+        color = "red";
+    else if(!tag.isNull() && tag.toUpper() == "B")
+        color = "blue";
+
+    // Grab the UI measurements for scaling.
+    int boxWidth = ui->gameBoard->width() / currentLevel->WIDTH;
+    int boxHeight = ui->gameBoard->height() / currentLevel->HEIGHT;
+    int uiX = x * boxWidth;
+    int uiY = y * boxHeight;
+
+    // Set the current wire texture, scaled relative to the.
+    wirePixmap = wirePixmaps.value({direction, color}).scaled(
+        boxWidth, boxHeight,
+        Qt::KeepAspectRatio,
+        Qt::FastTransformation);
+
+
+    // Set up the painter and link to wireLayer.
+    QPainter wirePainter(&wireLayer);
+
+    // Draw to the painter.
+    wirePainter.drawPixmap(uiX, uiY, boxWidth, boxHeight, wirePixmap);
+
+    // Draw to the UI.
+    ui->gameBoard->setPixmap(wireLayer);
+
+}
+
+void MainWindow::paintGate(int x, int y) {
+
+}
+
+void MainWindow::paintNode(int x, int y) {
+
+}
+
+void MainWindow::paintObstacle(int x, int y) {
+
+}
+
 void MainWindow::changeLevel() {
     if(currentLevel) {
-        currentLevel->removeConfetti();
+        currentLevel->clearLevel();
         delete currentLevel;
     }
-    currentLevel = new Level(graphicsScene, box2DWorld, this);
+    currentLevel = new Level(levelNum, graphicsScene, box2DWorld, this);
+
+    repaint();
 }
 
 // MOUSE EVENTS
@@ -117,6 +244,9 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event) {
     if (newPosition) {
         currentLevel->drawWire(gameBoardX, gameBoardY, currentTag);
         newPosition = false;
+
+        //redraw the board.
+        repaint();
     }
 }
 
@@ -147,6 +277,8 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
     if (newPosition) {
         currentLevel->drawWire(gameBoardX, gameBoardY, currentTag);
         newPosition = false;
+
+        repaint();
     }
 }
 
@@ -164,6 +296,5 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
     if(!isInGameBoard(mouseX, mouseY))
         return;
 
-    qDebug() << "Mouse released; sending signal from MAIN to MODEL to save new version.";
-    //emit saveNewVersion(sprite);
+    qDebug() << "Mouse released";
 }

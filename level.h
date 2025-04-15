@@ -28,11 +28,12 @@ class Level : public QObject {
 public:
     /**
      * @brief Level - Default constructor.
+     * @param levelNum - The level chosen to set up.
      * @param graphicsScene - The graphics scene
      * @param box2DWorld - The Box2D world.
      * @param parent - the parent object.
      */
-    explicit Level(QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent);
+    explicit Level(int levelNum, QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent);
 
     /**
      * Destructor for the level class.
@@ -123,14 +124,19 @@ public:
     bool nodeCheck(int x, int y, Wire* currentWire);
 
     /**
-     * @brief updateLevel
+     * @brief updateLevel - Updates the level to initial start-up procedure.
      */
     void updateLevel();
 
     /**
-     * @brief removeConfetti
+     * @brief removeConfetti - Removes confetti from the level.
      */
     void removeConfetti();
+
+    /**
+     * @brief clearLevel - Clears the level.
+     */
+    void clearLevel();
 
 private:
 
@@ -167,7 +173,7 @@ private:
     /**
      * @brief gateGrid
      */
-    Gate* gateGrid;
+    Gate* gateGrid[WIDTH * HEIGHT];
 
     /**
      * @brief nodeGrid
@@ -177,7 +183,7 @@ private:
     /**
      * @brief obstacleGrid
      */
-    Obstacle* obstacleGrid;
+    Obstacle* obstacleGrid[WIDTH * HEIGHT];
 
     /**
      * @brief wireCheck - Private helper to reduce the redundency in the wireDraw method.
@@ -189,10 +195,44 @@ private:
      */
     void wireCheck(Wire* currentWire, Wire* checkingWire);
 
-    // /**
-    //  * @brief levelNum - the id associated with this specific level
-    //  */
-    // const int levelNum;
+    /**
+     * @brief removeTail
+     * @param x
+     * @param y
+     * @param currentWire
+     */
+    void removeTail(int x, int y, Wire* currentWire);
+
+    /**
+     * @brief addGate - Adds a gate at the specified x and y position into the level.
+     * @param x - The x position.
+     * @param y - The y position.
+     * @param gateType - The type of gate.
+     */
+    void addGate(int x, int y, Operator gateType);
+
+    /**
+     * @brief addNode - Adds a node at the specified x and y position into the level.
+     * @param x - The x position.
+     * @param y - The y position.
+     * @param tag - The input node.
+     * @param nodeType - Specifies whether it is a ROOT or END node.
+     * @param signal - The output value, true or false.
+     */
+    void addNode(int x, int y, QString& tag, NodeType nodeType, bool signal);
+
+    /**
+     * @brief addObstacle - Adds an obstacle at x and y position into the level.
+     * @param x - The x position.
+     * @param y - The y position.
+     */
+    void addObstacle(int x, int y);
+
+    /**
+     * @brief levelSetup - Sets up the level based on the passed in level number.
+     * @param level - The level number chosen to set up.
+     */
+    void levelSetup(int level);
 
 signals:
     void update();

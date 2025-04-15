@@ -28,15 +28,17 @@
  * The first letter represents the vertical half and the
  * second represnts the horizontal half.
  */
-enum class Direction {
-    NONE, NS, EW, NW, NE, SW, SE
-};
 
 class Node;
 
 class Wire : public GridComponent {
 
 public:
+
+    enum class Direction {
+        NONE, NS, EW, NW, NE, SW, SE, N, S, E, W
+    };
+
     /**
      * @brief Wire - creates a wire object.
      * @param parent - the parent object
