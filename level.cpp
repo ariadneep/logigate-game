@@ -189,7 +189,7 @@ void Level::drawWire(int x, int y, QString tag) {
     else {
         // Is this wire directly connected to an incomplete end?
         // If so, "go back" one wire.
-        if (currentWire->getTailConnection() != nullptr
+        if (currentWire && currentWire->getTailConnection() != nullptr
             && currentWire->getTailConnection()->getTailConnection() == nullptr) {
             qDebug() << "deleted wire at " << x << ", " << y;
             int tailX = currentWire->getTailConnection()->getX();
