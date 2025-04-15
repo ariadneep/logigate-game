@@ -255,7 +255,6 @@ Wire* Level::getWire(int x, int y) {
     if (x < 0 || x > WIDTH || y < 0 || y > HEIGHT) {
         return nullptr;
     }
-    qDebug() << "getWire done";
     return wireGrid[y * WIDTH + x];
 }
 

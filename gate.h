@@ -13,7 +13,12 @@
 
 #include <QObject>
 #include "gridcomponent.h"
+#include "node.h"
 
+
+/**
+ * @brief The Operator enum - Enum class to hold the Operators
+ */
 enum class Operator {
     AND, OR, NOT
 };
