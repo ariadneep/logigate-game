@@ -105,6 +105,7 @@ private:
      */
     QHash<QString, QPixmap> nodePixmaps;
 
+    /**
      * @brief wirePixmaps - Holds the Gate pixmaps with direction-color pairs as keys
      * and image Pixmaps as values.
      */

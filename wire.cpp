@@ -67,4 +67,16 @@ void Wire::setDirection(Wire::Direction newDirection) {
     direction = newDirection;
 }
 
+int Wire::getX() {
+    return x;
+}
+
+int Wire::getY() {
+    return y;
+}
+
+void Wire::setPosition(int x, int y) {
+    this->x = x;
+    this->y = y;
+}
 
