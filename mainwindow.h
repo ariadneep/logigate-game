@@ -17,6 +17,7 @@
 #include <QGraphicsScene>
 
 #include "level.h"
+#include "node.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -99,6 +100,11 @@ private:
     QHash<QPair<Wire::Direction, QString>, QPixmap> wirePixmaps;
 
     /**
+     * @brief nodePixmaps - Holds the node pixmaps with color as a key
+     * and image Pixmaps as values.
+     */
+    QHash<QString, QPixmap> nodePixmaps;
+
      * @brief wirePixmaps - Holds the Gate pixmaps with direction-color pairs as keys
      * and image Pixmaps as values.
      */
@@ -109,6 +115,12 @@ private:
      * for the wires.
      */
     void loadWirePixmaps();
+
+    /**
+     * @brief loadNodePixmaps - Helper method to load all the pixmaps
+     * for the nodes.
+     */
+    void loadNodePixmaps();
 
     /**
      * @brief loadGatePixmaps - Hellper method to load all the gates to pixmaps
@@ -126,6 +138,8 @@ private:
      * given x, y position.
      * @param x - the horizontal grid square index to draw the wire on.
      * @param y - the vertical grid square index to draw the wire on.
+     * @param direction - the direction of the wire.
+     * @param tag - the tag associated with the wire color.
      */
     void paintWire(int x, int y, Wire::Direction direction, QString tag);
 
@@ -142,8 +156,9 @@ private:
      * given x, y position.
      * @param x - the horizontal grid square index to draw the node on.
      * @param y - the vertical grid square index to draw the node on.
+     * @param tag - the tag associated with the color of the Node.
      */
-    void paintNode(int x, int y);
+    void paintNode(int x, int y, QString tag);
 
     /**
      * @brief paintObstacle - paints an obstacle with the appropriate attributes at the
