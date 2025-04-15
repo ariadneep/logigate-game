@@ -17,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Initialize pixmaps
     loadWirePixmaps();
+    loadNodePixmaps();
+
     int boardWidth = ui->gameBoard->width();
     int boardHeight = ui->gameBoard->height();
 
@@ -54,9 +56,11 @@ MainWindow::MainWindow(QWidget *parent)
     currentLevel = new Level(levelNum, graphicsScene, box2DWorld, this);
 
     // \/ CHANGE \/
-    currentTag = "a";
+    currentTag = "A";
     currentLevel->setWire(0, 0, currentTag);
-    currentLevel->setNode(0, 3, currentTag);
+    currentLevel->setNode(0, 3, "C");
+
+    repaint();
 
     // World timer
     connect(timer, &QTimer::timeout, this, &MainWindow::updateWorld);
@@ -125,28 +129,20 @@ void MainWindow::loadWirePixmaps() {
 void MainWindow::loadNodePixmaps() {
     // Red buttons
     nodePixmaps.insert("red", QPixmap(":/sprites/red_wires/red_button_down.png"));
-    nodePixmaps.insert("red", QPixmap(":/sprites/red_wires/red_button_up.png"));
-    nodePixmaps.insert("red", QPixmap(":/sprites/red_wires/red_button_right.png"));
-    nodePixmaps.insert("red", QPixmap(":/sprites/red_wires/red_button_left.png"));
 
     // Blue buttons
     nodePixmaps.insert("blue", QPixmap(":/sprites/blue_wires/blue_button_down.png"));
-    nodePixmaps.insert("blue", QPixmap(":/sprites/blue_wires/blue_button_up.png"));
-    nodePixmaps.insert("blue", QPixmap(":/sprites/blue_wires/blue_button_right.png"));
-    nodePixmaps.insert("blue", QPixmap(":/sprites/blue_wires/blue_button_left.png"));
 
     // Green buttons
-    nodePixmaps.insert("green", QPixmap(":/sprites/green_wires/green_button_down.png"));
-    nodePixmaps.insert("green", QPixmap(":/sprites/green_wires/green_button_up.png"));
-    nodePixmaps.insert("green", QPixmap(":/sprites/green_wires/green_button_right.png"));
-    nodePixmaps.insert("green", QPixmap(":/sprites/green_wires/green_button_left.png"));
+    nodePixmaps.insert("green", QPixmap(":/sprites/green_wires/green_button.png"));
 }
 
 void MainWindow::repaint() {
     qDebug() << "repainting the board";
 
-    //Must remove everything already in the wire layer.
+    //Must remove everything already in the layers.
     wireLayer.fill(Qt::transparent);
+    nodeLayer.fill(Qt::transparent);
 
     //Pointers to hold values of the different grid objects.
     Wire* currentWire;
@@ -157,7 +153,6 @@ void MainWindow::repaint() {
     //checks for components at each box on the board.
     for(int x = 0; x < currentLevel->WIDTH; x++) {
         for( int y = 0; y < currentLevel->HEIGHT; y++) {
-
             currentWire = currentLevel->getWire(x, y);
             currentGate = currentLevel->getGate(x, y);
             currentNode = currentLevel->getNode(x, y);
@@ -168,7 +163,7 @@ void MainWindow::repaint() {
             if(currentGate)
                 paintGate(x, y);
             if(currentNode)
-                paintNode(x, y);
+                paintNode(x, y, currentNode->getTag());
             if(currentObstacle)
                 paintObstacle(x, y);
         }
@@ -201,7 +196,6 @@ void MainWindow::paintWire(int x, int y, Wire::Direction direction, QString tag)
         Qt::KeepAspectRatio,
         Qt::FastTransformation);
 
-
     // Set up the painter and link to wireLayer.
     QPainter wirePainter(&wireLayer);
 
@@ -217,7 +211,42 @@ void MainWindow::paintGate(int x, int y) {
 
 }
 
-void MainWindow::paintNode(int x, int y) {
+void MainWindow::paintNode(int x, int y, QString tag) {
+    // Set default color. This color is retained if the tag is not A or B.
+    QString color = "green";
+
+    // Holds the current wire texture to be drawn.
+    QPixmap nodePixmap;
+
+    // Change the color to red if the wire tag is A or blue if the wire tag is B.
+    if(!tag.isNull() && tag.toUpper() == "A")
+        color = "red";
+    else if(!tag.isNull() && tag.toUpper() == "B")
+        color = "blue";
+    qDebug() << "Node color is " << color << "and its tag is " << tag;
+
+    // Grab the UI measurements for scaling.
+    int boxWidth = ui->gameBoard->width() / currentLevel->WIDTH;
+    int boxHeight = ui->gameBoard->height() / currentLevel->HEIGHT;
+    int uiX = x * boxWidth;
+    int uiY = y * boxHeight;
+
+    // Set the current wire texture, scaled relative to the.
+    nodePixmap = nodePixmaps.value(color).scaled(
+        boxWidth, boxHeight,
+        Qt::KeepAspectRatio,
+        Qt::FastTransformation);
+
+    qDebug() << "Node pixmap is null???" << nodePixmap.isNull();
+
+    // Set up the painter and link to wireLayer.
+    QPainter nodePainter(&wireLayer);
+
+    // Draw to the painter.
+    nodePainter.drawPixmap(uiX, uiY, boxWidth, boxHeight, nodePixmap);
+
+    // Draw to the UI.
+    ui->gameBoard->setPixmap(wireLayer);
 
 }
 

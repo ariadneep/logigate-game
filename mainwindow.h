@@ -129,6 +129,8 @@ private:
      * given x, y position.
      * @param x - the horizontal grid square index to draw the wire on.
      * @param y - the vertical grid square index to draw the wire on.
+     * @param direction - the direction of the wire.
+     * @param tag - the tag associated with the wire color.
      */
     void paintWire(int x, int y, Wire::Direction direction, QString tag);
 
@@ -145,8 +147,9 @@ private:
      * given x, y position.
      * @param x - the horizontal grid square index to draw the node on.
      * @param y - the vertical grid square index to draw the node on.
+     * @param tag - the tag associated with the color of the Node.
      */
-    void paintNode(int x, int y);
+    void paintNode(int x, int y, QString tag);
 
     /**
      * @brief paintObstacle - paints an obstacle with the appropriate attributes at the
