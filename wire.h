@@ -105,6 +105,25 @@ public:
     void setDirection(Direction newDirection);
 
     /**
+     * @brief getX
+     * @return
+     */
+    int getX();
+
+    /**
+     * @brief getY
+     * @return
+     */
+    int getY();
+
+    /**
+     * @brief setPosition
+     * @param x
+     * @param y
+     */
+    void setPosition(int x, int y);
+
+    /**
      * @brief getSignal - gets the signal
      * @return Boolean value of signal
      */
@@ -121,6 +140,16 @@ private:
      * @brief tag - represents the wire ID that this wire is a part of.
      */
     QString tag;
+
+    /**
+     * @brief x - The x position on the grid.
+     */
+    int x;
+
+    /**
+     * @brief y - The y position on the grid.
+     */
+    int y;
 
     /**
      * @brief wireSignal - represents the current signal
