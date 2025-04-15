@@ -393,7 +393,9 @@ void Level::addGate(int x, int y, Operator gateType) {
 void Level::addNode(int x, int y, QString& tag, NodeType nodeType, bool signal) {
     if(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
         if(nodeGrid[y * WIDTH + x] == nullptr) {
-            nodeGrid[y * WIDTH + x] = new Node(tag, nodeType, graphicsScene, x, y, this);
+            nodeGrid[y * WIDTH + x] = new Node(this);
+            // TODO: refactor parameters;
+            // nodeGrid[y * WIDTH + x] = new Node(tag, nodeType, graphicsScene, x, y, this);
             if(nodeType == NodeType::ROOT) {
                 nodeGrid[y * WIDTH + x]->setSignal(signal);
             }
