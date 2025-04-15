@@ -76,11 +76,11 @@ public:
     Wire* getWire(int x, int y);
 
     /**
-     * @brief setWire TEMP METHOD, REMOVE LATER
+     * @brief setWireTemp TEMP METHOD, REMOVE LATER
      * @param x
      * @param y
      */
-    void setWire(int x, int y, QString tag);
+    void setWireTemp(int x, int y, QString tag);
 
     /**
      * @brief getGate
@@ -172,6 +172,8 @@ private:
      * @param checkingWire - The space of the wire to retrieve context from.
      */
     void wireCheck(Wire* currentWire, Wire* checkingWire);
+
+    void setWire(int x, int y, Wire* newWire);
 
     void removeTail(int x, int y, Wire* currentWire);
 

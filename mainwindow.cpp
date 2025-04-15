@@ -55,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // \/ CHANGE \/
     currentTag = "a";
-    currentLevel->setWire(0, 0, currentTag);
+    currentLevel->setWireTemp(0, 0, currentTag);
 
     // World timer
     connect(timer, &QTimer::timeout, this, &MainWindow::updateWorld);
@@ -110,6 +110,10 @@ void MainWindow::loadWirePixmaps() {
     wirePixmaps.insert({Wire::Direction::NW, "red"}, QPixmap(":/sprites/red_wires/red_wire_NW.png"));
     wirePixmaps.insert({Wire::Direction::SE, "red"}, QPixmap(":/sprites/red_wires/red_wire_SE.png"));
     wirePixmaps.insert({Wire::Direction::SW, "red"}, QPixmap(":/sprites/red_wires/red_wire_SW.png"));
+    wirePixmaps.insert({Wire::Direction::N, "red"}, QPixmap(":/sprites/red_wires/red_plug_down.png"));
+    wirePixmaps.insert({Wire::Direction::E, "red"}, QPixmap(":/sprites/red_wires/red_plug_left.png"));
+    wirePixmaps.insert({Wire::Direction::S, "red"}, QPixmap(":/sprites/red_wires/red_plug_up.png"));
+    wirePixmaps.insert({Wire::Direction::W, "red"}, QPixmap(":/sprites/red_wires/red_plug_right.png"));
 
     //greed wires
     wirePixmaps.insert({Wire::Direction::EW, "green"}, QPixmap(":/sprites/green_wires/green_wire_EW.png"));
