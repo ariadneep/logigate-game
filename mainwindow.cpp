@@ -112,7 +112,7 @@ void MainWindow::loadWirePixmaps() {
     wirePixmaps.insert({Wire::Direction::SE, "red"}, QPixmap(":/sprites/red_wires/red_wire_SE.png"));
     wirePixmaps.insert({Wire::Direction::SW, "red"}, QPixmap(":/sprites/red_wires/red_wire_SW.png"));
 
-    //greed wires
+    //green wires
     wirePixmaps.insert({Wire::Direction::EW, "green"}, QPixmap(":/sprites/green_wires/green_wire_EW.png"));
     wirePixmaps.insert({Wire::Direction::NE, "green"}, QPixmap(":/sprites/green_wires/green_wire_NE.png"));
     wirePixmaps.insert({Wire::Direction::NS, "green"}, QPixmap(":/sprites/green_wires/green_wire_NS.png"));
@@ -120,6 +120,26 @@ void MainWindow::loadWirePixmaps() {
     wirePixmaps.insert({Wire::Direction::SE, "green"}, QPixmap(":/sprites/green_wires/green_wire_SE.png"));
     wirePixmaps.insert({Wire::Direction::SW, "green"}, QPixmap(":/sprites/green_wires/green_wire_SW.png"));
 
+}
+
+void MainWindow::loadNodePixmaps() {
+    // Red buttons
+    nodePixmaps.insert("red", QPixmap(":/sprites/red_wires/red_button_down.png"));
+    nodePixmaps.insert("red", QPixmap(":/sprites/red_wires/red_button_up.png"));
+    nodePixmaps.insert("red", QPixmap(":/sprites/red_wires/red_button_right.png"));
+    nodePixmaps.insert("red", QPixmap(":/sprites/red_wires/red_button_left.png"));
+
+    // Blue buttons
+    nodePixmaps.insert("blue", QPixmap(":/sprites/blue_wires/blue_button_down.png"));
+    nodePixmaps.insert("blue", QPixmap(":/sprites/blue_wires/blue_button_up.png"));
+    nodePixmaps.insert("blue", QPixmap(":/sprites/blue_wires/blue_button_right.png"));
+    nodePixmaps.insert("blue", QPixmap(":/sprites/blue_wires/blue_button_left.png"));
+
+    // Green buttons
+    nodePixmaps.insert("green", QPixmap(":/sprites/green_wires/green_button_down.png"));
+    nodePixmaps.insert("green", QPixmap(":/sprites/green_wires/green_button_up.png"));
+    nodePixmaps.insert("green", QPixmap(":/sprites/green_wires/green_button_right.png"));
+    nodePixmaps.insert("green", QPixmap(":/sprites/green_wires/green_button_left.png"));
 }
 
 void MainWindow::repaint() {

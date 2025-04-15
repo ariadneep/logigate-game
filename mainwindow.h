@@ -17,6 +17,7 @@
 #include <QGraphicsScene>
 
 #include "level.h"
+#include "node.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -99,10 +100,23 @@ private:
     QHash<QPair<Wire::Direction, QString>, QPixmap> wirePixmaps;
 
     /**
+     * @brief nodePixmaps - Holds the node pixmaps with color as a key
+     * and image Pixmaps as values.
+     */
+    QHash<QString, QPixmap> nodePixmaps;
+
+
+    /**
      * @brief loadWirePixmaps - Helper method to load all the pixmaps
      * for the wires.
      */
     void loadWirePixmaps();
+
+    /**
+     * @brief loadNodePixmaps - Helper method to load all the pixmaps
+     * for the nodes.
+     */
+    void loadNodePixmaps();
 
     /**
      * @brief repaint - Redraws the whole board based on the current level's data.
