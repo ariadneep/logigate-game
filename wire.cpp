@@ -1,5 +1,7 @@
 #include "wire.h"
 
+class Node;
+
 Wire::Wire(QObject *parent)
     : GridComponent{parent}
 {
@@ -62,3 +64,5 @@ Direction Wire::getDirection() {
 void Wire::setDirection(Direction newDirection) {
     direction = newDirection;
 }
+
+

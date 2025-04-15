@@ -4,6 +4,7 @@ Node::Node(QObject *parent)
     : GridComponent{parent}
 {
     signal = true;
+    connected = false;
     // current code has been commented out because it used parameters that got deleted --
     // I'm not too sure how to make this working again without adding back some of the params
 
@@ -60,4 +61,12 @@ bool Node::checkSignal(QString& tag, bool signal) {
         return false;
     }
     return (tag == this->tag && signal);
+}
+
+bool Node::getConnected() {
+    return connected;
+}
+
+void Node::setConnected(bool connectionStatus) {
+    connected = connectionStatus;
 }

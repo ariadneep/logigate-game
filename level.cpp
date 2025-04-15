@@ -89,7 +89,10 @@ void Level::drawWire(int x, int y, QString tag) {
         else if (downWire != nullptr && downWire->getTag() == tag
                    && !downWire->isFullyConnected()) {
 
-            nodeCheck(x, y, downWire);
+            // run node check, and see if there's a node to connect to.
+            if(nodeCheck(x, y, downWire)){
+                victory();
+            }
             qDebug() << "Created new wire, connected to below.";
             currentWire = new Wire();
             currentWire->setTag(tag);
@@ -106,9 +109,10 @@ void Level::drawWire(int x, int y, QString tag) {
         // Check the left component:
         else if (leftWire != nullptr && leftWire->getTag() == tag
                    && !leftWire->isFullyConnected()) {
-
-            nodeCheck(x, y, leftWire);
             qDebug() << "Created new wire, connected to left.";
+            nodeCheck(x, y, leftWire);
+
+
             currentWire = new Wire();
             currentWire->setTag(tag);
             currentWire->setHeadConnection(leftWire);
@@ -134,7 +138,7 @@ void Level::drawWire(int x, int y, QString tag) {
     qDebug() << "//////////////";
 }
 
-void Level::nodeCheck(int x, int y, Wire* currentWire) {
+bool Level::nodeCheck(int x, int y, Wire* currentWire) {
     Node* upNode = getNode(x, y - 1);
     Node* rightNode = getNode(x + 1, y);
     Node* downNode = getNode(x, y + 1);
@@ -146,25 +150,31 @@ void Level::nodeCheck(int x, int y, Wire* currentWire) {
 
     if (upNode != nullptr && upNode->getTag() == currentTag && upNode->getSignal() == currentSignal) {
         qDebug() << "Node detected above, and meets all requirements to link!";
+        upNode->setConnected(true);
         // TODO: ACTUALLY SET UP CONNECTION
         wasChanged = true;
     }
     else if (downNode != nullptr && downNode->getTag() == currentTag && downNode->getSignal() == currentSignal) {
         qDebug() << "Node detected below, and meets all requirements to link!";
+        downNode->setConnected(true);
         // TODO: ACTUALLY SET UP CONNECTION
         wasChanged = true;
     }
     else if (rightNode != nullptr && rightNode->getTag() == currentTag && rightNode->getSignal() == currentSignal) {
         qDebug() << "Node detected to the right, and meets all requirements to link!";
+        rightNode->setConnected(true);
         // TODO: ACTUALLY SET UP CONNECTION
         wasChanged = true;
     }
     else if (leftNode != nullptr && leftNode->getTag() == currentTag && leftNode->getSignal() == currentSignal) {
         qDebug() << "Node detected to the left, and meets all requirements to link!";
+        leftNode->setConnected(true);
         // TODO: ACTUALLY SET UP CONNECTION
         wasChanged = true;
     }
-
+    // return wasChanged -- meaning this method will return true if the wire happened to
+    // connect to a node.
+    return wasChanged;
 }
 
 Wire* Level::getWire(int x, int y) {
@@ -194,11 +204,18 @@ void Level::setNode(int x, int y, QString tag) {
 
 void Level::victory() {
     /*
-     * TESTING PURPOSES, CHANGE LATER.
+     * erm... should we change this to say "victoryCheck"?
      */
-    if(!isVictory) {
-        isVictory = true;
+    bool victory = true;
+    for (int i = 0; i < WIDTH * HEIGHT; i++) {
+        if (nodeGrid[i] != nullptr && nodeGrid[i]->getConnected() == false) {
+            qDebug() << "was false!";
+            victory = false;
+        }
+    }
+    if(victory) {
         spawnConfetti();
+        isVictory = true;
     }
 }
 

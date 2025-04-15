@@ -103,6 +103,17 @@ public:
      */
     int getY();
 
+    /**
+     * @brief getConnected - Returns if the node has been connected
+     * @return bool of if it's connected
+     */
+    bool getConnected();
+
+    /**
+     * @brief setConnected - sets the node's status of connection
+     */
+    void setConnected(bool connectionStatus);
+
 private:
     /**
      * @brief tag - The input node type.
@@ -124,10 +135,7 @@ private:
      */
     QGraphicsPixmapItem* sprite;
 
-    /**
-     * @brief direction
-     */
-    Direction direction;
+    bool connected;
 };
 
 #endif // NODE_H

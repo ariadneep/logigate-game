@@ -120,7 +120,7 @@ public:
      * @param y
      * @param currentWire
      */
-    void nodeCheck(int x, int y, Wire* currentWire);
+    bool nodeCheck(int x, int y, Wire* currentWire);
 
     /**
      * @brief updateLevel
