@@ -96,28 +96,28 @@ void MainWindow::updateWorld() {
 
 void MainWindow::loadWirePixmaps() {
     //bue wires
-    wirePixmaps.insert({Direction::EW, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_EW.png"));
-    wirePixmaps.insert({Direction::NE, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_NE.png"));
-    wirePixmaps.insert({Direction::NS, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_NS.png"));
-    wirePixmaps.insert({Direction::NW, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_NW.png"));
-    wirePixmaps.insert({Direction::SE, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_SE.png"));
-    wirePixmaps.insert({Direction::SW, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_SW.png"));
+    wirePixmaps.insert({Wire::Direction::EW, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_EW.png"));
+    wirePixmaps.insert({Wire::Direction::NE, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_NE.png"));
+    wirePixmaps.insert({Wire::Direction::NS, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_NS.png"));
+    wirePixmaps.insert({Wire::Direction::NW, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_NW.png"));
+    wirePixmaps.insert({Wire::Direction::SE, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_SE.png"));
+    wirePixmaps.insert({Wire::Direction::SW, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_SW.png"));
 
     //red wires
-    wirePixmaps.insert({Direction::EW, "red"}, QPixmap(":/sprites/red_wires/red_wire_EW.png"));
-    wirePixmaps.insert({Direction::NE, "red"}, QPixmap(":/sprites/red_wires/red_wire_NE.png"));
-    wirePixmaps.insert({Direction::NS, "red"}, QPixmap(":/sprites/red_wires/red_wire_NS.png"));
-    wirePixmaps.insert({Direction::NW, "red"}, QPixmap(":/sprites/red_wires/red_wire_NW.png"));
-    wirePixmaps.insert({Direction::SE, "red"}, QPixmap(":/sprites/red_wires/red_wire_SE.png"));
-    wirePixmaps.insert({Direction::SW, "red"}, QPixmap(":/sprites/red_wires/red_wire_SW.png"));
+    wirePixmaps.insert({Wire::Direction::EW, "red"}, QPixmap(":/sprites/red_wires/red_wire_EW.png"));
+    wirePixmaps.insert({Wire::Direction::NE, "red"}, QPixmap(":/sprites/red_wires/red_wire_NE.png"));
+    wirePixmaps.insert({Wire::Direction::NS, "red"}, QPixmap(":/sprites/red_wires/red_wire_NS.png"));
+    wirePixmaps.insert({Wire::Direction::NW, "red"}, QPixmap(":/sprites/red_wires/red_wire_NW.png"));
+    wirePixmaps.insert({Wire::Direction::SE, "red"}, QPixmap(":/sprites/red_wires/red_wire_SE.png"));
+    wirePixmaps.insert({Wire::Direction::SW, "red"}, QPixmap(":/sprites/red_wires/red_wire_SW.png"));
 
     //greed wires
-    wirePixmaps.insert({Direction::EW, "green"}, QPixmap(":/sprites/green_wires/green_wire_EW.png"));
-    wirePixmaps.insert({Direction::NE, "green"}, QPixmap(":/sprites/green_wires/green_wire_NE.png"));
-    wirePixmaps.insert({Direction::NS, "green"}, QPixmap(":/sprites/green_wires/green_wire_NS.png"));
-    wirePixmaps.insert({Direction::NW, "green"}, QPixmap(":/sprites/green_wires/green_wire_NW.png"));
-    wirePixmaps.insert({Direction::SE, "green"}, QPixmap(":/sprites/green_wires/green_wire_SE.png"));
-    wirePixmaps.insert({Direction::SW, "green"}, QPixmap(":/sprites/green_wires/green_wire_SW.png"));
+    wirePixmaps.insert({Wire::Direction::EW, "green"}, QPixmap(":/sprites/green_wires/green_wire_EW.png"));
+    wirePixmaps.insert({Wire::Direction::NE, "green"}, QPixmap(":/sprites/green_wires/green_wire_NE.png"));
+    wirePixmaps.insert({Wire::Direction::NS, "green"}, QPixmap(":/sprites/green_wires/green_wire_NS.png"));
+    wirePixmaps.insert({Wire::Direction::NW, "green"}, QPixmap(":/sprites/green_wires/green_wire_NW.png"));
+    wirePixmaps.insert({Wire::Direction::SE, "green"}, QPixmap(":/sprites/green_wires/green_wire_SE.png"));
+    wirePixmaps.insert({Wire::Direction::SW, "green"}, QPixmap(":/sprites/green_wires/green_wire_SW.png"));
 
 }
 
@@ -155,7 +155,7 @@ void MainWindow::repaint() {
 
 }
 
-void MainWindow::paintWire(int x, int y, Direction direction, QString tag) {
+void MainWindow::paintWire(int x, int y, Wire::Direction direction, QString tag) {
     // Set default color. This color is retained if the tag is not A or B.
     QString color = "green";
 

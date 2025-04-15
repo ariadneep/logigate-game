@@ -96,7 +96,7 @@ private:
      * @brief wirePixmaps - Holds the wire pixmaps with direction-color pairs as keys
      * and image Pixmaps as values.
      */
-    QHash<QPair<Direction, QString>, QPixmap> wirePixmaps;
+    QHash<QPair<Wire::Direction, QString>, QPixmap> wirePixmaps;
 
     /**
      * @brief loadWirePixmaps - Helper method to load all the pixmaps
@@ -116,7 +116,7 @@ private:
      * @param x - the horizontal grid square index to draw the wire on.
      * @param y - the vertical grid square index to draw the wire on.
      */
-    void paintWire(int x, int y, Direction direction, QString tag);
+    void paintWire(int x, int y, Wire::Direction direction, QString tag);
 
     /**
      * @brief paintGate - paints a Gate with the appropriate attributes at the
