@@ -365,7 +365,6 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
 
     if (newPosition) {
         currentLevel->drawWire(gameBoardX, gameBoardY, currentTag);
-        currentLevel->drawGate(gameBoardX, gameBoardY, Operator::AND);
         newPosition = false;
 
 
