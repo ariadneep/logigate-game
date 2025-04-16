@@ -53,6 +53,12 @@ public:
     bool getSignal();
 
     /**
+     * @brief getGateTag - Gets the tag for the gate
+     * @return returns the gate
+     */
+    QString getGateTag();
+
+    /**
      * @brief convertSignal - sets the output signal after checking the
      * two input pulses and performing a boolean operation on them based
      * on the Type of the gate.
@@ -93,6 +99,11 @@ private:
      * by this logic gate. False when the gate is dead,
      */
     bool outputSignal;
+
+    /**
+     * @brief tag - represents the gate ID.
+     */
+    QString tag;
 
 };
 

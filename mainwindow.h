@@ -149,8 +149,9 @@ private:
      * given x, y position.
      * @param x - the horizontal grid square index to draw the gate on.
      * @param y - the vertical grid square index to draw the gate on.
+     * @param tag - tag to hold what type of gate it is.
      */
-    void paintGate(int x, int y, Operator op);
+    void paintGate(int x, int y, Operator op, QString tag);
 
     /**
      * @brief paintNode - paints a node with the appropriate attributes at the

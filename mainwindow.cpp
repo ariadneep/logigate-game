@@ -167,7 +167,7 @@ void MainWindow::repaint() {
             if(currentWire)
                 paintWire(x, y, currentWire->getDirection(), currentWire->getTag());
             if(currentGate)
-                paintGate(x, y, currentGate->getOperator());
+                paintGate(x, y, currentGate->getOperator(), currentGate->getGateTag());
             if(currentNode)
                 paintNode(x, y, currentNode->getTag());
             if(currentObstacle)
@@ -216,14 +216,16 @@ void MainWindow::paintWire(int x, int y, Wire::Direction direction, QString tag)
 
 void MainWindow::loadGatePixmaps() {
     //greed AND gates
-    gatePixmaps.insert({Operator::AND, "green"}, QPixmap(":/sprites/green_wires/and_bottom_blue.png"));
+    gatePixmaps.insert({Operator::AND, "green_bottom_connect"}, QPixmap(":/sprites/green_wires/and_bottom_blue.png"));
     gatePixmaps.insert({Operator::AND, "green"}, QPixmap(":/sprites/green_wires/and_bottom_noconnection.png"));
     gatePixmaps.insert({Operator::AND, "green"}, QPixmap(":/sprites/green_wires/and_top_noconnection.png"));
     gatePixmaps.insert({Operator::AND, "green"}, QPixmap(":/sprites/green_wires/and_top_red.png"));
 
 }
 
-void MainWindow::paintGate(int x, int y, Operator op) {
+void MainWindow::paintGate(int x, int y, Operator op, QString tag) {
+    QString gate = "green_bottom_connect";
+
     // Holds the current gate texture to be drawn.
     QPixmap gatePixmap;
     // Grab the UI measurements for scaling.
@@ -233,7 +235,7 @@ void MainWindow::paintGate(int x, int y, Operator op) {
     int uiY = y * boxHeight;
 
     // Set the current gate texture, scaled relative to the.
-    gatePixmap = gatePixmaps.value({op, "AND"}).scaled(
+    gatePixmap = gatePixmaps.value({op, gate}).scaled(
         boxWidth, boxHeight,
         Qt::KeepAspectRatio,
         Qt::FastTransformation);

@@ -4,6 +4,7 @@
 Gate::Gate(Operator type, QObject *parent)
     : GridComponent{parent}, gateOperator(type) {
     outputSignal = false;
+    tag = "";
 }
 
 Gate::~Gate() {
@@ -55,6 +56,9 @@ bool Gate::getSignal() {
     return outputSignal;
 }
 
+QString Gate::getGateTag() {
+    return tag;
+}
 
 GridComponent::Type Gate::getType() {
     return GridComponent::Type::GATE;
