@@ -437,3 +437,18 @@ void Level::addObstacle(int x, int y) {
         }
     }
 }
+
+void Level::drawGate(int x, int y, Operator op) {
+    if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
+        return;
+
+    if (getGate(x, y) || getWire(x, y) || getNode(x, y) || getObstacle(x, y))
+        return;
+
+    setGate(x, y, op);
+}
+
+void Level::setGate(int x, int y, Operator op) {
+    Gate* newGate = new Gate(op, this);  // `this` is the QObject parent
+    gateGrid[y * WIDTH + x] = newGate;
+}

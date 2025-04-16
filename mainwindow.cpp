@@ -60,6 +60,7 @@ MainWindow::MainWindow(QWidget *parent)
     currentTag = "A";
     currentLevel->setWireTemp(0, 0, currentTag);
     currentLevel->setNode(0, 3, "C");
+    currentLevel ->setGate(3,3, Operator::AND);
 
     repaint();
 
@@ -362,7 +363,9 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
 
     if (newPosition) {
         currentLevel->drawWire(gameBoardX, gameBoardY, currentTag);
+        currentLevel->drawGate(gameBoardX, gameBoardY, Operator::AND);
         newPosition = false;
+
 
         repaint();
     }

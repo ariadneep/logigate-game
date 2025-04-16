@@ -138,6 +138,22 @@ public:
      */
     void clearLevel();
 
+    /**
+     * @brief drawGate - Draws the Gate at a certain X and Y Coordinate
+     * @param x - Given X Coordinate
+     * @param y - Given Y Coordinate
+     * @param op - Given Operator to use
+     */
+    void drawGate(int x, int y, Operator op);
+
+    /**
+     * @brief setGate
+     * @param x
+     * @param y
+     * @param op
+     */
+    void setGate(int x, int y, Operator op);
+
 private:
 
     /**
@@ -195,6 +211,12 @@ private:
      */
     void wireCheck(Wire* currentWire, Wire* checkingWire);
 
+    /**
+     * @brief setWire
+     * @param x
+     * @param y
+     * @param newWire
+     */
     void setWire(int x, int y, Wire* newWire);
   
     /**
