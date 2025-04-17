@@ -199,6 +199,8 @@ private:
 
     void wireRemove(Wire* currentWire);
 
+    Wire* findWire(int x, int y, QString tag, Wire::Direction& wireConnectionDirection);
+
     Node* findNode(int x, int y, QString tag, Wire::Direction& wireConnectionDirection);
 
     /**

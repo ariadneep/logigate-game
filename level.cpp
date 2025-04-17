@@ -35,10 +35,12 @@ void Level::drawWire(int x, int y, QString tag) {
 
     qDebug() << "///////////\nChecked at (" << x << ", " << y << ")";
 
-    if (x < 0 || x > WIDTH || y < 0 || y > HEIGHT)
+    if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
         return;
 
     Wire* currentWire = getWire(x, y);
+
+    qDebug() << "currentWirePtr: " << currentWire;
 
     // nodeConnect(x, y, tag, currentNode);
 
@@ -51,6 +53,7 @@ void Level::drawWire(int x, int y, QString tag) {
         Wire::Direction wireConnectionDirection = Wire::Direction::NONE;
 
         if (Node* connectNode = findNode(x, y, tag, wireConnectionDirection)) {
+
             currentWire = new Wire();
             setWire(x, y, currentWire);
             Wire* nodeWire = connectNode->getWire();
@@ -61,8 +64,90 @@ void Level::drawWire(int x, int y, QString tag) {
 
             return;
         }
+        else if (Wire* connectWire = findWire(x, y, tag, wireConnectionDirection)) {
 
-        wireConnect(x, y, tag, currentWire);
+            currentWire = new Wire();
+            setWire(x, y, currentWire);
+            connectWires(connectWire, currentWire, wireConnectionDirection);
+
+            qDebug() << "Head: " << currentWire->getHeadConnection()
+                     << " Tail: " << currentWire->getTailConnection();
+
+            switch(wireConnectionDirection) {
+            case Wire::Direction::N :
+
+                // Draw NS Corner
+                if (connectWire->getY() - connectWire->getHeadConnection()->getY() == 1) {
+                    connectWire->setDirection(Wire::Direction::NS);
+                }
+                // Draw SE Corner
+                else if (connectWire->getHeadConnection()->getX() - connectWire->getX() == 1) {
+                    connectWire->setDirection(Wire::Direction::SE);
+                }
+                // Draw SW Corner
+                // Refactor this later if no errors occurs
+                else if (connectWire->getX() - connectWire->getHeadConnection()->getX() == 1) {
+                    connectWire->setDirection(Wire::Direction::SW);
+                }
+
+                break;
+            case Wire::Direction::E :
+
+                // Draw NW Corner
+                if (connectWire->getY() - connectWire->getHeadConnection()->getY() == 1) {
+                    connectWire->setDirection(Wire::Direction::NW);
+                }
+                // Draw EW Corner
+                else if (connectWire->getHeadConnection()->getX() - connectWire->getX() == 1) {
+                    connectWire->setDirection(Wire::Direction::EW);
+                }
+                // Draw SW Corner
+                // Refactor this later if no errors occurs
+                else if (connectWire->getHeadConnection()->getY() - connectWire->getY() == 1) {
+                    connectWire->setDirection(Wire::Direction::SW);
+                }
+
+                break;
+            case Wire::Direction::S :
+
+                // Draw NE Corner
+                if (connectWire->getHeadConnection()->getX() - connectWire->getX() == 1) {
+                    connectWire->setDirection(Wire::Direction::NE);
+                }
+                // Draw NS Corner
+                else if (connectWire->getHeadConnection()->getY() - connectWire->getY() == 1) {
+                    connectWire->setDirection(Wire::Direction::NS);
+                }
+                // Draw NW Corner
+                // Refactor this later if no errors occurs
+                else if (connectWire->getX() - connectWire->getHeadConnection()->getX() == 1) {
+                    connectWire->setDirection(Wire::Direction::NW);
+                }
+
+                break;
+            case Wire::Direction::W :
+
+                // Draw NE Corner
+                if (connectWire->getY() - connectWire->getHeadConnection()->getY() == 1) {
+                    connectWire->setDirection(Wire::Direction::NE);
+                }
+                // Draw SE Corner
+                else if (connectWire->getHeadConnection()->getY() - connectWire->getY() == 1) {
+                    connectWire->setDirection(Wire::Direction::SE);
+                }
+                // Draw EW Corner
+                // Refactor this later if no errors occurs
+                else if (connectWire->getX() - connectWire->getHeadConnection()->getX() == 1) {
+                    connectWire->setDirection(Wire::Direction::EW);
+                }
+
+                break;
+            default :
+                break;
+            }
+        }
+
+        // wireConnect(x, y, tag, currentWire);
 
         // add checks for gates
     }
@@ -79,7 +164,7 @@ void Level::drawWire(int x, int y, QString tag) {
     qDebug() << "//////////////";
 }
 
-void Level::wireConnect(int x, int y, QString tag, Wire* currentWire) {
+Wire* Level::findWire(int x, int y, QString tag, Wire::Direction& wireConnectionDirection) {
 
     Wire* upWire = getWire(x, y - 1);
     Wire* rightWire = getWire(x + 1, y);
@@ -91,29 +176,8 @@ void Level::wireConnect(int x, int y, QString tag, Wire* currentWire) {
         && !upWire->isFullyConnected()) {
 
         qDebug() << "Created new wire, connected to above.";
-
-        currentWire = new Wire();
-        currentWire->setTag(tag);
-        currentWire->setHeadConnection(upWire);
-        currentWire->setDirection(Wire::Direction::N);
-        setWire(x, y, currentWire);
-        upWire->setTailConnection(currentWire);
-        qDebug() << "Head: " << (currentWire->getHeadConnection() != nullptr)
-                 << " Tail: " << (currentWire->getTailConnection() != nullptr);
-
-        // Draw NS Corner
-        if (upWire->getY() - upWire->getHeadConnection()->getY() == 1) {
-            upWire->setDirection(Wire::Direction::NS);
-        }
-        // Draw SE Corner
-        else if (upWire->getHeadConnection()->getX() - upWire->getX() == 1) {
-            upWire->setDirection(Wire::Direction::SE);
-        }
-        // Draw SW Corner
-        // Refactor this later if no errors occurs
-        else if (upWire->getX() - upWire->getHeadConnection()->getX() == 1) {
-            upWire->setDirection(Wire::Direction::SW);
-        }
+        wireConnectionDirection = Wire::Direction::N;
+        return upWire;
     }
 
     // Check the right component:
@@ -121,28 +185,8 @@ void Level::wireConnect(int x, int y, QString tag, Wire* currentWire) {
              && !rightWire->isFullyConnected()) {
 
         qDebug() << "Created new wire, connected to right.";
-        currentWire = new Wire();
-        currentWire->setTag(tag);
-        currentWire->setHeadConnection(rightWire);
-        currentWire->setDirection(Wire::Direction::E);
-        setWire(x, y, currentWire);
-        rightWire->setTailConnection(currentWire);
-        qDebug() << "Head: " << (currentWire->getHeadConnection() != nullptr)
-                 << " Tail: " << (currentWire->getTailConnection() != nullptr);
-
-        // Draw NW Corner
-        if (rightWire->getY() - rightWire->getHeadConnection()->getY() == 1) {
-            rightWire->setDirection(Wire::Direction::NW);
-        }
-        // Draw EW Corner
-        else if (rightWire->getHeadConnection()->getX() - rightWire->getX() == 1) {
-            rightWire->setDirection(Wire::Direction::EW);
-        }
-        // Draw SW Corner
-        // Refactor this later if no errors occurs
-        else if (rightWire->getHeadConnection()->getY() - rightWire->getY() == 1) {
-            rightWire->setDirection(Wire::Direction::SW);
-        }
+        wireConnectionDirection = Wire::Direction::E;
+        return rightWire;
     }
 
     // Check the below component:
@@ -150,28 +194,8 @@ void Level::wireConnect(int x, int y, QString tag, Wire* currentWire) {
              && !downWire->isFullyConnected()) {
 
         qDebug() << "Created new wire, connected to below.";
-        currentWire = new Wire();
-        currentWire->setTag(tag);
-        currentWire->setHeadConnection(downWire);
-        currentWire->setDirection(Wire::Direction::S);
-        setWire(x, y, currentWire);
-        downWire->setTailConnection(currentWire);
-        qDebug() << "Head: " << (currentWire->getHeadConnection() != nullptr)
-                 << " Tail: " << (currentWire->getTailConnection() != nullptr);
-
-        // Draw NE Corner
-        if (downWire->getHeadConnection()->getX() - downWire->getX() == 1) {
-            downWire->setDirection(Wire::Direction::NE);
-        }
-        // Draw NS Corner
-        else if (downWire->getHeadConnection()->getY() - downWire->getY() == 1) {
-            downWire->setDirection(Wire::Direction::NS);
-        }
-        // Draw NW Corner
-        // Refactor this later if no errors occurs
-        else if (downWire->getX() - downWire->getHeadConnection()->getX() == 1) {
-            downWire->setDirection(Wire::Direction::NW);
-        }
+        wireConnectionDirection = Wire::Direction::S;
+        return downWire;
     }
 
     // Check the left component:
@@ -179,33 +203,12 @@ void Level::wireConnect(int x, int y, QString tag, Wire* currentWire) {
              && !leftWire->isFullyConnected()) {
 
         qDebug() << "Created new wire, connected to left.";
-
-        currentWire = new Wire();
-        currentWire->setTag(tag);
-        currentWire->setHeadConnection(leftWire);
-        currentWire->setDirection(Wire::Direction::W);
-        setWire(x, y, currentWire);
-        leftWire->setTailConnection(currentWire);
-
-        qDebug() << "Head: " << (currentWire->getHeadConnection() != nullptr)
-                 << " Tail: " << (currentWire->getTailConnection() != nullptr);
-
-        // Draw NE Corner
-        if (leftWire->getY() - leftWire->getHeadConnection()->getY() == 1) {
-            leftWire->setDirection(Wire::Direction::NE);
-        }
-        // Draw SE Corner
-        else if (leftWire->getHeadConnection()->getY() - leftWire->getY() == 1) {
-            leftWire->setDirection(Wire::Direction::SE);
-        }
-        // Draw EW Corner
-        // Refactor this later if no errors occurs
-        else if (leftWire->getX() - leftWire->getHeadConnection()->getX() == 1) {
-            leftWire->setDirection(Wire::Direction::EW);
-        }
+        wireConnectionDirection = Wire::Direction::W;
+        return leftWire;
     }
-    else
-        qDebug() << "No new wire. Return.";
+
+    qDebug() << "No new wire. Return.";
+    return nullptr;
 }
 
 void Level::wireRemove(Wire* currentWire) {
