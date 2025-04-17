@@ -29,15 +29,11 @@ public:
     };
 
     /**
-     * @brief The Alignment enum - Holds the location of a Gate
-     * relative to its center.
-     *
-     * A Gate that takes up two grid squares could be
-     * any of the four cardinal directions, whereas a Gate that takes
-     * up just one grid square has an Alignment of CENTER.
+     * @brief The Alignment enum - Holds information on whether this gate
+     * is a first half or a second half.
      */
     enum class Alignment {
-        CENTER, NORTH, EAST, SOUTH, WEST
+        FIRST, SECOND
     };
 
     /**

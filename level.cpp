@@ -415,8 +415,8 @@ void Level::addGate(int x, int y, Gate::Operator gateType, Gate::Direction dir) 
 
     calculateGateOffset(dir, xOffset, yOffset);
 
-    Gate::Alignment firstAlignment = Gate::Alignment::NORTH;
-    Gate::Alignment secondAlignment = Gate::Alignment::SOUTH;
+    Gate::Alignment firstAlignment = Gate::Alignment::SECOND;
+    Gate::Alignment secondAlignment = Gate::Alignment::FIRST;
 
     // Create related gate objects.
     Gate* firstHalf = new Gate(gateType, firstAlignment, dir, this);
