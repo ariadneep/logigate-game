@@ -257,12 +257,6 @@ private:
     void addObstacle(int x, int y);
 
     /**
-     * @brief levelSetup - Sets up the level based on the passed in level number.
-     * @param level - The level number chosen to set up.
-     */
-    void levelSetup(int level);
-
-    /**
      * @brief calculateGateOffset - Helper method to calculate the offset of
      * the x and y positions for the otherHalf of this gate.
      * If xOffset is nonzero, yOffset must be 0.
