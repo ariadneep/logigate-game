@@ -144,7 +144,7 @@ public:
      * @param y - Given Y Coordinate
      * @param op - Given Operator to use
      */
-    void drawGate(int x, int y, Operator op);
+    void drawGate(int x, int y, Gate::Operator op);
 
 private:
 
@@ -225,7 +225,7 @@ private:
      * @param y - The y position.
      * @param gateType - The type of gate.
      */
-    void addGate(int x, int y, Operator gateType);
+    void addGate(int x, int y, Gate::Operator gateType);
 
     /**
      * @brief addNode - Adds a node at the specified x and y position into the level.

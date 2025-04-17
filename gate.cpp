@@ -12,7 +12,7 @@ Gate::~Gate() {
 
 }
 
-Operator Gate::getOperator() {
+Gate::Operator Gate::getOperator() {
     return gateOperator;
 }
 

@@ -15,17 +15,16 @@
 #include "gridcomponent.h"
 #include "node.h"
 
-
-/**
- * @brief The Operator enum - Enum class to hold the Operators
- */
-enum class Operator {
-    AND, OR, NOT
-};
-
 class Gate : public GridComponent {
 
 public:
+    /**
+    * @brief The Operator enum - Enum class to hold the Operators
+    */
+    enum class Operator {
+        AND, OR, NOT
+    };
+
     /**
      * @brief Gate - Makes a Gate object.
      * @param type - AND, OR, or NOT gate.

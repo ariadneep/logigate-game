@@ -408,7 +408,7 @@ void Level::clearLevel() {
     isVictory = false;
 }
 
-void Level::addGate(int x, int y, Operator gateType) {
+void Level::addGate(int x, int y, Gate::Operator gateType) {
     // Later, these will depend on a direction (horizontal or vertical) passed into the method.
     int secondX = x;
     int secondY = y + 1; // Below this Y coordinate.
@@ -449,7 +449,7 @@ void Level::addObstacle(int x, int y) {
     }
 }
 
-void Level::drawGate(int x, int y, Operator op) {
+void Level::drawGate(int x, int y, Gate::Operator op) {
     // Check bounds for x and y.
     if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
         return;

@@ -61,7 +61,7 @@ MainWindow::MainWindow(QWidget *parent)
     currentLevel->setWireTemp(0, 0, currentTag);
     currentLevel->setNode(0, 3, "C");
     currentLevel->setNode(0, 0, "A");
-    currentLevel->drawGate(3,3, Operator::AND);
+    currentLevel->drawGate(3,3, Gate::Operator::AND);
 
     repaint();
 
@@ -217,14 +217,14 @@ void MainWindow::paintWire(int x, int y, Wire::Direction direction, QString tag)
 
 void MainWindow::loadGatePixmaps() {
     //greed AND gates
-    gatePixmaps.insert({Operator::AND, "green_bottom_connect"}, QPixmap(":/sprites/green_wires/and_bottom_blue.png"));
-    gatePixmaps.insert({Operator::AND, "green"}, QPixmap(":/sprites/green_wires/and_bottom_noconnection.png"));
-    gatePixmaps.insert({Operator::AND, "green"}, QPixmap(":/sprites/green_wires/and_top_noconnection.png"));
-    gatePixmaps.insert({Operator::AND, "green"}, QPixmap(":/sprites/green_wires/and_top_red.png"));
+    gatePixmaps.insert({Gate::Operator::AND, "green_bottom_connect"}, QPixmap(":/sprites/green_wires/and_bottom_blue.png"));
+    gatePixmaps.insert({Gate::Operator::AND, "green"}, QPixmap(":/sprites/green_wires/and_bottom_noconnection.png"));
+    gatePixmaps.insert({Gate::Operator::AND, "green"}, QPixmap(":/sprites/green_wires/and_top_noconnection.png"));
+    gatePixmaps.insert({Gate::Operator::AND, "green"}, QPixmap(":/sprites/green_wires/and_top_red.png"));
 
 }
 
-void MainWindow::paintGate(int x, int y, Operator op, QString tag) {
+void MainWindow::paintGate(int x, int y, Gate::Operator op, QString tag) {
     QString gate = "green_bottom_connect";
 
     // Holds the current gate texture to be drawn.
