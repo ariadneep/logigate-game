@@ -146,14 +146,6 @@ public:
      */
     void drawGate(int x, int y, Operator op);
 
-    /**
-     * @brief setGate
-     * @param x
-     * @param y
-     * @param op
-     */
-    void setGate(int x, int y, Operator op);
-
 private:
 
     /**

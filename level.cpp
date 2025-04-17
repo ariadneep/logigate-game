@@ -408,13 +408,24 @@ void Level::clearLevel() {
     isVictory = false;
 }
 
-
 void Level::addGate(int x, int y, Operator gateType) {
-    if(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
-        if(gateGrid[y * WIDTH + x] == nullptr) {
-            gateGrid[y * WIDTH + x] = new Gate(gateType, this);
-        }
-    }
+    // Later, these will depend on a direction (horizontal or vertical) passed into the method.
+    int secondX = x;
+    int secondY = y + 1; // Below this Y coordinate.
+
+    // Create related gate objects.
+    Gate* firstHalf = new Gate(gateType);
+    Gate* secondHalf = new Gate(gateType);
+
+    // Specify relation between
+    firstHalf->setOtherHalf(secondHalf);
+    secondHalf->setOtherHalf(firstHalf);
+
+    // Draw a gate at the given x, y position
+    gateGrid[y * WIDTH + x] = firstHalf;
+
+    // Draw a gate adjacent to firstHalf in the specified direction.
+    gateGrid[(secondY) * WIDTH + secondX] = secondHalf;
 }
 
 void Level::addNode(int x, int y, QString& tag, NodeType nodeType, bool signal) {
@@ -439,16 +450,14 @@ void Level::addObstacle(int x, int y) {
 }
 
 void Level::drawGate(int x, int y, Operator op) {
+    // Check bounds for x and y.
     if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
         return;
 
+    // Ensure there is nothing already in this grid square.
     if (getGate(x, y) || getWire(x, y) || getNode(x, y) || getObstacle(x, y))
         return;
 
-    setGate(x, y, op);
-}
-
-void Level::setGate(int x, int y, Operator op) {
-    Gate* newGate = new Gate(op, this);  // `this` is the QObject parent
-    gateGrid[y * WIDTH + x] = newGate;
+    // Add the gate to the backend.
+    addGate(x, y, op);
 }

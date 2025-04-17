@@ -60,7 +60,8 @@ MainWindow::MainWindow(QWidget *parent)
     currentTag = "A";
     currentLevel->setWireTemp(0, 0, currentTag);
     currentLevel->setNode(0, 3, "C");
-    currentLevel ->setGate(3,3, Operator::AND);
+    currentLevel->setNode(0, 0, "A");
+    currentLevel->drawGate(3,3, Operator::AND);
 
     repaint();
 
