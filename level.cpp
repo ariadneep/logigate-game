@@ -410,8 +410,10 @@ void Level::clearLevel() {
 
 void Level::addGate(int x, int y, Gate::Operator gateType, Gate::Direction dir) {
     // Later, these will depend on a direction (horizontal or vertical) passed into the method.
-    int secondX = x;
-    int secondY = y + 1; // Below this Y coordinate.
+    int xOffset = 0;
+    int yOffset = 0; // Below this Y coordinate.
+
+    calculateGateOffset(dir, xOffset, yOffset);
 
     Gate::Alignment firstAlignment = Gate::Alignment::NORTH;
     Gate::Alignment secondAlignment = Gate::Alignment::SOUTH;
@@ -428,7 +430,33 @@ void Level::addGate(int x, int y, Gate::Operator gateType, Gate::Direction dir) 
     gateGrid[y * WIDTH + x] = firstHalf;
 
     // Draw a gate adjacent to firstHalf in the specified direction.
-    gateGrid[(secondY) * WIDTH + secondX] = secondHalf;
+    gateGrid[(y + yOffset) * WIDTH + x + xOffset] = secondHalf;
+}
+
+void Level::calculateGateOffset(Gate::Direction dir, int& xOffset, int& yOffset) {
+    switch(dir) {
+    case Gate::Direction::NORTH:
+        xOffset = 1;
+        yOffset = 0;
+        break;
+    case Gate::Direction::EAST:
+        xOffset = 0;
+        yOffset = 1;
+        break;
+    case Gate::Direction::SOUTH:
+        xOffset = -1;
+        yOffset = 0;
+        break;
+    case Gate::Direction::WEST:
+        xOffset = 0;
+        yOffset = -1;
+        break;
+    default:
+        xOffset = 0;
+        yOffset = 0;
+        break;
+    }
+
 }
 
 void Level::addNode(int x, int y, QString& tag, NodeType nodeType, bool signal) {
@@ -455,7 +483,12 @@ void Level::addObstacle(int x, int y) {
 void Level::drawGate(int x, int y, Gate::Operator op, Gate::Direction dir) {
     // Check bounds for x and y.
     // TODO: height - 1 is because it places a gate below. This should depend on direction param.
-    if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT - 1)
+    int xOffset = 0;
+    int yOffset = 0;
+
+    calculateGateOffset(dir, xOffset, yOffset);
+
+    if (x < 0 || x >= WIDTH + xOffset || y < 0 || y >= HEIGHT + yOffset)
         return;
 
     // Ensure there is nothing already in this grid square.

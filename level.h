@@ -251,6 +251,17 @@ private:
      */
     void levelSetup(int level);
 
+    /**
+     * @brief calculateGateOffset - Helper method to calculate the offset of
+     * the x and y positions for the otherHalf of this gate.
+     * If xOffset is nonzero, yOffset must be 0.
+     * If yOffset is nonzerol xOffset must be 0.
+     * @param dir - the direction the output side of this Gate is facing.
+     * @param xOffset - 0, 1, or -1.
+     * @param yOffset- 0, 1, or -1.
+     */
+    void calculateGateOffset(Gate::Direction dir, int& xOffset, int& yOffset);
+
 signals:
     void update();
 };
