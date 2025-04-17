@@ -67,6 +67,7 @@ MainWindow::MainWindow(QWidget *parent)
     // currentLevel->drawGate(0, 2, Gate::Operator::AND);
     // currentLevel->setWireTemp(0, 0, currentTag);
     currentLevel->setNode(0, 3, currentTag, Node::Type::ROOT);
+    currentLevel->setNode(8, 3, currentTag, Node::Type::END);
 
     currentLevel->drawGate(11, 1, Gate::Operator::AND, Gate::Direction::EAST);
     currentLevel->drawGate(10, 7, Gate::Operator::AND, Gate::Direction::SOUTH);
