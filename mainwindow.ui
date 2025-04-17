@@ -60,7 +60,7 @@ border-image: url(:/sprites/grid-12x8.png);</string>
      </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="deleteLevelButton">
+   <widget class="QPushButton" name="clearLevelButton">
     <property name="geometry">
      <rect>
       <x>650</x>
@@ -112,7 +112,7 @@ border-image: url(:/sprites/grid-12x8.png);</string>
    <widget class="QWidget" name="levelSelectMenu" native="true">
     <property name="geometry">
      <rect>
-      <x>-200</x>
+      <x>125</x>
       <y>90</y>
       <width>131</width>
       <height>341</height>
