@@ -464,20 +464,20 @@ void Level::addGate(int x, int y, Gate::Operator gateType, Gate::Direction dir) 
 void Level::calculateGateOffset(Gate::Direction dir, int& xOffset, int& yOffset) {
     switch(dir) {
     case Gate::Direction::NORTH:
-        xOffset = 1;
+        xOffset = -1;
         yOffset = 0;
         break;
     case Gate::Direction::EAST:
         xOffset = 0;
-        yOffset = 1;
+        yOffset = -1;
         break;
     case Gate::Direction::SOUTH:
-        xOffset = -1;
+        xOffset = 1;
         yOffset = 0;
         break;
     case Gate::Direction::WEST:
         xOffset = 0;
-        yOffset = -1;
+        yOffset = 1;
         break;
     default:
         xOffset = 0;
