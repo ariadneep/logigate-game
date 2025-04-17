@@ -19,10 +19,25 @@ class Gate : public GridComponent {
 
 public:
     /**
-    * @brief The Operator enum - Enum class to hold the Operators
+    * @brief The Operator enum - Holds the operation type performed
+    * by this gate.
+    *
+    * Represents the different types of logic gates.
     */
     enum class Operator {
         AND, OR, NOT
+    };
+
+    /**
+     * @brief The Location enum - Holds the location of a Gate
+     * relative to its center.
+     *
+     * A Gate that takes up two grid squares could be
+     * any of the four cardinal directions, whereas a Gate that takes
+     * up just one grid square has a location of CENTER.
+     */
+    enum class Location {
+        CENTER, NORTH, SOUTH, EAST, WEST
     };
 
     /**
