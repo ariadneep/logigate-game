@@ -138,6 +138,12 @@ public:
      */
     void clearLevel();
 
+    /**
+     * @brief levelSetup - Sets up the level based on the passed in level number.
+     * @param level - The level number chosen to set up.
+     */
+    void levelSetup(int level);
+
 private:
 
     /**
@@ -229,12 +235,6 @@ private:
      * @param y - The y position.
      */
     void addObstacle(int x, int y);
-
-    /**
-     * @brief levelSetup - Sets up the level based on the passed in level number.
-     * @param level - The level number chosen to set up.
-     */
-    void levelSetup(int level);
 
 signals:
     void update();
