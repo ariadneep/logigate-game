@@ -434,13 +434,57 @@ void Level::clearLevel() {
     isVictory = false;
 }
 
+void Level::addGate(int x, int y, Gate::Operator gateType, Gate::Direction dir) {
+    // Later, these will depend on a direction (horizontal or vertical) passed into the method.
+    int xOffset = 0;
+    int yOffset = 0; // Below this Y coordinate.
 
-void Level::addGate(int x, int y, Operator gateType) {
-    if(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
-        if(gateGrid[y * WIDTH + x] == nullptr) {
-            gateGrid[y * WIDTH + x] = new Gate(gateType, this);
-        }
+    calculateGateOffset(dir, xOffset, yOffset);
+
+    Gate::Alignment firstAlignment = Gate::Alignment::SECOND;
+    Gate::Alignment secondAlignment = Gate::Alignment::FIRST;
+
+    // Create related gate objects.
+    Gate* firstHalf = new Gate(gateType, firstAlignment, dir, this);
+    Gate* secondHalf = new Gate(gateType, secondAlignment, dir, this);
+
+    // TODO: secondHalf should have an output, firstHalf should not.
+
+    // Specify relation between
+    firstHalf->setOtherHalf(secondHalf);
+    secondHalf->setOtherHalf(firstHalf);
+
+    // Draw a gate at the given x, y position
+    gateGrid[y * WIDTH + x] = firstHalf;
+
+    // Draw a gate adjacent to firstHalf in the specified direction.
+    gateGrid[(y + yOffset) * WIDTH + x + xOffset] = secondHalf;
+}
+
+void Level::calculateGateOffset(Gate::Direction dir, int& xOffset, int& yOffset) {
+    switch(dir) {
+    case Gate::Direction::NORTH:
+        xOffset = 1;
+        yOffset = 0;
+        break;
+    case Gate::Direction::EAST:
+        xOffset = 0;
+        yOffset = 1;
+        break;
+    case Gate::Direction::SOUTH:
+        xOffset = -1;
+        yOffset = 0;
+        break;
+    case Gate::Direction::WEST:
+        xOffset = 0;
+        yOffset = -1;
+        break;
+    default:
+        xOffset = 0;
+        yOffset = 0;
+        break;
     }
+
 }
 
 void Level::addNode(int x, int y, QString& tag, Node::Type nodeType, bool signal) {
@@ -462,4 +506,23 @@ void Level::addObstacle(int x, int y) {
             obstacleGrid[y * WIDTH + x] = new Obstacle(this);
         }
     }
+}
+
+void Level::drawGate(int x, int y, Gate::Operator op, Gate::Direction dir) {
+    // Check bounds for x and y.
+    // TODO: height - 1 is because it places a gate below. This should depend on direction param.
+    int xOffset = 0;
+    int yOffset = 0;
+
+    calculateGateOffset(dir, xOffset, yOffset);
+
+    if (x < 0 || x >= WIDTH + xOffset || y < 0 || y >= HEIGHT + yOffset)
+        return;
+
+    // Ensure there is nothing already in this grid square.
+    if (getGate(x, y) || getWire(x, y) || getNode(x, y) || getObstacle(x, y))
+        return;
+
+    // Add the gate to the backend.
+    addGate(x, y, op, dir);
 }
