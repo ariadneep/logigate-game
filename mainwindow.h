@@ -126,10 +126,7 @@ private:
     bool newPosition;
 
     //pixmap layers
-    QPixmap wireLayer;
-    QPixmap gateLayer;
-    QPixmap nodeLayer;
-    QPixmap obstacleLayer;
+    QPixmap componentLayer;
     QPixmap backgroundLayer;
 
     /**

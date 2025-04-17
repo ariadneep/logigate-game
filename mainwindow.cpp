@@ -26,16 +26,10 @@ MainWindow::MainWindow(QWidget *parent)
     int boardWidth = ui->gameBoard->width();
     int boardHeight = ui->gameBoard->height();
 
-    wireLayer = QPixmap(boardWidth, boardHeight);
-    gateLayer = QPixmap(boardWidth, boardHeight);
-    nodeLayer = QPixmap(boardWidth, boardHeight);
-    obstacleLayer = QPixmap(boardWidth, boardHeight);
+    componentLayer = QPixmap(boardWidth, boardHeight);
     backgroundLayer = QPixmap(":/sprites/grid-12x8.png");
 
-    wireLayer.fill(Qt::transparent);
-    gateLayer.fill(Qt::transparent);
-    nodeLayer.fill(Qt::transparent);
-    obstacleLayer.fill(Qt::transparent);
+    componentLayer.fill(Qt::transparent);
 
 
     // SETTING UP BOX2D
@@ -179,8 +173,7 @@ void MainWindow::repaint() {
     qDebug() << "repainting the board";
 
     //Must remove everything already in the layers.
-    wireLayer.fill(Qt::transparent);
-    nodeLayer.fill(Qt::transparent);
+    componentLayer.fill(Qt::transparent);
 
     //Pointers to hold values of the different grid objects.
     Wire* currentWire;
@@ -234,14 +227,14 @@ void MainWindow::paintWire(int x, int y, Wire::Direction direction, QString tag)
         Qt::KeepAspectRatio,
         Qt::FastTransformation);
 
-    // Set up the painter and link to wireLayer.
-    QPainter wirePainter(&wireLayer);
+    // Set up the painter and link to componentLayer.
+    QPainter wirePainter(&componentLayer);
 
     // Draw to the painter.
     wirePainter.drawPixmap(uiX, uiY, boxWidth, boxHeight, wirePixmap);
 
     // Draw to the UI.
-    ui->gameBoard->setPixmap(wireLayer);
+    ui->gameBoard->setPixmap(componentLayer);
 
 }
 
@@ -288,14 +281,14 @@ void MainWindow::paintGate(int x, int y, Gate::Operator op, Gate::Alignment alig
         Qt::FastTransformation);
 
 
-    // Set up the painter and link to wireLayer.
-    QPainter wirePainter(&wireLayer);
+    // Set up the painter and link to componentLayer.
+    QPainter wirePainter(&componentLayer);
 
     // Draw to the painter.
     wirePainter.drawPixmap(uiX, uiY, boxWidth, boxHeight, gatePixmap);
 
     // Draw to the UI.
-    ui->gameBoard->setPixmap(wireLayer);
+    ui->gameBoard->setPixmap(componentLayer);
 }
 
 void MainWindow::paintNode(int x, int y, QString tag) {
@@ -326,14 +319,14 @@ void MainWindow::paintNode(int x, int y, QString tag) {
 
     qDebug() << "Node pixmap is null???" << nodePixmap.isNull();
 
-    // Set up the painter and link to wireLayer.
-    QPainter nodePainter(&wireLayer);
+    // Set up the painter and link to componentLayer.
+    QPainter nodePainter(&componentLayer);
 
     // Draw to the painter.
     nodePainter.drawPixmap(uiX, uiY, boxWidth, boxHeight, nodePixmap);
 
     // Draw to the UI.
-    ui->gameBoard->setPixmap(wireLayer);
+    ui->gameBoard->setPixmap(componentLayer);
 
 }
 
