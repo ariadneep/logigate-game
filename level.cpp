@@ -343,17 +343,16 @@ void Level::spawnConfetti() {
 }
 
 void Level::updateLevel() {
-    /*
-     * TODO: Change method to implement level-start up procedures such as
-     * where nodes and wires will be in level.
-     * Idea: Potentially delete method and move code into victory()?
-     */
     if (isVictory) {
         confetti->updateConfetti();
     }
 }
 
 void Level::levelSetup(int levelNum) {
+    /*
+     * TODO: hardcoded grid values of where to place obstacles, nodes, and etc.
+     */
+
     if (levelNum == 1) {
         /*
          * TODO: Determine what our level setup will be for each level and use
@@ -369,10 +368,13 @@ void Level::levelSetup(int levelNum) {
 
     }
 
-    /*
-     * And ETC, based on how many levels we decide to have there will be more if-statements
-     * with hardcoded grid values of where to place obstacles, nodes, and etc.
-     */
+    if(levelNum == 4) {
+
+    }
+
+    if(levelNum == 5) {
+
+    }
 }
 
 void Level::removeConfetti() {

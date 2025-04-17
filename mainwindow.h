@@ -75,6 +75,16 @@ private slots:
     void updateWorld();
 
     /**
+     * @brief nextLevelButtonClicked - Event for when nextLevelButton is clicked.
+     */
+    void nextLevelButtonClicked();
+
+    /**
+     * @brief clearLevelButtonClicked - Event for when clearLevelButton is clicked.
+     */
+    void clearLevelButtonClicked();
+
+    /**
      * @brief levelMenuButtonClicked - Event for when levelMenuButton is clicked.
      */
     void levelMenuButtonClicked();
