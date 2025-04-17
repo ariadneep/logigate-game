@@ -422,6 +422,8 @@ void Level::addGate(int x, int y, Gate::Operator gateType, Gate::Direction dir) 
     Gate* firstHalf = new Gate(gateType, firstAlignment, dir, this);
     Gate* secondHalf = new Gate(gateType, secondAlignment, dir, this);
 
+    // TODO: secondHalf should have an output, firstHalf should not.
+
     // Specify relation between
     firstHalf->setOtherHalf(secondHalf);
     secondHalf->setOtherHalf(firstHalf);

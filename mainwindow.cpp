@@ -62,6 +62,9 @@ MainWindow::MainWindow(QWidget *parent)
     currentLevel->setNode(0, 3, "C");
     currentLevel->setNode(0, 0, "A");
     currentLevel->drawGate(3, 3, Gate::Operator::AND, Gate::Direction::EAST);
+    currentLevel->drawGate(5, 5, Gate::Operator::AND, Gate::Direction::SOUTH);
+    currentLevel->drawGate(6, 4, Gate::Operator::AND, Gate::Direction::WEST);
+    currentLevel->drawGate(4, 2, Gate::Operator::AND, Gate::Direction::NORTH);
 
     /* this needs to be edited: you shouldn't be able to draw a wire when the square
      * in the direction you're drawing in is occupied
@@ -221,11 +224,28 @@ void MainWindow::paintWire(int x, int y, Wire::Direction direction, QString tag)
 
 
 void MainWindow::loadGatePixmaps() {
-    //greed AND gates
-    // gatePixmaps.insert({Gate::Operator::AND, Gate::Alignment::SOUTH}, QPixmap(":/sprites/green_wires/and_bottom_blue.png"));
-    gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::SOUTH, Gate::Direction::EAST}}, QPixmap(":/sprites/green_wires/and_bottom_noconnection.png"));
-    gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::NORTH, Gate::Direction::EAST}}, QPixmap(":/sprites/green_wires/and_top_noconnection.png"));
-    // gatePixmaps.insert({Gate::Operator::AND, Gate::Alignment::NORTH}, QPixmap(":/sprites/green_wires/and_top_red.png"));
+    // EAST-facing wires.
+    gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::SOUTH, Gate::Direction::EAST}},
+                       QPixmap(":/sprites/green_wires/and_bottom_noconnection.png"));
+    gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::NORTH, Gate::Direction::EAST}},
+                       QPixmap(":/sprites/green_wires/and_top_noconnection.png"));
+
+    // SOUTH-facing wires.
+    gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::SOUTH, Gate::Direction::SOUTH}},
+                       QPixmap(":/sprites/green_wires/and_bottom_noconnection.png").transformed(QTransform().rotate(90)));
+    gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::NORTH, Gate::Direction::SOUTH}},
+                       QPixmap(":/sprites/green_wires/and_top_noconnection.png").transformed(QTransform().rotate(90)));
+
+    // WEST-facing wires.
+    gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::SOUTH, Gate::Direction::WEST}},
+                       QPixmap(":/sprites/green_wires/and_bottom_noconnection.png").transformed(QTransform().rotate(180)));
+    gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::NORTH, Gate::Direction::WEST}},
+                       QPixmap(":/sprites/green_wires/and_top_noconnection.png").transformed(QTransform().rotate(180)));
+    // NORTH-facing wires.
+    gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::SOUTH, Gate::Direction::NORTH}},
+                       QPixmap(":/sprites/green_wires/and_bottom_noconnection.png").transformed(QTransform().rotate(270)));
+    gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::NORTH, Gate::Direction::NORTH}},
+                       QPixmap(":/sprites/green_wires/and_top_noconnection.png").transformed(QTransform().rotate(270)));
 
 }
 
