@@ -6,10 +6,15 @@ Gate::Gate(Operator type, QObject *parent)
     outputSignal = false;
     tag = "";
     otherHalf = nullptr;
+
+    // inputNode = new Node();
+    // if(location == Gate::Location::NORTH)
+    //     outputNode = new Node();
 }
 
 Gate::~Gate() {
-
+    delete inputNode;
+    delete outputNode;
 }
 
 Gate::Operator Gate::getOperator() {

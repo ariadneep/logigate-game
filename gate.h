@@ -118,6 +118,18 @@ private:
     Operator gateOperator;
 
     /**
+     * @brief inputNode - takes in a wire input. Nullptr when no wire is connected
+     * on the input end.
+     */
+    Node* inputNode;
+
+    /**
+     * @brief outputNode - gives out a wire output. Nullptr when
+     * no wire is connected on the output end.
+     */
+    Node* outputNode;
+
+    /**
      * @brief outputSignal - the signal currently output
      * by this logic gate. False when the gate is dead,
      */
@@ -133,6 +145,12 @@ private:
      * Null if the gate is of a 1-block type, like Type::NOT.
      */
     Gate* otherHalf;
+
+    /**
+     * @brief location - The relative location of this Gate with respect to its
+     * otherHalf.
+     */
+    Location location;
 
 };
 
