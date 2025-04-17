@@ -402,6 +402,9 @@ void Level::setWireTemp(int x, int y, QString tag) {
 }
 
 void Level::setNode(int x, int y, QString tag, Node::Type type) {
+    if (getGate(x, y) || getWire(x, y) || getNode(x, y) || getObstacle(x, y))
+        return;
+
     Node* newNode = new Node(this, x, y, type, tag);
     nodeGrid[y * WIDTH + x] = newNode;
 }
@@ -550,6 +553,9 @@ void Level::calculateGateOffset(Gate::Direction dir, int& xOffset, int& yOffset)
 }
 
 void Level::addNode(int x, int y, QString& tag, Node::Type nodeType, bool signal) {
+    if (getGate(x, y) || getWire(x, y) || getNode(x, y) || getObstacle(x, y))
+        return;
+
     if(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
         if(nodeGrid[y * WIDTH + x] == nullptr) {
             nodeGrid[y * WIDTH + x] = new Node(this);
