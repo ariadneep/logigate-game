@@ -29,14 +29,14 @@ public:
     };
 
     /**
-     * @brief The Location enum - Holds the location of a Gate
+     * @brief The Alignment enum - Holds the location of a Gate
      * relative to its center.
      *
      * A Gate that takes up two grid squares could be
      * any of the four cardinal directions, whereas a Gate that takes
-     * up just one grid square has a location of CENTER.
+     * up just one grid square has an Alignment of CENTER.
      */
-    enum class Location {
+    enum class Alignment {
         CENTER, NORTH, SOUTH, EAST, WEST
     };
 
@@ -110,6 +110,20 @@ public:
      */
     void setOtherHalf(Gate* otherGate);
 
+    /**
+     * @brief getAlignment - Getter method for this Gate's Alignment.
+     * @return the alignment of this Gate relative to the center position.
+     */
+    Alignment getAlignment();
+
+    /**
+     * @brief setAlignment - Sets the alignment of this Gate square.
+     * @param newAlignment - Where this gate is located relative to its otherHalf.
+     * If it has no otherHalf (takes up a single square), then it should be CENTER.
+     * CENTER, or a cardinal direction NORTH, SOUTH, EAST, or WEST.
+     */
+    void setAlignment(Alignment newAlignment);
+
 private:
     /**
      * @brief gateOperator - whether this object represents
@@ -147,10 +161,10 @@ private:
     Gate* otherHalf;
 
     /**
-     * @brief location - The relative location of this Gate with respect to its
+     * @brief alignment - The relative alignment of this Gate with respect to its
      * otherHalf.
      */
-    Location location;
+    Alignment alignment;
 
 };
 
