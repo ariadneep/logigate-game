@@ -1,10 +1,9 @@
 
 #include "gate.h"
 
-Gate::Gate(Operator type, QObject *parent)
-    : GridComponent{parent}, gateOperator(type) {
+Gate::Gate(Operator type, Alignment alignment, Direction direction, QObject *parent)
+    : GridComponent{parent}, gateOperator(type), alignment(alignment), direction(direction) {
     outputSignal = false;
-    tag = "";
     otherHalf = nullptr;
 
     // inputNode = new Node();
@@ -62,10 +61,6 @@ bool Gate::getSignal() {
     return outputSignal;
 }
 
-QString Gate::getGateTag() {
-    return tag;
-}
-
 GridComponent::Type Gate::getType() {
     return GridComponent::Type::GATE;
 }
@@ -77,4 +72,12 @@ void Gate::setOtherHalf(Gate* otherGate) {
 
     // Connects this half of a two-square gate to the other half.
     otherHalf = otherGate;
+}
+
+Gate::Alignment Gate::getAlignment() {
+    return alignment;
+}
+
+Gate::Direction Gate::getDirection() {
+    return direction;
 }

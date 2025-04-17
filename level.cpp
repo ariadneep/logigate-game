@@ -408,14 +408,17 @@ void Level::clearLevel() {
     isVictory = false;
 }
 
-void Level::addGate(int x, int y, Gate::Operator gateType) {
+void Level::addGate(int x, int y, Gate::Operator gateType, Gate::Direction dir) {
     // Later, these will depend on a direction (horizontal or vertical) passed into the method.
     int secondX = x;
     int secondY = y + 1; // Below this Y coordinate.
 
+    Gate::Alignment firstAlignment = Gate::Alignment::NORTH;
+    Gate::Alignment secondAlignment = Gate::Alignment::SOUTH;
+
     // Create related gate objects.
-    Gate* firstHalf = new Gate(gateType);
-    Gate* secondHalf = new Gate(gateType);
+    Gate* firstHalf = new Gate(gateType, firstAlignment, dir, this);
+    Gate* secondHalf = new Gate(gateType, secondAlignment, dir, this);
 
     // Specify relation between
     firstHalf->setOtherHalf(secondHalf);
@@ -449,9 +452,10 @@ void Level::addObstacle(int x, int y) {
     }
 }
 
-void Level::drawGate(int x, int y, Gate::Operator op) {
+void Level::drawGate(int x, int y, Gate::Operator op, Gate::Direction dir) {
     // Check bounds for x and y.
-    if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
+    // TODO: height - 1 is because it places a gate below. This should depend on direction param.
+    if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT - 1)
         return;
 
     // Ensure there is nothing already in this grid square.
@@ -459,5 +463,5 @@ void Level::drawGate(int x, int y, Gate::Operator op) {
         return;
 
     // Add the gate to the backend.
-    addGate(x, y, op);
+    addGate(x, y, op, dir);
 }

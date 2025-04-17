@@ -61,7 +61,12 @@ MainWindow::MainWindow(QWidget *parent)
     currentLevel->setWireTemp(0, 0, currentTag);
     currentLevel->setNode(0, 3, "C");
     currentLevel->setNode(0, 0, "A");
-    currentLevel->drawGate(3,3, Gate::Operator::AND);
+    currentLevel->drawGate(3, 3, Gate::Operator::AND, Gate::Direction::EAST);
+
+    /* this needs to be edited: you shouldn't be able to draw a wire when the square
+     * in the direction you're drawing in is occupied
+     */
+    // currentLevel->drawGate(0, 2, Gate::Operator::AND);
 
     repaint();
 
@@ -168,7 +173,7 @@ void MainWindow::repaint() {
             if(currentWire)
                 paintWire(x, y, currentWire->getDirection(), currentWire->getTag());
             if(currentGate)
-                paintGate(x, y, currentGate->getOperator(), currentGate->getGateTag());
+                paintGate(x, y, currentGate->getOperator(), currentGate->getAlignment(), currentGate->getDirection());
             if(currentNode)
                 paintNode(x, y, currentNode->getTag());
             if(currentObstacle)
@@ -217,16 +222,14 @@ void MainWindow::paintWire(int x, int y, Wire::Direction direction, QString tag)
 
 void MainWindow::loadGatePixmaps() {
     //greed AND gates
-    gatePixmaps.insert({Gate::Operator::AND, "green_bottom_connect"}, QPixmap(":/sprites/green_wires/and_bottom_blue.png"));
-    gatePixmaps.insert({Gate::Operator::AND, "green"}, QPixmap(":/sprites/green_wires/and_bottom_noconnection.png"));
-    gatePixmaps.insert({Gate::Operator::AND, "green"}, QPixmap(":/sprites/green_wires/and_top_noconnection.png"));
-    gatePixmaps.insert({Gate::Operator::AND, "green"}, QPixmap(":/sprites/green_wires/and_top_red.png"));
+    // gatePixmaps.insert({Gate::Operator::AND, Gate::Alignment::SOUTH}, QPixmap(":/sprites/green_wires/and_bottom_blue.png"));
+    gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::SOUTH, Gate::Direction::EAST}}, QPixmap(":/sprites/green_wires/and_bottom_noconnection.png"));
+    gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::NORTH, Gate::Direction::EAST}}, QPixmap(":/sprites/green_wires/and_top_noconnection.png"));
+    // gatePixmaps.insert({Gate::Operator::AND, Gate::Alignment::NORTH}, QPixmap(":/sprites/green_wires/and_top_red.png"));
 
 }
 
-void MainWindow::paintGate(int x, int y, Gate::Operator op, QString tag) {
-    QString gate = "green_bottom_connect";
-
+void MainWindow::paintGate(int x, int y, Gate::Operator op, Gate::Alignment align, Gate::Direction dir) {
     // Holds the current gate texture to be drawn.
     QPixmap gatePixmap;
     // Grab the UI measurements for scaling.
@@ -236,7 +239,7 @@ void MainWindow::paintGate(int x, int y, Gate::Operator op, QString tag) {
     int uiY = y * boxHeight;
 
     // Set the current gate texture, scaled relative to the.
-    gatePixmap = gatePixmaps.value({op, gate}).scaled(
+    gatePixmap = gatePixmaps.value({op, {align, dir}}).scaled(
         boxWidth, boxHeight,
         Qt::KeepAspectRatio,
         Qt::FastTransformation);

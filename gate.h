@@ -37,7 +37,17 @@ public:
      * up just one grid square has an Alignment of CENTER.
      */
     enum class Alignment {
-        CENTER, NORTH, SOUTH, EAST, WEST
+        CENTER, NORTH, EAST, SOUTH, WEST
+    };
+
+    /**
+     * @brief The Direction enum - Describes the direction tthe output side of this
+     * Gate is facing.
+     *
+     * A gate and its otherHalf must share a rotation.
+     */
+    enum class Direction {
+        NORTH, EAST, SOUTH, WEST
     };
 
     /**
@@ -45,7 +55,7 @@ public:
      * @param type - AND, OR, or NOT gate.
      * @param parent - The parent object
      */
-    explicit Gate(Operator type, QObject *parent = nullptr);
+    explicit Gate(Operator type, Alignment alignment, Direction direction, QObject *parent = nullptr);
 
     /**
      * Destructor for the Gate class.
@@ -65,12 +75,6 @@ public:
      * @return the current signal the inputs merge into.
      */
     bool getSignal();
-
-    /**
-     * @brief getGateTag - Gets the tag for the gate
-     * @return returns the gate
-     */
-    QString getGateTag();
 
     /**
      * @brief convertSignal - sets the output signal after checking the
@@ -117,12 +121,10 @@ public:
     Alignment getAlignment();
 
     /**
-     * @brief setAlignment - Sets the alignment of this Gate square.
-     * @param newAlignment - Where this gate is located relative to its otherHalf.
-     * If it has no otherHalf (takes up a single square), then it should be CENTER.
-     * CENTER, or a cardinal direction NORTH, SOUTH, EAST, or WEST.
+     * @brief getDirection - Getter method for this Gate's Direction.
+     * @return the direction this Gate has been rotated to face.
      */
-    void setAlignment(Alignment newAlignment);
+    Direction getDirection();
 
 private:
     /**
@@ -150,11 +152,6 @@ private:
     bool outputSignal;
 
     /**
-     * @brief tag - represents the gate ID.
-     */
-    QString tag;
-
-    /**
      * @brief otherHalf - the other half of the current gate.
      * Null if the gate is of a 1-block type, like Type::NOT.
      */
@@ -165,6 +162,11 @@ private:
      * otherHalf.
      */
     Alignment alignment;
+
+    /**
+     * @brief direction - the direction this Gate has been rotated to face.
+     */
+    Direction direction;
 
 };
 
