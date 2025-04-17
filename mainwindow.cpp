@@ -58,8 +58,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     // \/ CHANGE \/
     currentTag = "A";
-    currentLevel->setWireTemp(0, 0, currentTag);
-    currentLevel->setNode(0, 3, "C");
+    // currentLevel->setWireTemp(0, 0, currentTag);
+    currentLevel->setNode(0, 3, currentTag, Node::Type::ROOT);
 
     repaint();
 

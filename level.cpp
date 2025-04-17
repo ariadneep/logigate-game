@@ -33,36 +33,47 @@ Level::~Level() {
 
 void Level::drawWire(int x, int y, QString tag) {
 
-    qDebug() << "Checked at (" << x << ", " << y << ")";
+    qDebug() << "///////////\nChecked at (" << x << ", " << y << ")";
 
     if (x < 0 || x > WIDTH || y < 0 || y > HEIGHT)
         return;
 
     Wire* currentWire = getWire(x, y);
-    Node* currentNode = getNode(x, y);
 
-    if (currentNode) {
-        //do some method
-        return;
-    }
+    // nodeConnect(x, y, tag, currentNode);
+
+    // Check for Nodes:
 
     if (currentWire == nullptr) {
 
         qDebug() << "empty space, attempting to place wire";
 
+        Wire::Direction wireConnectionDirection = Wire::Direction::NONE;
+
+        if (Node* connectNode = findNode(x, y, tag, wireConnectionDirection)) {
+            currentWire = new Wire();
+            setWire(x, y, currentWire);
+            Wire* nodeWire = connectNode->getWire();
+            // Check some stuff with the wire to make sure it is valid, namely,
+            // are we connecting with a root or an end?
+            // IF END:
+            connectWires(nodeWire, currentWire, wireConnectionDirection);
+
+            return;
+        }
+
         wireConnect(x, y, tag, currentWire);
 
         // add checks for gates
     }
-    else {
+    else if (currentWire && currentWire->getTailConnection() != nullptr
+             && currentWire->getTailConnection()->getTailConnection() == nullptr) {
         // Is this wire directly connected to an incomplete end?
         // If so, "go back" one wire.
-        if (currentWire && currentWire->getTailConnection() != nullptr
-            && currentWire->getTailConnection()->getTailConnection() == nullptr) {
-            qDebug() << "deleted wire at " << x << ", " << y;
 
-            wireRemove(currentWire);
-        }
+        qDebug() << "deleted wire at " << x << ", " << y;
+
+        wireRemove(currentWire);
     }
 
     qDebug() << "//////////////";
@@ -80,7 +91,7 @@ void Level::wireConnect(int x, int y, QString tag, Wire* currentWire) {
         && !upWire->isFullyConnected()) {
 
         qDebug() << "Created new wire, connected to above.";
-        nodeCheck(x, y, upWire);
+
         currentWire = new Wire();
         currentWire->setTag(tag);
         currentWire->setHeadConnection(upWire);
@@ -109,7 +120,6 @@ void Level::wireConnect(int x, int y, QString tag, Wire* currentWire) {
     else if (rightWire != nullptr && rightWire->getTag() == tag
              && !rightWire->isFullyConnected()) {
 
-        nodeCheck(x, y, rightWire);
         qDebug() << "Created new wire, connected to right.";
         currentWire = new Wire();
         currentWire->setTag(tag);
@@ -139,10 +149,6 @@ void Level::wireConnect(int x, int y, QString tag, Wire* currentWire) {
     else if (downWire != nullptr && downWire->getTag() == tag
              && !downWire->isFullyConnected()) {
 
-        // run node check, and see if there's a node to connect to.
-        if(nodeCheck(x, y, downWire)){
-            victory();
-        }
         qDebug() << "Created new wire, connected to below.";
         currentWire = new Wire();
         currentWire->setTag(tag);
@@ -173,8 +179,6 @@ void Level::wireConnect(int x, int y, QString tag, Wire* currentWire) {
              && !leftWire->isFullyConnected()) {
 
         qDebug() << "Created new wire, connected to left.";
-
-        nodeCheck(x, y, leftWire);
 
         currentWire = new Wire();
         currentWire->setTag(tag);
@@ -234,44 +238,53 @@ void Level::wireRemove(Wire* currentWire) {
     }
 }
 
-bool Level::nodeCheck(int x, int y, Wire* currentWire) {
+Node* Level::findNode(int x, int y, QString tag, Wire::Direction& wireConnectionDirection) {
+
     Node* upNode = getNode(x, y - 1);
     Node* rightNode = getNode(x + 1, y);
     Node* downNode = getNode(x, y + 1);
     Node* leftNode = getNode(x - 1, y);
 
-    QString currentTag = currentWire->getTag();
-    bool currentSignal = currentWire->getSignal();
-    bool wasChanged = false;
+    if (upNode != nullptr && upNode->getTag() == tag && !upNode->getConnected()
+        && (upNode->getDirection() == Node::Direction::NONE
+            || upNode->getDirection() == Node::Direction::S)) {
+        wireConnectionDirection = Wire::Direction::N;
+        return upNode;
+    }
+    else if (rightNode != nullptr && rightNode->getTag() == tag && !rightNode->getConnected()
+             && (rightNode->getDirection() == Node::Direction::NONE
+                 || rightNode->getDirection() == Node::Direction::W)) {
+        wireConnectionDirection = Wire::Direction::E;
+        return rightNode;
+    }
+    else if (downNode != nullptr && downNode->getTag() == tag && !downNode->getConnected()
+             && (downNode->getDirection() == Node::Direction::NONE
+                 || downNode->getDirection() == Node::Direction::N)) {
+        wireConnectionDirection = Wire::Direction::S;
+        return downNode;
+    }
+    else if (leftNode != nullptr && leftNode->getTag() == tag && !leftNode->getConnected()
+             && (leftNode->getDirection() == Node::Direction::NONE
+                 || leftNode->getDirection() == Node::Direction::E)) {
+        wireConnectionDirection = Wire::Direction::W;
+        return leftNode;
+    }
+    qDebug() << "No node found";
+    return nullptr;
+}
 
-    if (upNode != nullptr && upNode->getTag() == currentTag && upNode->getSignal() == currentSignal) {
-        qDebug() << "Node detected above, and meets all requirements to link!";
-        upNode->setConnected(true);
-        // TODO: ACTUALLY SET UP CONNECTION
-        wasChanged = true;
-    }
-    else if (downNode != nullptr && downNode->getTag() == currentTag && downNode->getSignal() == currentSignal) {
-        qDebug() << "Node detected below, and meets all requirements to link!";
-        downNode->setConnected(true);
-        // TODO: ACTUALLY SET UP CONNECTION
-        wasChanged = true;
-    }
-    else if (rightNode != nullptr && rightNode->getTag() == currentTag && rightNode->getSignal() == currentSignal) {
-        qDebug() << "Node detected to the right, and meets all requirements to link!";
-        rightNode->setConnected(true);
-        // TODO: ACTUALLY SET UP CONNECTION
-        wasChanged = true;
-    }
-    else if (leftNode != nullptr && leftNode->getTag() == currentTag && leftNode->getSignal() == currentSignal) {
-        qDebug() << "Node detected to the left, and meets all requirements to link!";
-        leftNode->setConnected(true);
-        // TODO: ACTUALLY SET UP CONNECTION
-        wasChanged = true;
-    }
-    // return wasChanged -- meaning this method will return true if the wire happened to
-    // connect to a node.
-    return wasChanged;
- }
+void Level::connectWires(Wire* headWire, Wire* tailWire,
+                        Wire::Direction& wireConnectionDirection) {
+
+    tailWire->setTag(headWire->getTag());
+    tailWire->setDirection(wireConnectionDirection);
+    // PUT THIS IN THE DRAW WIRE METHOD INSTEAD AND THEN CONNECT.
+    // setWire(x, y, tailWire);
+    //
+    headWire->setTailConnection(tailWire);
+    tailWire->setHeadConnection(headWire);
+    qDebug() << "Wires connected.";
+}
 
 Wire* Level::getWire(int x, int y) {
     if (x < 0 || x > WIDTH || y < 0 || y > HEIGHT) {
@@ -314,9 +327,8 @@ void Level::setWireTemp(int x, int y, QString tag) {
     wireGrid[y * WIDTH + x] = addWire;
 }
 
-void Level::setNode(int x, int y, QString tag) {
-    Node* newNode = new Node();
-    newNode->setTag(tag);
+void Level::setNode(int x, int y, QString tag, Node::Type type) {
+    Node* newNode = new Node(this, x, y, Node::Type::ROOT, tag);
     nodeGrid[y * WIDTH + x] = newNode;
 }
 
@@ -417,13 +429,13 @@ void Level::addGate(int x, int y, Operator gateType) {
     }
 }
 
-void Level::addNode(int x, int y, QString& tag, NodeType nodeType, bool signal) {
+void Level::addNode(int x, int y, QString& tag, Node::Type nodeType, bool signal) {
     if(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
         if(nodeGrid[y * WIDTH + x] == nullptr) {
             nodeGrid[y * WIDTH + x] = new Node(this);
             // TODO: refactor parameters;
             // nodeGrid[y * WIDTH + x] = new Node(tag, nodeType, graphicsScene, x, y, this);
-            if(nodeType == NodeType::ROOT) {
+            if(nodeType == Node::Type::ROOT) {
                 nodeGrid[y * WIDTH + x]->setSignal(signal);
             }
         }
