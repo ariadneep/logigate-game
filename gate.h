@@ -87,6 +87,15 @@ public:
      */
     GridComponent::Type getType() override;
 
+    /**
+     * @brief setOtherHalf - Sets a pointer to the other half of this gate.
+     * This should hold a nullptr value when the gate is of a single-block
+     * Type like OR and a Gate* of the same Type when the gate is of a two-block Type,
+     * like AND or OR.
+     * @param otherGate - A Gate pointer to a Gate of the same Gate::Type
+     */
+    void setOtherHalf(Gate* otherGate);
+
 private:
     /**
      * @brief gateOperator - whether this object represents
@@ -104,6 +113,12 @@ private:
      * @brief tag - represents the gate ID.
      */
     QString tag;
+
+    /**
+     * @brief otherHalf - the other half of the current gate.
+     * Null if the gate is of a 1-block type, like Type::NOT.
+     */
+    Gate* otherHalf;
 
 };
 

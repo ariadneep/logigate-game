@@ -5,6 +5,7 @@ Gate::Gate(Operator type, QObject *parent)
     : GridComponent{parent}, gateOperator(type) {
     outputSignal = false;
     tag = "";
+    otherHalf = nullptr;
 }
 
 Gate::~Gate() {
@@ -62,4 +63,10 @@ QString Gate::getGateTag() {
 
 GridComponent::Type Gate::getType() {
     return GridComponent::Type::GATE;
+}
+
+void Gate::setOtherHalf(Gate* otherGate) {
+    if(this->gateOperator == Operator::NOT)
+        return;
+    otherHalf = otherGate;
 }
