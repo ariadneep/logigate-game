@@ -59,8 +59,17 @@ void Level::drawWire(int x, int y, QString tag) {
             Wire* nodeWire = connectNode->getWire();
             // Check some stuff with the wire to make sure it is valid, namely,
             // are we connecting with a root or an end?
-            // IF END:
-            connectWires(nodeWire, currentWire, wireConnectionDirection);
+
+            switch (connectNode->getNodeType()) {
+            case Node::Type::ROOT :
+                connectWires(nodeWire, currentWire, wireConnectionDirection);
+                break;
+            case Node::Type::END :
+                connectWires(currentWire, nodeWire, wireConnectionDirection);
+                break;
+            }
+
+            // connectWires(nodeWire, currentWire, wireConnectionDirection);
 
             return;
         }
