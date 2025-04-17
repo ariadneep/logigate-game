@@ -195,12 +195,48 @@ private:
      */
     void wireCheck(Wire* currentWire, Wire* checkingWire);
 
+    /**
+     * @brief wireConnect
+     * @param x
+     * @param y
+     * @param tag
+     * @param currentWire
+     */
     void wireConnect(int x, int y, QString tag, Wire* currentWire);
 
+    /**
+     * @brief wireRemove
+     * @param currentWire
+     */
     void wireRemove(Wire* currentWire);
 
+    /**
+     * @brief findWire - Checks all coordinates nearby and returns a pointer to a valid wire
+     * nearby. Valid wires are: Same tag, not connected to a tail, not null.
+     * The Wire::Direction enum reference is passed through to store the direction at which the
+     * wire was found.
+     * @param x - The coordinate x position to check around.
+     * @param y - The coordinate y position to check around.
+     * @param tag - The tag of the wire to link up to.
+     * @param wireConnectionDirection - The relative direction of where the wire was found at the
+     * coordinates.
+     * @return The pointer to the neighboring valid wire.
+     */
     Wire* findWire(int x, int y, QString tag, Wire::Direction& wireConnectionDirection);
 
+    /**
+     * @brief findNode - Checks all coordinates nearby and returns a pointer to a valid node
+     * nearby. Valid nodes are: Same tag, not connected, not null, in a connection direction
+     * equal to where the node was found or has a direction of NONE.
+     * The Wire::Direction enum reference is passed through to store the direction at which the
+     * node was found.
+     * @param x - The coordinate x position to check around.
+     * @param y - The coordinate y position to check around.
+     * @param tag - The tag of the node to link up to.
+     * @param wireConnectionDirection - The relative direction of where the node was found at the
+     * coordinates.
+     * @return The pointer to the neighboring valid node.
+     */
     Node* findNode(int x, int y, QString tag, Wire::Direction& wireConnectionDirection);
 
     /**
@@ -209,11 +245,31 @@ private:
      * @param y
      * @param headWire
      * @param tailWire
-     * @param wireConnectionDirection
      */
-    void connectWires(Wire* headWire, Wire* tailWire,
-                      Wire::Direction& wireConnectionDirection);
+    void connectWires(Wire* headWire, Wire* tailWire);
 
+    /**
+     * @brief nodeDualDirector
+     * @param nodeDirection
+     * @param wireDirection
+     * @return
+     */
+    Wire::Direction nodeDualDirector(Wire::Direction nodeDirection, Wire::Direction wireDirection);
+
+    /**
+     * @brief wireDualDirector
+     * @param connectWire
+     * @param wireDirection
+     * @return
+     */
+    Wire::Direction wireDualDirector(Wire* connectWire, Wire::Direction wireDirection);
+
+    /**
+     * @brief setWire
+     * @param x
+     * @param y
+     * @param newWire
+     */
     void setWire(int x, int y, Wire* newWire);
 
     /**
