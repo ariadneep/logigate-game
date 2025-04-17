@@ -74,6 +74,45 @@ private slots:
      */
     void updateWorld();
 
+    /**
+     * @brief nextLevelButtonClicked - Event for when nextLevelButton is clicked.
+     */
+    void nextLevelButtonClicked();
+
+    /**
+     * @brief clearLevelButtonClicked - Event for when clearLevelButton is clicked.
+     */
+    void clearLevelButtonClicked();
+
+    /**
+     * @brief levelMenuButtonClicked - Event for when levelMenuButton is clicked.
+     */
+    void levelMenuButtonClicked();
+
+    /**
+     * @brief levelOneButtonClicked - Event for when levelOneButton is clicked.
+     */
+    void levelOneButtonClicked();
+
+    /**
+     * @brief levelTwoButtonClicked - Event for when levelTwoButton is clicked.
+     */
+    void levelTwoButtonClicked();
+
+    /**
+     * @brief levelThreeButtonClicked - Event for when levelThreeButton is clicked.
+     */
+    void levelThreeButtonClicked();
+
+    /**
+     * @brief levelFourButtonClicked - Event for when levelFourButton is clicked.
+     */
+    void levelFourButtonClicked();
+
+    /**
+     * @brief levelFiveButtonClicked - Event for when levelFiveButton is clicked.
+     */
+    void levelFiveButtonClicked();
 
 private:
     /**
@@ -223,5 +262,15 @@ private:
      * @brief levelNum - The current level.
      */
     int levelNum;
+
+    /**
+     * @brief levelMenuBody - Box2D for levelMenu Widget.
+     */
+    b2Body* levelMenuBody;
+
+    /**
+     * @brief isLevelMenuShowing - Bool for sliding levelMenu on or off screen.
+     */
+    bool isLevelMenuShowing;
 };
 #endif // MAINWINDOW_H

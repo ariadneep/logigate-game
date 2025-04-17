@@ -1,35 +1,29 @@
 #include "node.h"
 
-Node::Node(QObject *parent)
+Node::Node(QObject *parent, int x, int y, Node::Type type, QString tag)
     : GridComponent{parent}
 {
     signal = true;
     connected = false;
-    // current code has been commented out because it used parameters that got deleted --
-    // I'm not too sure how to make this working again without adding back some of the params
+    nodeType = type;
+    this->tag = tag;
+    this->direction = Node::Direction::NONE;
+    backingWire = new Wire();
+    backingWire->setTag(tag);
+    backingWire->setPosition(x, y);
 
-    // QString spritePath;
-    // if (nodeType == NodeType::ROOT) {
-    //     if(tag == "A") {
-    //         spritePath = ":/sprites/Sprites/red_wires/red_button_down.png";
-    //     }
-    //     if(tag == "B") {
-    //         //BLUE WIRE PATH HERE
-    //     }
-    // }
-
-
-
-    /*
-     * Add the sprite into the scene at the grid x and y-coordinates.
-     */
-    // sprite = new QGraphicsPixmapItem(QPixmap(spritePath));
-    // sprite->setPos(xPos, yPos);
-    // graphicsScene->addItem(sprite);
+    switch (nodeType) {
+    case Node::Type::ROOT :
+        backingWire->setHeadConnection(backingWire);
+        break;
+    case Node::Type::END :
+        backingWire->setTailConnection(backingWire);
+    }
 }
 
 Node::~Node() {
     delete sprite;
+    delete backingWire;
 }
 
 GridComponent::Type Node::getType() {
@@ -52,21 +46,29 @@ void Node::setSignal(bool signal) {
     this->signal = signal;
 }
 
-NodeType Node::getNodeType() {
+Node::Type Node::getNodeType() {
     return nodeType;
 }
 
+Node::Direction Node::getDirection() {
+    return direction;
+}
+
+void Node::setDirection(Node::Direction newDirection) {
+    direction = newDirection;
+}
+
 bool Node::checkSignal(QString& tag, bool signal) {
-    if(nodeType != NodeType::END) {
+    if(nodeType != Node::Type::END) {
         return false;
     }
     return (tag == this->tag && signal);
 }
 
 bool Node::getConnected() {
-    return connected;
+    return backingWire->isFullyConnected();
 }
 
-void Node::setConnected(bool connectionStatus) {
-    connected = connectionStatus;
+Wire* Node::getWire() {
+    return backingWire;
 }

@@ -11,6 +11,9 @@ MainWindow::MainWindow(QWidget *parent)
     setMouseTracking(true);
     ui->gameBoard->setMouseTracking(true);
 
+    ui->levelSelectMenu->setStyleSheet("background: 3b3e3f");
+    isLevelMenuShowing = false;
+
     gameBoardX = 0;
     gameBoardY = 0;
     newPosition = true;
@@ -54,13 +57,16 @@ MainWindow::MainWindow(QWidget *parent)
     groundBox.SetAsBox(9.5f, 0.1f);
     groundBody->CreateFixture(&groundBox, 0.0f);
 
+    b2BodyDef levelMenuBodyDef;
+    levelMenuBodyDef.type = b2_kinematicBody;
+    levelMenuBodyDef.position.Set(-200.0f, 0.0f);
+    levelMenuBody = box2DWorld->CreateBody(&levelMenuBodyDef);
+
     currentLevel = new Level(levelNum, graphicsScene, box2DWorld, this);
 
     // \/ CHANGE \/
     currentTag = "A";
-    currentLevel->setWireTemp(0, 0, currentTag);
-    currentLevel->setNode(0, 3, "C");
-    currentLevel->setNode(0, 0, "A");
+
     currentLevel->drawGate(3, 3, Gate::Operator::AND, Gate::Direction::EAST);
     currentLevel->drawGate(5, 5, Gate::Operator::AND, Gate::Direction::SOUTH);
     currentLevel->drawGate(6, 4, Gate::Operator::AND, Gate::Direction::WEST);
@@ -70,8 +76,22 @@ MainWindow::MainWindow(QWidget *parent)
      * in the direction you're drawing in is occupied
      */
     // currentLevel->drawGate(0, 2, Gate::Operator::AND);
+    // currentLevel->setWireTemp(0, 0, currentTag);
+    currentLevel->setNode(0, 3, currentTag, Node::Type::ROOT);
 
     repaint();
+
+    // Level Selection
+    connect(ui->levelMenuButton, &QPushButton::clicked, this, &MainWindow::levelMenuButtonClicked);
+    connect(ui->levelOneButton, &QPushButton::clicked, this, &MainWindow::levelOneButtonClicked);
+    connect(ui->levelTwoButton, &QPushButton::clicked, this, &MainWindow::levelTwoButtonClicked);
+    connect(ui->levelThreeButton, &QPushButton::clicked, this, &MainWindow::levelThreeButtonClicked);
+    connect(ui->levelFourButton, &QPushButton::clicked, this, &MainWindow::levelFourButtonClicked);
+    connect(ui->levelFiveButton, &QPushButton::clicked, this, &MainWindow::levelFiveButtonClicked);
+
+    // Next lvl & reset
+    connect(ui->nextLevelButton, &QPushButton::clicked, this, &MainWindow::nextLevelButtonClicked);
+    connect(ui->clearLevelButton, &QPushButton::clicked, this, &MainWindow::clearLevelButtonClicked);
 
     // World timer
     connect(timer, &QTimer::timeout, this, &MainWindow::updateWorld);
@@ -90,16 +110,19 @@ MainWindow::~MainWindow()
 void MainWindow::updateWorld() {
     box2DWorld->Step(1.0f / 60.0f, 6, 2);
 
-    frameCount++;
-    if(frameCount == 100) {
-        currentLevel->victory();
-    }
+    b2Vec2 levelMenuPosition = levelMenuBody->GetPosition();
+    ui->levelSelectMenu->move(levelMenuPosition.x * 100.0f, ui->levelSelectMenu->y());
 
-    /*
-    * CHANGE THIS IN THE FUTURE FOR WHEN LEVEL CHANGES.
-    */
-    if(frameCount == 500) {
-        currentLevel->removeConfetti();
+    //Stop levelMenu at specific positions.
+    if(isLevelMenuShowing && levelMenuPosition.x * 100.0f >= 125.0f) {
+        levelMenuBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+        levelMenuBody->SetTransform(b2Vec2(125.0f / 100.0f, 0.0f), 0.0f);
+        ui->levelSelectMenu->move(125, 90);
+    }
+    else if (!isLevelMenuShowing && levelMenuPosition.x * 100.0f <= -200.0f) {
+        levelMenuBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+        levelMenuBody->SetTransform(b2Vec2(-200.0f / 100.0f, 0.0f), 0.0f);
+        ui->levelSelectMenu->move(-200, 90);
     }
 
     currentLevel->updateLevel();
@@ -319,11 +342,17 @@ void MainWindow::paintObstacle(int x, int y) {
 }
 
 void MainWindow::changeLevel() {
-    if(currentLevel) {
-        currentLevel->clearLevel();
-        delete currentLevel;
-    }
+    /**
+     * Procedure: clear level, create a new instance of currentLevel, and then
+     * set up the level.
+     */
+    currentLevel->clearLevel();
+
+    delete currentLevel;
+
     currentLevel = new Level(levelNum, graphicsScene, box2DWorld, this);
+
+    currentLevel->levelSetup(levelNum);
 
     repaint();
 }
@@ -411,4 +440,73 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
         return;
 
     qDebug() << "Mouse released";
+}
+
+void MainWindow::levelMenuButtonClicked() {
+    /*
+     * Slide the menu to the right if bool isLevelMenuVisible is false upon clicked.
+     * Slide the menu to the left if the bool isLevelMenuVisible is true upon clicked.
+     */
+    if(!isLevelMenuShowing) {
+        levelMenuBody->SetLinearVelocity(b2Vec2(2.0f, 0.0f));
+        isLevelMenuShowing = true;
+    } else {
+        levelMenuBody->SetLinearVelocity(b2Vec2(-2.0f, 0.0f));
+        isLevelMenuShowing = false;
+    }
+}
+
+void MainWindow::levelOneButtonClicked(){
+    /*
+     * Procedure:
+     * 1. Call the clearLevel method.
+     * 2. Call levelLayout(levelNum), based on which button was clicked.
+     * Do the same for the other level button clicked public slots.
+     */
+    levelNum = 1;
+    changeLevel();
+}
+
+void MainWindow::levelTwoButtonClicked(){
+    levelNum = 2;
+    changeLevel();
+}
+
+void MainWindow::levelThreeButtonClicked(){
+    levelNum = 3;
+    changeLevel();
+}
+
+void MainWindow::levelFourButtonClicked(){
+    levelNum = 4;
+    changeLevel();
+}
+
+void MainWindow::levelFiveButtonClicked(){
+    levelNum = 5;
+    changeLevel();
+}
+
+void MainWindow::clearLevelButtonClicked() {
+    /*
+     * Procedure: Clear the level, and set it up again.
+     */
+    changeLevel();
+    qDebug() << "clearing level";
+}
+
+void MainWindow::nextLevelButtonClicked() {
+    qDebug() << "next level loading";
+    /*
+     * Procedure: Clear the level, and then set up the next one.
+     */
+
+    levelNum++;
+    //If already on highest level, loop back to level one.
+    if(levelNum > 5) {
+        levelNum = 1;
+    }
+
+    qDebug() << "levelNum: " << levelNum;
+    changeLevel();
 }

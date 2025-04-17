@@ -47,4 +47,9 @@
         <file>red_wires/red_wire_SW.png</file>
         <file>grid-12x8.png</file>
     </qresource>
+    <qresource prefix="/icons">
+        <file>arrow.png</file>
+        <file>menu.png</file>
+        <file>trash.png</file>
+    </qresource>
 </RCC>

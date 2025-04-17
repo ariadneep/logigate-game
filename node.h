@@ -22,24 +22,32 @@
 #include "gridcomponent.h"
 #include "wire.h"
 
-enum class NodeType {
-    ROOT, END
-};
-
-
 class Node : public GridComponent {
 
 public:
+    enum class Type {
+        ROOT, END
+    };
+
+    enum class Direction {
+        NONE, N, E, S, W
+    };
+
     /**
      * @brief Node - Creates a Node object
-     * @param tag - The input node.
-     * @param nodeType - Determines if it is the ROOT or END of the node.
-     * @param graphicsScene - The QGraphicsScene for adding sprites.
-     * @param xPos - The x-coordinate of the grid.
-     * @param yPos - the y-coordinate of the grid.
      * @param parent - The parent object.
+     * @param type - Determines if it is the ROOT or END of the node.
+     * @param tag - The input node.
      */
-    explicit Node(QObject *parent = nullptr);
+    explicit Node(QObject *parent = nullptr, int x = 0, int y = 0,
+                  Node::Type type = Node::Type::ROOT, QString tag = "A");
+
+    /**
+     * @brief setPosition
+     * @param x
+     * @param y
+     */
+    void setPosition(int x, int y);
 
     /**
      * Destructor for the Node class.
@@ -81,7 +89,7 @@ public:
      * @brief getNodeType - The type of the node.
      * @return A Type representing whether the node is a ROOT or END.
      */
-    NodeType getNodeType();
+    Node::Type getNodeType();
 
     /**
      * @brief checkSignal - Determines the END value of a node.
@@ -90,6 +98,18 @@ public:
      * @return A bool representing if the tags match and it is an end node.
      */
     bool checkSignal(QString& tag, bool signal);
+
+    /**
+     * @brief getDirection
+     * @return
+     */
+    Node::Direction getDirection();
+
+    /**
+     * @brief setDirection
+     * @param newDirection
+     */
+    void setDirection(Node::Direction newDirection);
 
     /**
      * @brief getX - The node's x-coordinate in the grid.
@@ -110,11 +130,18 @@ public:
     bool getConnected();
 
     /**
-     * @brief setConnected - sets the node's status of connection
+     * @brief getWire
+     * @return
      */
-    void setConnected(bool connectionStatus);
+    Wire* getWire();
 
 private:
+
+    /**
+     * @brief direction
+     */
+    Node::Direction direction;
+
     /**
      * @brief tag - The input node type.
      */
@@ -126,9 +153,14 @@ private:
     bool signal;
 
     /**
+     * @brief backingWire
+     */
+    Wire* backingWire;
+
+    /**
      * @brief nodeType - Determines if it is a ROOT or END node.
      */
-    NodeType nodeType;
+    Node::Type nodeType;
 
     /**
      * @brief sprite - The sprite of the node.
