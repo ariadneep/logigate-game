@@ -104,7 +104,7 @@ public:
      * @param x
      * @param y
      */
-    void setNode(int x, int y, QString tag);
+    void setNode(int x, int y, QString tag, Node::Type type);
 
     /**
      * @brief getObstacle
@@ -115,13 +115,13 @@ public:
     Obstacle* getObstacle(int x, int y);
 
     /**
-     * @brief This Checks the surrounding nodes and then applies
-     * the needed transformations to the pointer wire
+     * @brief nodeConnect
      * @param x
      * @param y
+     * @param tag
      * @param currentWire
      */
-    bool nodeCheck(int x, int y, Wire* currentWire);
+    void nodeConnect(int x, int y, QString tag, Wire* currentWire);
 
     /**
      * @brief updateLevel - Updates the level to initial start-up procedure.
@@ -195,15 +195,26 @@ private:
      */
     void wireCheck(Wire* currentWire, Wire* checkingWire);
 
-    void setWire(int x, int y, Wire* newWire);
-  
+    void wireConnect(int x, int y, QString tag, Wire* currentWire);
+
+    void wireRemove(Wire* currentWire);
+
+    Wire* findWire(int x, int y, QString tag, Wire::Direction& wireConnectionDirection);
+
+    Node* findNode(int x, int y, QString tag, Wire::Direction& wireConnectionDirection);
+
     /**
-     * @brief removeTail
+     * @brief connectWires
      * @param x
      * @param y
-     * @param currentWire
+     * @param headWire
+     * @param tailWire
+     * @param wireConnectionDirection
      */
-    void removeTail(int x, int y, Wire* currentWire);
+    void connectWires(Wire* headWire, Wire* tailWire,
+                      Wire::Direction& wireConnectionDirection);
+
+    void setWire(int x, int y, Wire* newWire);
 
     /**
      * @brief addGate - Adds a gate at the specified x and y position into the level.
@@ -221,7 +232,7 @@ private:
      * @param nodeType - Specifies whether it is a ROOT or END node.
      * @param signal - The output value, true or false.
      */
-    void addNode(int x, int y, QString& tag, NodeType nodeType, bool signal);
+    void addNode(int x, int y, QString& tag, Node::Type nodeType, bool signal);
 
     /**
      * @brief addObstacle - Adds an obstacle at x and y position into the level.

@@ -46,7 +46,6 @@ Wire* Wire::getHeadConnection() {
 }
 
 void Wire::setHeadConnection(Wire* newWire) {
-    delete headConnection;
     headConnection = newWire;
 }
 
@@ -55,7 +54,6 @@ Wire* Wire::getTailConnection() {
 }
 
 void Wire::setTailConnection(Wire* newWire) {
-    delete tailConnection;
     tailConnection = newWire;
 }
 
