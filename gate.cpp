@@ -66,7 +66,10 @@ GridComponent::Type Gate::getType() {
 }
 
 void Gate::setOtherHalf(Gate* otherGate) {
-    if(this->gateOperator == Operator::NOT)
+    // Conditions wherein this method should do nothing.
+    if(this->gateOperator == Operator::NOT || this->gateOperator != otherGate->gateOperator)
         return;
+
+    // Connects this half of a two-square gate to the other half.
     otherHalf = otherGate;
 }
