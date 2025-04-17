@@ -61,17 +61,17 @@ MainWindow::MainWindow(QWidget *parent)
     // \/ CHANGE \/
     currentTag = "A";
 
-    currentLevel->drawGate(11, 0, Gate::Operator::AND, Gate::Direction::EAST);
-    currentLevel->drawGate(11, 7, Gate::Operator::AND, Gate::Direction::SOUTH);
-    currentLevel->drawGate(0, 7, Gate::Operator::AND, Gate::Direction::WEST);
-    currentLevel->drawGate(0, 0, Gate::Operator::AND, Gate::Direction::NORTH);
-
     /* this needs to be edited: you shouldn't be able to draw a wire when the square
      * in the direction you're drawing in is occupied
      */
     // currentLevel->drawGate(0, 2, Gate::Operator::AND);
     // currentLevel->setWireTemp(0, 0, currentTag);
     currentLevel->setNode(0, 3, currentTag, Node::Type::ROOT);
+
+    currentLevel->drawGate(11, 1, Gate::Operator::AND, Gate::Direction::EAST);
+    currentLevel->drawGate(10, 7, Gate::Operator::AND, Gate::Direction::SOUTH);
+    currentLevel->drawGate(0, 6, Gate::Operator::AND, Gate::Direction::WEST);
+    currentLevel->drawGate(1, 3, Gate::Operator::AND, Gate::Direction::NORTH);
 
     repaint();
 

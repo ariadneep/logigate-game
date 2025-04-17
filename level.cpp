@@ -516,13 +516,22 @@ void Level::drawGate(int x, int y, Gate::Operator op, Gate::Direction dir) {
 
     calculateGateOffset(dir, xOffset, yOffset);
 
-    if (x < 0 || x >= WIDTH + xOffset || y < 0 || y >= HEIGHT + yOffset)
+    if (x < 0 || x >= WIDTH  || y < 0 || y >= HEIGHT )
         return;
+
+    if (x + xOffset < 0 || x + xOffset >= WIDTH || y + yOffset < 0 || y + yOffset >= HEIGHT )
+        return;
+
 
     // Ensure there is nothing already in this grid square.
     if (getGate(x, y) || getWire(x, y) || getNode(x, y) || getObstacle(x, y))
         return;
 
+    // Location for the second gate
+    if (getGate(x + xOffset, y + yOffset) || getWire(x + xOffset, y + yOffset) ||
+        getNode(x + xOffset, y + yOffset) || getObstacle(x + xOffset, y + yOffset))
+        return;
     // Add the gate to the backend.
+
     addGate(x, y, op, dir);
 }
