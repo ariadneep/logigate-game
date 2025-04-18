@@ -144,6 +144,7 @@ public:
      */
     void removeTails(Node* startingNode);
 
+    /**
      * @brief drawGate - Draws the Gate at a certain X and Y Coordinate
      * @param x - Given X Coordinate
      * @param y - Given Y Coordinate

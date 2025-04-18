@@ -607,6 +607,7 @@ void Level::removeTails(Node* startingNode) {
             return;
         setWire(x, y, nullptr);
         currentWire = tailWire;
+    }
 }
     
 void Level::drawGate(int x, int y, Gate::Operator op, Gate::Direction dir) {
