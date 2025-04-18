@@ -73,6 +73,12 @@ public:
     bool getSignal();
 
     /**
+     * @brief setSignal - Sets output signal to desired output.
+     * @param signal - A bool manually set by the user.
+     */
+    void setSignal(bool signal);
+
+    /**
      * @brief convertSignal - sets the output signal after checking the
      * two input pulses and performing a boolean operation on them based
      * on the Type of the gate.

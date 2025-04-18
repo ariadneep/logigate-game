@@ -168,6 +168,20 @@ public:
      */
     bool isEmptySpace(int x, int y);
 
+    /**
+     * @brief clearWires - Method to clear the wires on the given level.
+     */
+    void clearWires();
+
+    /**
+     * @brief clearGates - Method to clear the gate signals on the given level.
+     */
+    void clearGates();
+
+    /**
+     * @brief clearNodes - Method to clear the node signals on the given level.
+     */
+    void clearNodes();
 
 private:
 

@@ -61,6 +61,10 @@ bool Gate::getSignal() {
     return outputSignal;
 }
 
+void Gate::setSignal(bool signal) {
+    outputSignal = signal;
+}
+
 GridComponent::Type Gate::getType() {
     return GridComponent::Type::GATE;
 }

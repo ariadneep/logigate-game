@@ -18,7 +18,7 @@ Level::Level(int levelNum, QGraphicsScene* graphicsScene, b2World* box2DWorld, Q
     }
 
     //Setup the level based on the chosen level.
-    levelSetup(levelNum);
+    // levelSetup(levelNum);
 }
 
 Level::~Level() {
@@ -464,28 +464,53 @@ void Level::levelSetup(int levelNum) {
      * TODO: hardcoded grid values of where to place obstacles, nodes, and etc.
      */
 
-    if (levelNum == 1) {
-        /*
-         * TODO: Determine what our level setup will be for each level and use
-         * addObstacle, addNode, etc, to set up the level on the grid.
-         */
+    // clearLevel();
+
+    switch (levelNum) {
+    case 1:
+        setNode(0, 3, "A", Node::Type::ROOT);
+        setNode(8, 3, "A", Node::Type::END);
+
+        drawGate(11, 1, Gate::Operator::AND, Gate::Direction::EAST);
+        drawGate(10, 7, Gate::Operator::AND, Gate::Direction::SOUTH);
+        drawGate(0, 6, Gate::Operator::AND, Gate::Direction::WEST);
+        drawGate(1, 3, Gate::Operator::AND, Gate::Direction::NORTH);
+        break;
+
+    case 2:
+        setNode(3, 3, "A", Node::Type::ROOT);
+        setNode(19, 5, "A", Node::Type::END);
+
+        drawGate(11, 1, Gate::Operator::AND, Gate::Direction::EAST);
+        drawGate(10, 7, Gate::Operator::AND, Gate::Direction::SOUTH);
+
+        break;
+
+    case 3:
+
+        break;
+
+    case 4:
+
+        break;
+
+    case 5:
+
+        break;
+
+    default:
+        setNode(0, 3, "A", Node::Type::ROOT);
+        setNode(8, 3, "A", Node::Type::END);
+
+        drawGate(11, 1, Gate::Operator::AND, Gate::Direction::EAST);
+        drawGate(10, 7, Gate::Operator::AND, Gate::Direction::SOUTH);
+        drawGate(0, 6, Gate::Operator::AND, Gate::Direction::WEST);
+        drawGate(1, 0, Gate::Operator::AND, Gate::Direction::NORTH);
+        break;
     }
 
-    if(levelNum == 2) {
-
-    }
-
-    if(levelNum == 3) {
-
-    }
-
-    if(levelNum == 4) {
-
-    }
-
-    if(levelNum == 5) {
-
-    }
+    // Reset victory state after setting up new level
+    isVictory = false;
 }
 
 void Level::removeConfetti() {
@@ -493,6 +518,7 @@ void Level::removeConfetti() {
     isVictory = false;
 }
 
+// Did not use this for Clear Button. But could use this for moving to the next level.
 void Level::clearLevel() {
     removeConfetti();
 
@@ -646,3 +672,72 @@ void Level::drawGate(int x, int y, Gate::Operator op, Gate::Direction dir) {
 
     addGate(x, y, op, dir);
 }
+
+void Level::clearWires() {
+    for (int i = 0; i < WIDTH * HEIGHT; i++) {
+        Wire* wire = wireGrid[i];
+
+        bool isNodeWire = false;
+        for (int j = 0; j < WIDTH * HEIGHT; j++) {
+            if (nodeGrid[j] && nodeGrid[j]->getWire() == wire) {
+                isNodeWire = true;
+                break;
+            }
+        }
+
+        if (!isNodeWire && wire) {
+            delete wire;
+        }
+
+        wireGrid[i] = nullptr;
+    }
+
+    // Reset connections on backing wires (nodes still exist)
+    for (int i = 0; i < WIDTH * HEIGHT; i++) {
+        if (nodeGrid[i]) {
+            Wire* backWire = nodeGrid[i]->getWire();
+            if (backWire) {
+                // reset only the opposite end
+                if (nodeGrid[i]->getNodeType() == Node::Type::ROOT)
+                    backWire->setTailConnection(nullptr);
+                else if (nodeGrid[i]->getNodeType() == Node::Type::END)
+                    backWire->setHeadConnection(nullptr);
+            }
+        }
+    }
+
+    isVictory = false;
+}
+
+void Level::clearGates() {
+    for(int i = 0; i < WIDTH * HEIGHT; i++) {
+        if (gateGrid[i]) {
+            gateGrid[i]->setSignal(false);
+        }
+    }
+}
+
+void Level::clearNodes() {
+    for (int i = 0; i < WIDTH * HEIGHT; i++) {
+        if (nodeGrid[i]) {
+            Node* node = nodeGrid[i];
+            node->setSignal(true);
+            Wire* backWire = node->getWire();
+            if (backWire) {
+                if(node->getNodeType() == Node::Type::ROOT) {
+                    backWire->setHeadConnection(backWire);
+                    backWire->setTailConnection(nullptr);
+                } else if (node->getNodeType() == Node::Type::END) {
+                    backWire->setHeadConnection(nullptr);
+                    backWire->setTailConnection(backWire);
+                }
+
+                if (backWire->getX() >= 0 && backWire->getX() < WIDTH &&
+                    backWire->getY() >= 0 && backWire->getY() < HEIGHT) {
+                    wireGrid[backWire->getY() * WIDTH + backWire->getX()] = backWire;
+                }
+            }
+        }
+    }
+}
+
