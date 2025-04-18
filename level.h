@@ -144,6 +144,20 @@ public:
      */
     void removeTails(Node* startingNode);
 
+     * @brief drawGate - Draws the Gate at a certain X and Y Coordinate
+     * @param x - Given X Coordinate
+     * @param y - Given Y Coordinate
+     * @param op - Given Operator to use
+     * @param rot - The direction the gate faces.
+     */
+    void drawGate(int x, int y, Gate::Operator op, Gate::Direction dir);
+
+    /**
+     * @brief levelSetup - Sets up the level based on the passed in level number.
+     * @param level - The level number chosen to set up.
+     */
+    void levelSetup(int level);
+
 private:
 
     /**
@@ -284,7 +298,7 @@ private:
      * @param y - The y position.
      * @param gateType - The type of gate.
      */
-    void addGate(int x, int y, Operator gateType);
+    void addGate(int x, int y, Gate::Operator gateType, Gate::Direction dir);
 
     /**
      * @brief addNode - Adds a node at the specified x and y position into the level.
@@ -304,10 +318,15 @@ private:
     void addObstacle(int x, int y);
 
     /**
-     * @brief levelSetup - Sets up the level based on the passed in level number.
-     * @param level - The level number chosen to set up.
+     * @brief calculateGateOffset - Helper method to calculate the offset of
+     * the x and y positions for the otherHalf of this gate.
+     * If xOffset is nonzero, yOffset must be 0.
+     * If yOffset is nonzerol xOffset must be 0.
+     * @param dir - the direction the output side of this Gate is facing.
+     * @param xOffset - 0, 1, or -1.
+     * @param yOffset- 0, 1, or -1.
      */
-    void levelSetup(int level);
+    void calculateGateOffset(Gate::Direction dir, int& xOffset, int& yOffset);
 
 signals:
     void update();

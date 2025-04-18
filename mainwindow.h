@@ -74,6 +74,45 @@ private slots:
      */
     void updateWorld();
 
+    /**
+     * @brief nextLevelButtonClicked - Event for when nextLevelButton is clicked.
+     */
+    void nextLevelButtonClicked();
+
+    /**
+     * @brief clearLevelButtonClicked - Event for when clearLevelButton is clicked.
+     */
+    void clearLevelButtonClicked();
+
+    /**
+     * @brief levelMenuButtonClicked - Event for when levelMenuButton is clicked.
+     */
+    void levelMenuButtonClicked();
+
+    /**
+     * @brief levelOneButtonClicked - Event for when levelOneButton is clicked.
+     */
+    void levelOneButtonClicked();
+
+    /**
+     * @brief levelTwoButtonClicked - Event for when levelTwoButton is clicked.
+     */
+    void levelTwoButtonClicked();
+
+    /**
+     * @brief levelThreeButtonClicked - Event for when levelThreeButton is clicked.
+     */
+    void levelThreeButtonClicked();
+
+    /**
+     * @brief levelFourButtonClicked - Event for when levelFourButton is clicked.
+     */
+    void levelFourButtonClicked();
+
+    /**
+     * @brief levelFiveButtonClicked - Event for when levelFiveButton is clicked.
+     */
+    void levelFiveButtonClicked();
 
 private:
     /**
@@ -87,10 +126,7 @@ private:
     bool newPosition;
 
     //pixmap layers
-    QPixmap wireLayer;
-    QPixmap gateLayer;
-    QPixmap nodeLayer;
-    QPixmap obstacleLayer;
+    QPixmap componentLayer;
     QPixmap backgroundLayer;
 
     /**
@@ -109,7 +145,7 @@ private:
      * @brief wirePixmaps - Holds the Gate pixmaps with direction-color pairs as keys
      * and image Pixmaps as values.
      */
-    QHash<QPair<Operator, QString>, QPixmap> gatePixmaps;
+    QHash<QPair<Gate::Operator, QPair<Gate::Alignment, Gate::Direction>>, QPixmap> gatePixmaps;
 
     /**
      * @brief loadWirePixmaps - Helper method to load all the pixmaps
@@ -149,8 +185,9 @@ private:
      * given x, y position.
      * @param x - the horizontal grid square index to draw the gate on.
      * @param y - the vertical grid square index to draw the gate on.
+     * @param align - the alignment of the gate.
      */
-    void paintGate(int x, int y, Operator op);
+    void paintGate(int x, int y, Gate::Operator op, Gate::Alignment align, Gate::Direction dir);
 
     /**
      * @brief paintNode - paints a node with the appropriate attributes at the
@@ -222,5 +259,15 @@ private:
      * @brief levelNum - The current level.
      */
     int levelNum;
+
+    /**
+     * @brief levelMenuBody - Box2D for levelMenu Widget.
+     */
+    b2Body* levelMenuBody;
+
+    /**
+     * @brief isLevelMenuShowing - Bool for sliding levelMenu on or off screen.
+     */
+    bool isLevelMenuShowing;
 };
 #endif // MAINWINDOW_H

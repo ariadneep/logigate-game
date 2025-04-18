@@ -15,23 +15,43 @@
 #include "gridcomponent.h"
 #include "node.h"
 
-
-/**
- * @brief The Operator enum - Enum class to hold the Operators
- */
-enum class Operator {
-    AND, OR, NOT
-};
-
 class Gate : public GridComponent {
 
 public:
+    /**
+    * @brief The Operator enum - Holds the operation type performed
+    * by this gate.
+    *
+    * Represents the different types of logic gates.
+    */
+    enum class Operator {
+        AND, OR, NOT
+    };
+
+    /**
+     * @brief The Alignment enum - Holds information on whether this gate
+     * is a first half or a second half.
+     */
+    enum class Alignment {
+        FIRST, SECOND
+    };
+
+    /**
+     * @brief The Direction enum - Describes the direction tthe output side of this
+     * Gate is facing.
+     *
+     * A gate and its otherHalf must share a rotation.
+     */
+    enum class Direction {
+        NORTH, EAST, SOUTH, WEST
+    };
+
     /**
      * @brief Gate - Makes a Gate object.
      * @param type - AND, OR, or NOT gate.
      * @param parent - The parent object
      */
-    explicit Gate(Operator type, QObject *parent = nullptr);
+    explicit Gate(Operator type, Alignment alignment, Direction direction, QObject *parent = nullptr);
 
     /**
      * Destructor for the Gate class.
@@ -81,6 +101,27 @@ public:
      */
     GridComponent::Type getType() override;
 
+    /**
+     * @brief setOtherHalf - Sets a pointer to the other half of this gate.
+     * This should hold a nullptr value when the gate is of a single-block
+     * Type like OR and a Gate* of the same Type when the gate is of a two-block Type,
+     * like AND or OR.
+     * @param otherGate - A Gate pointer to a Gate of the same Gate::Type
+     */
+    void setOtherHalf(Gate* otherGate);
+
+    /**
+     * @brief getAlignment - Getter method for this Gate's Alignment.
+     * @return the alignment of this Gate relative to the center position.
+     */
+    Alignment getAlignment();
+
+    /**
+     * @brief getDirection - Getter method for this Gate's Direction.
+     * @return the direction this Gate has been rotated to face.
+     */
+    Direction getDirection();
+
 private:
     /**
      * @brief gateOperator - whether this object represents
@@ -89,10 +130,39 @@ private:
     Operator gateOperator;
 
     /**
+     * @brief inputNode - takes in a wire input. Nullptr when no wire is connected
+     * on the input end.
+     */
+    Node* inputNode;
+
+    /**
+     * @brief outputNode - gives out a wire output. Nullptr when
+     * no wire is connected on the output end.
+     */
+    Node* outputNode;
+
+    /**
      * @brief outputSignal - the signal currently output
      * by this logic gate. False when the gate is dead,
      */
     bool outputSignal;
+
+    /**
+     * @brief otherHalf - the other half of the current gate.
+     * Null if the gate is of a 1-block type, like Type::NOT.
+     */
+    Gate* otherHalf;
+
+    /**
+     * @brief alignment - The relative alignment of this Gate with respect to its
+     * otherHalf.
+     */
+    Alignment alignment;
+
+    /**
+     * @brief direction - the direction this Gate has been rotated to face.
+     */
+    Direction direction;
 
 };
 

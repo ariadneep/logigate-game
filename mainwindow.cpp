@@ -11,6 +11,9 @@ MainWindow::MainWindow(QWidget *parent)
     setMouseTracking(true);
     ui->gameBoard->setMouseTracking(true);
 
+    ui->levelSelectMenu->setStyleSheet("background: 3b3e3f");
+    isLevelMenuShowing = false;
+
     gameBoardX = 0;
     gameBoardY = 0;
     newPosition = true;
@@ -23,16 +26,10 @@ MainWindow::MainWindow(QWidget *parent)
     int boardWidth = ui->gameBoard->width();
     int boardHeight = ui->gameBoard->height();
 
-    wireLayer = QPixmap(boardWidth, boardHeight);
-    gateLayer = QPixmap(boardWidth, boardHeight);
-    nodeLayer = QPixmap(boardWidth, boardHeight);
-    obstacleLayer = QPixmap(boardWidth, boardHeight);
+    componentLayer = QPixmap(boardWidth, boardHeight);
     backgroundLayer = QPixmap(":/sprites/grid-12x8.png");
 
-    wireLayer.fill(Qt::transparent);
-    gateLayer.fill(Qt::transparent);
-    nodeLayer.fill(Qt::transparent);
-    obstacleLayer.fill(Qt::transparent);
+    componentLayer.fill(Qt::transparent);
 
 
     // SETTING UP BOX2D
@@ -54,15 +51,41 @@ MainWindow::MainWindow(QWidget *parent)
     groundBox.SetAsBox(9.5f, 0.1f);
     groundBody->CreateFixture(&groundBox, 0.0f);
 
+    b2BodyDef levelMenuBodyDef;
+    levelMenuBodyDef.type = b2_kinematicBody;
+    levelMenuBodyDef.position.Set(-200.0f, 0.0f);
+    levelMenuBody = box2DWorld->CreateBody(&levelMenuBodyDef);
+
     currentLevel = new Level(levelNum, graphicsScene, box2DWorld, this);
 
     currentTag = "";
     // \/ CHANGE \/
+    /* this needs to be edited: you shouldn't be able to draw a wire when the square
+     * in the direction you're drawing in is occupied
+     */
+    // currentLevel->drawGate(0, 2, Gate::Operator::AND);
     // currentLevel->setWireTemp(0, 0, currentTag);
     currentLevel->setNode(0, 3, "A", Node::Type::ROOT);
     currentLevel->setNode(8, 3, "A", Node::Type::END);
 
+    currentLevel->drawGate(11, 1, Gate::Operator::AND, Gate::Direction::EAST);
+    currentLevel->drawGate(10, 7, Gate::Operator::AND, Gate::Direction::SOUTH);
+    currentLevel->drawGate(0, 6, Gate::Operator::AND, Gate::Direction::WEST);
+    currentLevel->drawGate(1, 3, Gate::Operator::AND, Gate::Direction::NORTH);
+
     repaint();
+
+    // Level Selection
+    connect(ui->levelMenuButton, &QPushButton::clicked, this, &MainWindow::levelMenuButtonClicked);
+    connect(ui->levelOneButton, &QPushButton::clicked, this, &MainWindow::levelOneButtonClicked);
+    connect(ui->levelTwoButton, &QPushButton::clicked, this, &MainWindow::levelTwoButtonClicked);
+    connect(ui->levelThreeButton, &QPushButton::clicked, this, &MainWindow::levelThreeButtonClicked);
+    connect(ui->levelFourButton, &QPushButton::clicked, this, &MainWindow::levelFourButtonClicked);
+    connect(ui->levelFiveButton, &QPushButton::clicked, this, &MainWindow::levelFiveButtonClicked);
+
+    // Next lvl & reset
+    connect(ui->nextLevelButton, &QPushButton::clicked, this, &MainWindow::nextLevelButtonClicked);
+    connect(ui->clearLevelButton, &QPushButton::clicked, this, &MainWindow::clearLevelButtonClicked);
 
     // World timer
     connect(timer, &QTimer::timeout, this, &MainWindow::updateWorld);
@@ -81,16 +104,19 @@ MainWindow::~MainWindow()
 void MainWindow::updateWorld() {
     box2DWorld->Step(1.0f / 60.0f, 6, 2);
 
-    frameCount++;
-    if(frameCount == 100) {
-        currentLevel->victory();
-    }
+    b2Vec2 levelMenuPosition = levelMenuBody->GetPosition();
+    ui->levelSelectMenu->move(levelMenuPosition.x * 100.0f, ui->levelSelectMenu->y());
 
-    /*
-    * CHANGE THIS IN THE FUTURE FOR WHEN LEVEL CHANGES.
-    */
-    if(frameCount == 500) {
-        currentLevel->removeConfetti();
+    //Stop levelMenu at specific positions.
+    if(isLevelMenuShowing && levelMenuPosition.x * 100.0f >= 125.0f) {
+        levelMenuBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+        levelMenuBody->SetTransform(b2Vec2(125.0f / 100.0f, 0.0f), 0.0f);
+        ui->levelSelectMenu->move(125, 90);
+    }
+    else if (!isLevelMenuShowing && levelMenuPosition.x * 100.0f <= -200.0f) {
+        levelMenuBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+        levelMenuBody->SetTransform(b2Vec2(-200.0f / 100.0f, 0.0f), 0.0f);
+        ui->levelSelectMenu->move(-200, 90);
     }
 
     currentLevel->updateLevel();
@@ -147,8 +173,7 @@ void MainWindow::repaint() {
     qDebug() << "repainting the board";
 
     //Must remove everything already in the layers.
-    wireLayer.fill(Qt::transparent);
-    nodeLayer.fill(Qt::transparent);
+    componentLayer.fill(Qt::transparent);
 
     //Pointers to hold values of the different grid objects.
     Wire* currentWire;
@@ -167,7 +192,7 @@ void MainWindow::repaint() {
             if(currentWire)
                 paintWire(x, y, currentWire->getDirection(), currentWire->getTag());
             if(currentGate)
-                paintGate(x, y, currentGate->getOperator());
+                paintGate(x, y, currentGate->getOperator(), currentGate->getAlignment(), currentGate->getDirection());
             if(currentNode)
                 paintNode(x, y, currentNode->getTag());
             if(currentObstacle)
@@ -202,28 +227,45 @@ void MainWindow::paintWire(int x, int y, Wire::Direction direction, QString tag)
         Qt::KeepAspectRatio,
         Qt::FastTransformation);
 
-    // Set up the painter and link to wireLayer.
-    QPainter wirePainter(&wireLayer);
+    // Set up the painter and link to componentLayer.
+    QPainter wirePainter(&componentLayer);
 
     // Draw to the painter.
     wirePainter.drawPixmap(uiX, uiY, boxWidth, boxHeight, wirePixmap);
 
     // Draw to the UI.
-    ui->gameBoard->setPixmap(wireLayer);
+    ui->gameBoard->setPixmap(componentLayer);
 
 }
 
 
 void MainWindow::loadGatePixmaps() {
-    //greed AND gates
-    gatePixmaps.insert({Operator::AND, "green"}, QPixmap(":/sprites/green_wires/and_bottom_blue.png"));
-    gatePixmaps.insert({Operator::AND, "green"}, QPixmap(":/sprites/green_wires/and_bottom_noconnection.png"));
-    gatePixmaps.insert({Operator::AND, "green"}, QPixmap(":/sprites/green_wires/and_top_noconnection.png"));
-    gatePixmaps.insert({Operator::AND, "green"}, QPixmap(":/sprites/green_wires/and_top_red.png"));
+    // EAST-facing wires.
+    gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::SECOND, Gate::Direction::EAST}},
+                       QPixmap(":/sprites/green_wires/and_bottom_noconnection.png"));
+    gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::FIRST, Gate::Direction::EAST}},
+                       QPixmap(":/sprites/green_wires/and_top_noconnection.png"));
+
+    // SOUTH-facing wires.
+    gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::SECOND, Gate::Direction::SOUTH}},
+                       QPixmap(":/sprites/green_wires/and_bottom_noconnection.png").transformed(QTransform().rotate(90)));
+    gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::FIRST, Gate::Direction::SOUTH}},
+                       QPixmap(":/sprites/green_wires/and_top_noconnection.png").transformed(QTransform().rotate(90)));
+
+    // WEST-facing wires.
+    gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::SECOND, Gate::Direction::WEST}},
+                       QPixmap(":/sprites/green_wires/and_bottom_noconnection.png").transformed(QTransform().rotate(180)));
+    gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::FIRST, Gate::Direction::WEST}},
+                       QPixmap(":/sprites/green_wires/and_top_noconnection.png").transformed(QTransform().rotate(180)));
+    // NORTH-facing wires.
+    gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::SECOND, Gate::Direction::NORTH}},
+                       QPixmap(":/sprites/green_wires/and_bottom_noconnection.png").transformed(QTransform().rotate(270)));
+    gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::FIRST, Gate::Direction::NORTH}},
+                       QPixmap(":/sprites/green_wires/and_top_noconnection.png").transformed(QTransform().rotate(270)));
 
 }
 
-void MainWindow::paintGate(int x, int y, Operator op) {
+void MainWindow::paintGate(int x, int y, Gate::Operator op, Gate::Alignment align, Gate::Direction dir) {
     // Holds the current gate texture to be drawn.
     QPixmap gatePixmap;
     // Grab the UI measurements for scaling.
@@ -233,20 +275,20 @@ void MainWindow::paintGate(int x, int y, Operator op) {
     int uiY = y * boxHeight;
 
     // Set the current gate texture, scaled relative to the.
-    gatePixmap = gatePixmaps.value({op, "AND"}).scaled(
+    gatePixmap = gatePixmaps.value({op, {align, dir}}).scaled(
         boxWidth, boxHeight,
         Qt::KeepAspectRatio,
         Qt::FastTransformation);
 
 
-    // Set up the painter and link to wireLayer.
-    QPainter wirePainter(&wireLayer);
+    // Set up the painter and link to componentLayer.
+    QPainter wirePainter(&componentLayer);
 
     // Draw to the painter.
     wirePainter.drawPixmap(uiX, uiY, boxWidth, boxHeight, gatePixmap);
 
     // Draw to the UI.
-    ui->gameBoard->setPixmap(wireLayer);
+    ui->gameBoard->setPixmap(componentLayer);
 }
 
 void MainWindow::paintNode(int x, int y, QString tag) {
@@ -277,14 +319,14 @@ void MainWindow::paintNode(int x, int y, QString tag) {
 
     qDebug() << "Node pixmap is null???" << nodePixmap.isNull();
 
-    // Set up the painter and link to wireLayer.
-    QPainter nodePainter(&wireLayer);
+    // Set up the painter and link to componentLayer.
+    QPainter nodePainter(&componentLayer);
 
     // Draw to the painter.
     nodePainter.drawPixmap(uiX, uiY, boxWidth, boxHeight, nodePixmap);
 
     // Draw to the UI.
-    ui->gameBoard->setPixmap(wireLayer);
+    ui->gameBoard->setPixmap(componentLayer);
 
 }
 
@@ -293,11 +335,17 @@ void MainWindow::paintObstacle(int x, int y) {
 }
 
 void MainWindow::changeLevel() {
-    if(currentLevel) {
-        currentLevel->clearLevel();
-        delete currentLevel;
-    }
+    /**
+     * Procedure: clear level, create a new instance of currentLevel, and then
+     * set up the level.
+     */
+    currentLevel->clearLevel();
+
+    delete currentLevel;
+
     currentLevel = new Level(levelNum, graphicsScene, box2DWorld, this);
+
+    currentLevel->levelSetup(levelNum);
 
     repaint();
     currentTag = "";
@@ -372,6 +420,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
             currentLevel->drawWire(gameBoardX, gameBoardY, currentTag);
         newPosition = false;
 
+
         repaint();
     }
 }
@@ -391,4 +440,73 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
         return;
 
     qDebug() << "Mouse released";
+}
+
+void MainWindow::levelMenuButtonClicked() {
+    /*
+     * Slide the menu to the right if bool isLevelMenuVisible is false upon clicked.
+     * Slide the menu to the left if the bool isLevelMenuVisible is true upon clicked.
+     */
+    if(!isLevelMenuShowing) {
+        levelMenuBody->SetLinearVelocity(b2Vec2(2.0f, 0.0f));
+        isLevelMenuShowing = true;
+    } else {
+        levelMenuBody->SetLinearVelocity(b2Vec2(-2.0f, 0.0f));
+        isLevelMenuShowing = false;
+    }
+}
+
+void MainWindow::levelOneButtonClicked(){
+    /*
+     * Procedure:
+     * 1. Call the clearLevel method.
+     * 2. Call levelLayout(levelNum), based on which button was clicked.
+     * Do the same for the other level button clicked public slots.
+     */
+    levelNum = 1;
+    changeLevel();
+}
+
+void MainWindow::levelTwoButtonClicked(){
+    levelNum = 2;
+    changeLevel();
+}
+
+void MainWindow::levelThreeButtonClicked(){
+    levelNum = 3;
+    changeLevel();
+}
+
+void MainWindow::levelFourButtonClicked(){
+    levelNum = 4;
+    changeLevel();
+}
+
+void MainWindow::levelFiveButtonClicked(){
+    levelNum = 5;
+    changeLevel();
+}
+
+void MainWindow::clearLevelButtonClicked() {
+    /*
+     * Procedure: Clear the level, and set it up again.
+     */
+    changeLevel();
+    qDebug() << "clearing level";
+}
+
+void MainWindow::nextLevelButtonClicked() {
+    qDebug() << "next level loading";
+    /*
+     * Procedure: Clear the level, and then set up the next one.
+     */
+
+    levelNum++;
+    //If already on highest level, loop back to level one.
+    if(levelNum > 5) {
+        levelNum = 1;
+    }
+
+    qDebug() << "levelNum: " << levelNum;
+    changeLevel();
 }
