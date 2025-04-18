@@ -43,19 +43,21 @@ void Level::drawWire(int x, int y, QString tag) {
 
     Wire* currentWire = getWire(x, y);
 
-    if (currentWire == nullptr) {
+    if (isEmptySpace(x, y)) {
 
         qDebug() << "empty space, attempting to place wire";
 
+        Wire* currentWire = nullptr;
         Wire::Direction wireConnectionDirection = Wire::Direction::NONE;
         Wire::Direction nodeConnectionDirection = Wire::Direction::NONE;
-
 
         // Attempting to find valid neighboring node:
         if (Node* connectNode = findNode(x, y, tag, nodeConnectionDirection)) {
             Wire* nodeWire = connectNode->getWire();
             // Check some stuff with the wire to make sure it is valid, namely,
             // are we connecting with a root or an end?
+
+            qDebug() << "Node found";
 
             switch (connectNode->getNodeType()) {
             case Node::Type::ROOT :
@@ -635,6 +637,13 @@ void Level::removeTails(Node* startingNode) {
         currentWire = tailWire;
     }
 }
+
+bool Level::isEmptySpace(int x, int y) {
+    return (getWire(x, y) == nullptr) && (getNode(x, y) == nullptr) &&
+           (getObstacle(x, y) == nullptr) && (getGate(x, y) == nullptr);
+}
+
+
     
 void Level::drawGate(int x, int y, Gate::Operator op, Gate::Direction dir) {
     // Check bounds for x and y.

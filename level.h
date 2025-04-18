@@ -160,6 +160,15 @@ public:
     void levelSetup(int level);
 
     /**
+     * @brief isEmptySpace - Checks whether or not the level has a completely empty space at the
+     * x and y position.
+     * @param x - The x coordinate of the position to check.
+     * @param y - The y coordinate of the position to check.
+     * @return Whether or not the space is empty.
+     */
+    bool isEmptySpace(int x, int y);
+
+    /**
      * @brief clearWires - Method to clear the wires on the given level.
      */
     void clearWires();
