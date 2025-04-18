@@ -661,3 +661,35 @@ void Level::clearWires() {
     isVictory = false;
 }
 
+void Level::clearGates() {
+    for(int i = 0; i < WIDTH * HEIGHT; i++) {
+        if (gateGrid[i]) {
+            gateGrid[i]->setSignal(false);
+        }
+    }
+}
+
+void Level::clearNodes() {
+    for (int i = 0; i < WIDTH * HEIGHT; i++) {
+        if (nodeGrid[i]) {
+            Node* node = nodeGrid[i];
+            node->setSignal(true);
+            Wire* backWire = node->getWire();
+            if (backWire) {
+                if(node->getNodeType() == Node::Type::ROOT) {
+                    backWire->setHeadConnection(backWire);
+                    backWire->setTailConnection(nullptr);
+                } else if (node->getNodeType() == Node::Type::END) {
+                    backWire->setHeadConnection(nullptr);
+                    backWire->setTailConnection(backWire);
+                }
+
+                if (backWire->getX() >= 0 && backWire->getX() < WIDTH &&
+                    backWire->getY() >= 0 && backWire->getY() < HEIGHT) {
+                    wireGrid[backWire->getY() * WIDTH + backWire->getX()] = backWire;
+                }
+            }
+        }
+    }
+}
+

@@ -484,9 +484,13 @@ void MainWindow::levelFiveButtonClicked(){
 void MainWindow::clearLevelButtonClicked() {
     /*
      * Procedure: Clear the level, and set it up again.
+     * or, don't clear it at all, and only reset all wires from nodes A and B?
      */
     // changeLevel();
     currentLevel->clearWires();
+    currentLevel->clearGates();
+    currentLevel->clearNodes();
+
     repaint();
     qDebug() << "clearing level";
 }
@@ -496,7 +500,6 @@ void MainWindow::nextLevelButtonClicked() {
     /*
      * Procedure: Clear the level, and then set up the next one.
      */
-
     levelNum++;
     //If already on highest level, loop back to level one.
     if(levelNum > 5) {
