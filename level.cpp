@@ -456,6 +456,11 @@ void Level::levelSetup(int levelNum) {
         break;
 
     case 2:
+        setNode(3, 3, "A", Node::Type::ROOT);
+        setNode(19, 5, "A", Node::Type::END);
+
+        drawGate(11, 1, Gate::Operator::AND, Gate::Direction::EAST);
+        drawGate(10, 7, Gate::Operator::AND, Gate::Direction::SOUTH);
 
         break;
 

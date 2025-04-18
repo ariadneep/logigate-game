@@ -64,8 +64,6 @@ MainWindow::MainWindow(QWidget *parent)
     /* this needs to be edited: you shouldn't be able to draw a wire when the square
      * in the direction you're drawing in is occupied
      */
-    // currentLevel->drawGate(0, 2, Gate::Operator::AND);
-    // currentLevel->setWireTemp(0, 0, currentTag);
     // currentLevel->setNode(0, 3, currentTag, Node::Type::ROOT);
     // currentLevel->setNode(8, 3, currentTag, Node::Type::END);
 
@@ -73,6 +71,7 @@ MainWindow::MainWindow(QWidget *parent)
     // currentLevel->drawGate(10, 7, Gate::Operator::AND, Gate::Direction::SOUTH);
     // currentLevel->drawGate(0, 6, Gate::Operator::AND, Gate::Direction::WEST);
     // currentLevel->drawGate(1, 3, Gate::Operator::AND, Gate::Direction::NORTH);
+    currentLevel->levelSetup(levelNum);
 
     repaint();
 
@@ -86,7 +85,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Next lvl & reset
     connect(ui->nextLevelButton, &QPushButton::clicked, this, &MainWindow::nextLevelButtonClicked);
-    connect(ui->clearLevelButton, &QPushButton::clicked, this, &MainWindow::clearLevelButtonClicked); // Clears the wires on the level need to add a connection to clear entire level when switched to next level.
+    connect(ui->clearLevelButton, &QPushButton::clicked, this, &MainWindow::clearLevelButtonClicked);
 
     // World timer
     connect(timer, &QTimer::timeout, this, &MainWindow::updateWorld);
@@ -459,26 +458,31 @@ void MainWindow::levelOneButtonClicked(){
      */
     levelNum = 1;
     changeLevel();
+    repaint();
 }
 
 void MainWindow::levelTwoButtonClicked(){
     levelNum = 2;
     changeLevel();
+    repaint();
 }
 
 void MainWindow::levelThreeButtonClicked(){
     levelNum = 3;
     changeLevel();
+    repaint();
 }
 
 void MainWindow::levelFourButtonClicked(){
     levelNum = 4;
     changeLevel();
+    repaint();
 }
 
 void MainWindow::levelFiveButtonClicked(){
     levelNum = 5;
     changeLevel();
+    repaint();
 }
 
 void MainWindow::clearLevelButtonClicked() {
