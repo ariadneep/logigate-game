@@ -86,7 +86,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Next lvl & reset
     connect(ui->nextLevelButton, &QPushButton::clicked, this, &MainWindow::nextLevelButtonClicked);
-    connect(ui->clearLevelButton, &QPushButton::clicked, this, &MainWindow::clearLevelButtonClicked);
+    connect(ui->clearLevelButton, &QPushButton::clicked, this, &MainWindow::clearLevelButtonClicked); // Clears the wires on the level need to add a connection to clear entire level when switched to next level.
 
     // World timer
     connect(timer, &QTimer::timeout, this, &MainWindow::updateWorld);
@@ -485,7 +485,9 @@ void MainWindow::clearLevelButtonClicked() {
     /*
      * Procedure: Clear the level, and set it up again.
      */
-    changeLevel();
+    // changeLevel();
+    currentLevel->clearWires();
+    repaint();
     qDebug() << "clearing level";
 }
 

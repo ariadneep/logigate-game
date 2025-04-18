@@ -153,6 +153,11 @@ public:
      */
     void levelSetup(int level);
 
+    /**
+     * @brief clearWires - Method to clear the wires on the given level.
+     */
+    void clearWires();
+
 private:
 
     /**

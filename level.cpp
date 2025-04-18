@@ -471,6 +471,7 @@ void Level::removeConfetti() {
     isVictory = false;
 }
 
+// Did not use this for Clear Button. But could use this for moving to the next level.
 void Level::clearLevel() {
     removeConfetti();
 
@@ -603,3 +604,40 @@ void Level::drawGate(int x, int y, Gate::Operator op, Gate::Direction dir) {
 
     addGate(x, y, op, dir);
 }
+
+void Level::clearWires() {
+    for (int i = 0; i < WIDTH * HEIGHT; i++) {
+        Wire* wire = wireGrid[i];
+
+        bool isNodeWire = false;
+        for (int j = 0; j < WIDTH * HEIGHT; j++) {
+            if (nodeGrid[j] && nodeGrid[j]->getWire() == wire) {
+                isNodeWire = true;
+                break;
+            }
+        }
+
+        if (!isNodeWire && wire) {
+            delete wire;
+        }
+
+        wireGrid[i] = nullptr;
+    }
+
+    // Reset connections on backing wires (nodes still exist)
+    for (int i = 0; i < WIDTH * HEIGHT; i++) {
+        if (nodeGrid[i]) {
+            Wire* backWire = nodeGrid[i]->getWire();
+            if (backWire) {
+                // reset only the opposite end
+                if (nodeGrid[i]->getNodeType() == Node::Type::ROOT)
+                    backWire->setTailConnection(nullptr);
+                else if (nodeGrid[i]->getNodeType() == Node::Type::END)
+                    backWire->setHeadConnection(nullptr);
+            }
+        }
+    }
+
+    isVictory = false;
+}
+
