@@ -56,11 +56,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     currentLevel = new Level(levelNum, graphicsScene, box2DWorld, this);
 
+    currentTag = "";
     // \/ CHANGE \/
-    currentTag = "A";
     // currentLevel->setWireTemp(0, 0, currentTag);
-    currentLevel->setNode(0, 3, currentTag, Node::Type::ROOT);
-    currentLevel->setNode(8, 3, currentTag, Node::Type::END);
+    currentLevel->setNode(0, 3, "A", Node::Type::ROOT);
+    currentLevel->setNode(8, 3, "A", Node::Type::END);
 
     repaint();
 
@@ -300,6 +300,7 @@ void MainWindow::changeLevel() {
     currentLevel = new Level(levelNum, graphicsScene, box2DWorld, this);
 
     repaint();
+    currentTag = "";
 }
 
 // MOUSE EVENTS
@@ -362,7 +363,13 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
     }
 
     if (newPosition) {
-        currentLevel->drawWire(gameBoardX, gameBoardY, currentTag);
+        if (Node* selectedNode = currentLevel->getNode(gameBoardX, gameBoardY)){
+            qDebug() << "Removed tails called.";
+            currentTag = selectedNode->getTag();
+            currentLevel->removeTails(selectedNode);
+        }
+        else
+            currentLevel->drawWire(gameBoardX, gameBoardY, currentTag);
         newPosition = false;
 
         repaint();

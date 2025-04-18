@@ -135,6 +135,11 @@ public:
      */
     Wire* getWire();
 
+    /**
+     * @brief removeTails
+     */
+    void removeTails();
+
 private:
 
     /**

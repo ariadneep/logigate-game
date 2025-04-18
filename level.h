@@ -138,6 +138,12 @@ public:
      */
     void clearLevel();
 
+    /**
+     * @brief removeTails
+     * @param startingNode
+     */
+    void removeTails(Node* startingNode);
+
 private:
 
     /**
