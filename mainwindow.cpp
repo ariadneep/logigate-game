@@ -58,14 +58,15 @@ MainWindow::MainWindow(QWidget *parent)
 
     currentLevel = new Level(levelNum, graphicsScene, box2DWorld, this);
 
+    currentTag = "";
     // \/ CHANGE \/
-    currentTag = "A";
-
     /* this needs to be edited: you shouldn't be able to draw a wire when the square
      * in the direction you're drawing in is occupied
      */
-    // currentLevel->setNode(0, 3, currentTag, Node::Type::ROOT);
-    // currentLevel->setNode(8, 3, currentTag, Node::Type::END);
+    // currentLevel->drawGate(0, 2, Gate::Operator::AND);
+    // currentLevel->setWireTemp(0, 0, currentTag);
+    currentLevel->setNode(0, 3, "A", Node::Type::ROOT);
+    currentLevel->setNode(8, 3, "A", Node::Type::END);
 
     // currentLevel->drawGate(11, 1, Gate::Operator::AND, Gate::Direction::EAST);
     // currentLevel->drawGate(10, 7, Gate::Operator::AND, Gate::Direction::SOUTH);
@@ -348,6 +349,8 @@ void MainWindow::changeLevel() {
     currentLevel->levelSetup(levelNum);
 
     qDebug() << "Changed to level:" << levelNum;
+    repaint();
+    currentTag = "";
 }
 
 // MOUSE EVENTS
@@ -410,7 +413,13 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
     }
 
     if (newPosition) {
-        currentLevel->drawWire(gameBoardX, gameBoardY, currentTag);
+        if (Node* selectedNode = currentLevel->getNode(gameBoardX, gameBoardY)){
+            qDebug() << "Removed tails called.";
+            currentTag = selectedNode->getTag();
+            currentLevel->removeTails(selectedNode);
+        }
+        else
+            currentLevel->drawWire(gameBoardX, gameBoardY, currentTag);
         newPosition = false;
 
 
