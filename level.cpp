@@ -500,6 +500,7 @@ void Level::levelSetup(int levelNum) {
         setNode(0, 3, "A", Node::Type::ROOT);
         setNode(0, 5, "B", Node::Type::ROOT);
         setNode(8, 3, "A", Node::Type::END);
+        addObstacle(0, 0);
 
         drawGate(6, 4, Gate::Operator::AND, Gate::Direction::EAST);
         break;

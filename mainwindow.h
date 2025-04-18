@@ -142,6 +142,11 @@ private:
     QHash<QString, QPixmap> nodePixmaps;
 
     /**
+     * @brief obstaclePixmaps - Holds the obstacle sprite
+     */
+    QPixmap obstaclePixmaps;
+
+    /**
      * @brief wirePixmaps - Holds the Gate pixmaps with direction-color pairs as keys
      * and image Pixmaps as values.
      */

@@ -248,6 +248,7 @@ void MainWindow::loadGatePixmaps() {
                        QPixmap(":/sprites/objects/and_bottom.png").transformed(QTransform().rotate(180)));
     gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::FIRST, Gate::Direction::WEST}},
                        QPixmap(":/sprites/objects/and_top.png").transformed(QTransform().rotate(180)));
+
     // NORTH-facing wires.
     gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::SECOND, Gate::Direction::NORTH}},
                        QPixmap(":/sprites/objects/and_bottom.png").transformed(QTransform().rotate(270)));
@@ -271,7 +272,6 @@ void MainWindow::paintGate(int x, int y, Gate::Operator op, Gate::Alignment alig
         Qt::KeepAspectRatio,
         Qt::FastTransformation);
 
-
     // Set up the painter and link to componentLayer.
     QPainter wirePainter(&componentLayer);
 
@@ -284,7 +284,7 @@ void MainWindow::paintGate(int x, int y, Gate::Operator op, Gate::Alignment alig
 
 void MainWindow::paintNode(int x, int y, QString tag) {
     // Set default color. This color is retained if the tag is not A or B.
-    QString color = "green";
+    QString color = "red";
 
     // Holds the current wire texture to be drawn.
     QPixmap nodePixmap;
@@ -322,7 +322,26 @@ void MainWindow::paintNode(int x, int y, QString tag) {
 }
 
 void MainWindow::paintObstacle(int x, int y) {
+    // Grab the UI measurements for scaling.
+    int boxWidth = ui->gameBoard->width() / currentLevel->WIDTH;
+    int boxHeight = ui->gameBoard->height() / currentLevel->HEIGHT;
+    int uiX = x * boxWidth;
+    int uiY = y * boxHeight;
 
+    // Holds the current wire texture to be drawn.
+    QPixmap obstaclePixmap = QPixmap(":/sprites/objects/obsticle.png").scaled(
+        boxWidth, boxHeight,
+        Qt::KeepAspectRatio,
+        Qt::FastTransformation);
+
+    // Set up the painter and link to componentLayer.
+    QPainter obstaclePainter(&componentLayer);
+
+    // Draw to the painter.
+    obstaclePainter.drawPixmap(uiX, uiY, boxWidth, boxHeight, obstaclePixmap);
+
+    // Draw to the UI.
+    ui->gameBoard->setPixmap(componentLayer);
 }
 
 void MainWindow::changeLevel() {
