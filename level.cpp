@@ -35,8 +35,11 @@ void Level::drawWire(int x, int y, QString tag) {
 
     qDebug() << "///////////\nChecked at (" << x << ", " << y << ")";
 
-    if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
+    if ((x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
+        || tag == "") {
+        qDebug() << "Draw wire skipped. (tag: " << tag << ")";
         return;
+    }
 
     Wire* currentWire = getWire(x, y);
 
@@ -158,7 +161,7 @@ Wire* Level::findWire(int x, int y, QString tag, Wire::Direction& wireConnection
         return leftWire;
     }
 
-    qDebug() << "No new wire. Return.";
+    qDebug() << "No wire link found. Return.";
     return nullptr;
 }
 
@@ -296,7 +299,7 @@ void Level::wireRemove(Wire* currentWire) {
     int headY = currentWire->getHeadConnection()->getY();
 
     setWire(tailX, tailY, nullptr);
-    currentWire->setTailConnection(nullptr);
+    // currentWire->setTailConnection(nullptr);
 
     // Draw N
     if (currentY - headY == 1) {
@@ -368,8 +371,23 @@ Wire* Level::getWire(int x, int y) {
 }
 
 void Level::setWire(int x, int y, Wire* newWire) {
+    if ((x < 0 || x > WIDTH || y < 0 || y > HEIGHT)
+        || getNode(x, y) || getObstacle(x, y) || getGate(x, y)) {
+        return;
+    }
+
+    if (wireGrid[y * WIDTH + x]) {
+        if (Wire* headWire = wireGrid[y * WIDTH + x]->getHeadConnection())
+            headWire->setTailConnection(newWire);
+        if (Wire* tailWire = wireGrid[y * WIDTH + x]->getTailConnection())
+            tailWire->setHeadConnection(newWire);
+
+        delete wireGrid[y * WIDTH + x];
+    }
+
     if (newWire)
         newWire->setPosition(x, y);
+
     wireGrid[y * WIDTH + x] = newWire;
 }
 
@@ -402,8 +420,10 @@ void Level::setWireTemp(int x, int y, QString tag) {
 }
 
 void Level::setNode(int x, int y, QString tag, Node::Type type) {
+
     if (getGate(x, y) || getWire(x, y) || getNode(x, y) || getObstacle(x, y))
         return;
+
 
     Node* newNode = new Node(this, x, y, type, tag);
     nodeGrid[y * WIDTH + x] = newNode;
@@ -576,6 +596,19 @@ void Level::addObstacle(int x, int y) {
     }
 }
 
+void Level::removeTails(Node* startingNode) {
+
+    Wire* currentWire = startingNode->getWire()->getTailConnection();
+    while (currentWire) {
+        Wire* tailWire = currentWire->getTailConnection();
+        int x = currentWire->getX();
+        int y = currentWire->getY();
+        if (getNode(x, y))
+            return;
+        setWire(x, y, nullptr);
+        currentWire = tailWire;
+}
+    
 void Level::drawGate(int x, int y, Gate::Operator op, Gate::Direction dir) {
     // Check bounds for x and y.
     // TODO: height - 1 is because it places a gate below. This should depend on direction param.
