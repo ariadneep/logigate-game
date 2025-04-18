@@ -42,6 +42,7 @@ void Level::drawWire(int x, int y, QString tag) {
     }
 
     Wire* currentWire = getWire(x, y);
+    Gate* currentGate = getGate(x, y);
 
     if (currentWire == nullptr) {
 
@@ -469,10 +470,7 @@ void Level::levelSetup(int levelNum) {
         setNode(0, 3, "A", Node::Type::ROOT);
         setNode(8, 3, "A", Node::Type::END);
 
-        drawGate(11, 1, Gate::Operator::AND, Gate::Direction::EAST);
-        drawGate(10, 7, Gate::Operator::AND, Gate::Direction::SOUTH);
-        drawGate(0, 6, Gate::Operator::AND, Gate::Direction::WEST);
-        drawGate(1, 3, Gate::Operator::AND, Gate::Direction::NORTH);
+        drawGate(6, 4, Gate::Operator::AND, Gate::Direction::EAST);
         break;
 
     case 2:
@@ -498,12 +496,10 @@ void Level::levelSetup(int levelNum) {
 
     default:
         setNode(0, 3, "A", Node::Type::ROOT);
+        setNode(0, 5, "B", Node::Type::ROOT);
         setNode(8, 3, "A", Node::Type::END);
 
-        drawGate(11, 1, Gate::Operator::AND, Gate::Direction::EAST);
-        drawGate(10, 7, Gate::Operator::AND, Gate::Direction::SOUTH);
-        drawGate(0, 6, Gate::Operator::AND, Gate::Direction::WEST);
-        drawGate(1, 0, Gate::Operator::AND, Gate::Direction::NORTH);
+        drawGate(6, 4, Gate::Operator::AND, Gate::Direction::EAST);
         break;
     }
 

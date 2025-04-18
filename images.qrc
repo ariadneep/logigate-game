@@ -1,9 +1,13 @@
 <RCC>
+    <qresource prefix="/icons">
+        <file>arrow.png</file>
+        <file>menu.png</file>
+        <file>trash.png</file>
+    </qresource>
     <qresource prefix="/sprites">
-        <file>blue_wires/blue_button_down.png</file>
-        <file>blue_wires/blue_button_left.png</file>
-        <file>blue_wires/blue_button_right.png</file>
-        <file>blue_wires/blue_button_up.png</file>
+        <file>grid-12x8.png</file>
+        <file>blue_wires/blue_node_end.png</file>
+        <file>blue_wires/blue_node_root.png</file>
         <file>blue_wires/blue_plug_connected.png</file>
         <file>blue_wires/blue_plug_down.png</file>
         <file>blue_wires/blue_plug_left.png</file>
@@ -15,25 +19,14 @@
         <file>blue_wires/blue_wire_NW.png</file>
         <file>blue_wires/blue_wire_SE.png</file>
         <file>blue_wires/blue_wire_SW.png</file>
-        <file>green_wires/and_bottom_blue.png</file>
-        <file>green_wires/and_bottom_noconnection.png</file>
-        <file>green_wires/and_top_noconnection.png</file>
-        <file>green_wires/and_top_red.png</file>
-        <file>green_wires/green_button.png</file>
-        <file>green_wires/green_plug_down.png</file>
-        <file>green_wires/green_plug_left.png</file>
-        <file>green_wires/green_plug_right.png</file>
-        <file>green_wires/green_plug_up.png</file>
-        <file>green_wires/green_wire_EW.png</file>
-        <file>green_wires/green_wire_NE.png</file>
-        <file>green_wires/green_wire_NS.png</file>
-        <file>green_wires/green_wire_NW.png</file>
-        <file>green_wires/green_wire_SE.png</file>
-        <file>green_wires/green_wire_SW.png</file>
-        <file>red_wires/red_button_down.png</file>
-        <file>red_wires/red_button_left.png</file>
-        <file>red_wires/red_button_right.png</file>
-        <file>red_wires/red_button_up.png</file>
+        <file>objects/and_bottom.png</file>
+        <file>objects/and_top.png</file>
+        <file>objects/not.png</file>
+        <file>objects/obsticle.png</file>
+        <file>objects/or_bottom.png</file>
+        <file>objects/or_top.png</file>
+        <file>red_wires/red_node_end.png</file>
+        <file>red_wires/red_node_root.png</file>
         <file>red_wires/red_plug_connected.png</file>
         <file>red_wires/red_plug_down.png</file>
         <file>red_wires/red_plug_left.png</file>
@@ -45,11 +38,5 @@
         <file>red_wires/red_wire_NW.png</file>
         <file>red_wires/red_wire_SE.png</file>
         <file>red_wires/red_wire_SW.png</file>
-        <file>grid-12x8.png</file>
-    </qresource>
-    <qresource prefix="/icons">
-        <file>arrow.png</file>
-        <file>menu.png</file>
-        <file>trash.png</file>
     </qresource>
 </RCC>
