@@ -68,10 +68,11 @@ MainWindow::MainWindow(QWidget *parent)
     currentLevel->setNode(0, 3, "A", Node::Type::ROOT);
     currentLevel->setNode(8, 3, "A", Node::Type::END);
 
-    currentLevel->drawGate(11, 1, Gate::Operator::AND, Gate::Direction::EAST);
-    currentLevel->drawGate(10, 7, Gate::Operator::AND, Gate::Direction::SOUTH);
-    currentLevel->drawGate(0, 6, Gate::Operator::AND, Gate::Direction::WEST);
-    currentLevel->drawGate(1, 3, Gate::Operator::AND, Gate::Direction::NORTH);
+    // currentLevel->drawGate(11, 1, Gate::Operator::AND, Gate::Direction::EAST);
+    // currentLevel->drawGate(10, 7, Gate::Operator::AND, Gate::Direction::SOUTH);
+    // currentLevel->drawGate(0, 6, Gate::Operator::AND, Gate::Direction::WEST);
+    // currentLevel->drawGate(1, 3, Gate::Operator::AND, Gate::Direction::NORTH);
+    currentLevel->levelSetup(levelNum);
 
     repaint();
 
@@ -347,6 +348,7 @@ void MainWindow::changeLevel() {
 
     currentLevel->levelSetup(levelNum);
 
+    qDebug() << "Changed to level:" << levelNum;
     repaint();
     currentTag = "";
 }
@@ -465,33 +467,44 @@ void MainWindow::levelOneButtonClicked(){
      */
     levelNum = 1;
     changeLevel();
+    repaint();
 }
 
 void MainWindow::levelTwoButtonClicked(){
     levelNum = 2;
     changeLevel();
+    repaint();
 }
 
 void MainWindow::levelThreeButtonClicked(){
     levelNum = 3;
     changeLevel();
+    repaint();
 }
 
 void MainWindow::levelFourButtonClicked(){
     levelNum = 4;
     changeLevel();
+    repaint();
 }
 
 void MainWindow::levelFiveButtonClicked(){
     levelNum = 5;
     changeLevel();
+    repaint();
 }
 
 void MainWindow::clearLevelButtonClicked() {
     /*
      * Procedure: Clear the level, and set it up again.
+     * or, don't clear it at all, and only reset all wires from nodes A and B?
      */
-    changeLevel();
+    // changeLevel();
+    currentLevel->clearWires();
+    currentLevel->clearGates();
+    currentLevel->clearNodes();
+
+    repaint();
     qDebug() << "clearing level";
 }
 
@@ -500,7 +513,6 @@ void MainWindow::nextLevelButtonClicked() {
     /*
      * Procedure: Clear the level, and then set up the next one.
      */
-
     levelNum++;
     //If already on highest level, loop back to level one.
     if(levelNum > 5) {
@@ -509,4 +521,5 @@ void MainWindow::nextLevelButtonClicked() {
 
     qDebug() << "levelNum: " << levelNum;
     changeLevel();
+    repaint();
 }
