@@ -512,4 +512,5 @@ void MainWindow::nextLevelButtonClicked() {
 
     qDebug() << "levelNum: " << levelNum;
     changeLevel();
+    repaint();
 }
