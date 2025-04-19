@@ -422,13 +422,13 @@ void Level::setWireTemp(int x, int y, QString tag) {
     wireGrid[y * WIDTH + x] = addWire;
 }
 
-void Level::setNode(int x, int y, QString tag, Node::Type type) {
+void Level::setNode(int x, int y, bool signal, QString tag, Node::Type type) {
 
     if (getGate(x, y) || getWire(x, y) || getNode(x, y) || getObstacle(x, y))
         return;
 
 
-    Node* newNode = new Node(this, x, y, type, tag);
+    Node* newNode = new Node(this, x, y, type, signal, tag);
     nodeGrid[y * WIDTH + x] = newNode;
 }
 
@@ -469,15 +469,15 @@ void Level::levelSetup(int levelNum) {
 
     switch (levelNum) {
     case 1:
-        setNode(0, 3, "A", Node::Type::ROOT);
-        setNode(8, 3, "A", Node::Type::END);
+        setNode(0, 3, false, "A", Node::Type::ROOT);
+        setNode(8, 3, false, "A", Node::Type::END);
 
         drawGate(6, 4, Gate::Operator::AND, Gate::Direction::EAST);
         break;
 
     case 2:
-        setNode(3, 3, "A", Node::Type::ROOT);
-        setNode(19, 5, "A", Node::Type::END);
+        setNode(3, 3, false, "A", Node::Type::ROOT);
+        setNode(19, 5, false, "A", Node::Type::END);
 
         drawGate(11, 1, Gate::Operator::AND, Gate::Direction::EAST);
         drawGate(10, 7, Gate::Operator::AND, Gate::Direction::SOUTH);
@@ -497,12 +497,13 @@ void Level::levelSetup(int levelNum) {
         break;
 
     default:
-        setNode(0, 3, "A", Node::Type::ROOT);
-        setNode(0, 5, "B", Node::Type::ROOT);
-        setNode(8, 3, "A", Node::Type::END);
+        setNode(0, 3, true, "A", Node::Type::ROOT);
+        setNode(0, 5, false, "B", Node::Type::ROOT);
+        setNode(8, 3, true, "A", Node::Type::END);
         addObstacle(0, 0);
 
         drawGate(6, 4, Gate::Operator::AND, Gate::Direction::EAST);
+        drawGate(10, 4, Gate::Operator::OR, Gate::Direction::EAST);
         break;
     }
 
@@ -622,7 +623,6 @@ void Level::addObstacle(int x, int y) {
 }
 
 void Level::removeTails(Node* startingNode) {
-
     Wire* currentWire = startingNode->getWire()->getTailConnection();
     while (currentWire) {
         Wire* tailWire = currentWire->getTailConnection();
@@ -637,7 +637,7 @@ void Level::removeTails(Node* startingNode) {
 
 bool Level::isEmptySpace(int x, int y) {
     return (getWire(x, y) == nullptr) && (getNode(x, y) == nullptr) &&
-           (getObstacle(x, y) == nullptr) && (getGate(x, y) == nullptr);
+        (getObstacle(x, y) == nullptr) && (getGate(x, y) == nullptr);
 }
 
 
