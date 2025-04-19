@@ -1,15 +1,16 @@
 #include "node.h"
 
-Node::Node(QObject *parent, int x, int y, Node::Type type, QString tag)
+Node::Node(QObject *parent, int x, int y, Node::Type type, bool signal, QString tag)
     : GridComponent{parent}
 {
-    signal = true;
+    this->signal = signal;
     connected = false;
     nodeType = type;
     this->tag = tag;
     this->direction = Node::Direction::NONE;
     backingWire = new Wire();
     backingWire->setTag(tag);
+    backingWire->setSignal(signal);
     backingWire->setPosition(x, y);
 
     switch (nodeType) {

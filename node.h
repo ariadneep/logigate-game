@@ -40,7 +40,7 @@ public:
      * @param tag - The input node.
      */
     explicit Node(QObject *parent = nullptr, int x = 0, int y = 0,
-                  Node::Type type = Node::Type::ROOT, QString tag = "A");
+                  Node::Type type = Node::Type::ROOT, bool signal = true, QString tag = "A");
 
     /**
      * @brief setPosition

@@ -104,7 +104,7 @@ public:
      * @param x
      * @param y
      */
-    void setNode(int x, int y, QString tag, Node::Type type);
+    void setNode(int x, int y, bool signal, QString tag, Node::Type type);
 
     /**
      * @brief getObstacle

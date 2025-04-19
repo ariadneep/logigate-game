@@ -136,6 +136,10 @@ void MainWindow::loadWirePixmaps() {
     wirePixmaps.insert({Wire::Direction::NW, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_NW.png"));
     wirePixmaps.insert({Wire::Direction::SE, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_SE.png"));
     wirePixmaps.insert({Wire::Direction::SW, "blue"}, QPixmap(":/sprites/blue_wires/blue_wire_SW.png"));
+    wirePixmaps.insert({Wire::Direction::N, "blue"}, QPixmap(":/sprites/blue_wires/blue_plug_down.png"));
+    wirePixmaps.insert({Wire::Direction::E, "blue"}, QPixmap(":/sprites/blue_wires/blue_plug_left.png"));
+    wirePixmaps.insert({Wire::Direction::S, "blue"}, QPixmap(":/sprites/blue_wires/blue_plug_up.png"));
+    wirePixmaps.insert({Wire::Direction::W, "blue"}, QPixmap(":/sprites/blue_wires/blue_plug_right.png"));
 
     //red wires
     wirePixmaps.insert({Wire::Direction::EW, "red"}, QPixmap(":/sprites/red_wires/red_wire_EW.png"));
@@ -148,26 +152,14 @@ void MainWindow::loadWirePixmaps() {
     wirePixmaps.insert({Wire::Direction::E, "red"}, QPixmap(":/sprites/red_wires/red_plug_left.png"));
     wirePixmaps.insert({Wire::Direction::S, "red"}, QPixmap(":/sprites/red_wires/red_plug_up.png"));
     wirePixmaps.insert({Wire::Direction::W, "red"}, QPixmap(":/sprites/red_wires/red_plug_right.png"));
-
-    //green wires
-    wirePixmaps.insert({Wire::Direction::EW, "green"}, QPixmap(":/sprites/green_wires/green_wire_EW.png"));
-    wirePixmaps.insert({Wire::Direction::NE, "green"}, QPixmap(":/sprites/green_wires/green_wire_NE.png"));
-    wirePixmaps.insert({Wire::Direction::NS, "green"}, QPixmap(":/sprites/green_wires/green_wire_NS.png"));
-    wirePixmaps.insert({Wire::Direction::NW, "green"}, QPixmap(":/sprites/green_wires/green_wire_NW.png"));
-    wirePixmaps.insert({Wire::Direction::SE, "green"}, QPixmap(":/sprites/green_wires/green_wire_SE.png"));
-    wirePixmaps.insert({Wire::Direction::SW, "green"}, QPixmap(":/sprites/green_wires/green_wire_SW.png"));
-
 }
 
 void MainWindow::loadNodePixmaps() {
     // Red buttons
-    nodePixmaps.insert("red", QPixmap(":/sprites/red_wires/red_button_down.png"));
+    nodePixmaps.insert("red", QPixmap(":/sprites/red_wires/red_node_root.png"));
 
     // Blue buttons
-    nodePixmaps.insert("blue", QPixmap(":/sprites/blue_wires/blue_button_down.png"));
-
-    // Green buttons
-    nodePixmaps.insert("green", QPixmap(":/sprites/green_wires/green_button.png"));
+    nodePixmaps.insert("blue", QPixmap(":/sprites/blue_wires/blue_node_root.png"));
 }
 
 void MainWindow::repaint() {
@@ -191,11 +183,11 @@ void MainWindow::repaint() {
             currentObstacle = currentLevel->getObstacle(x, y);
 
             if(currentWire)
-                paintWire(x, y, currentWire->getDirection(), currentWire->getTag());
+                paintWire(x, y, currentWire->getDirection(), currentWire->getSignal());
             if(currentGate)
                 paintGate(x, y, currentGate->getOperator(), currentGate->getAlignment(), currentGate->getDirection());
             if(currentNode)
-                paintNode(x, y, currentNode->getTag());
+                paintNode(x, y, currentNode->getSignal(), currentNode->getTag());
             if(currentObstacle)
                 paintObstacle(x, y);
         }
@@ -203,18 +195,18 @@ void MainWindow::repaint() {
 
 }
 
-void MainWindow::paintWire(int x, int y, Wire::Direction direction, QString tag) {
+void MainWindow::paintWire(int x, int y, Wire::Direction direction, bool signal) {
     // Set default color. This color is retained if the tag is not A or B.
-    QString color = "green";
+    QString color = "blue";
 
     // Holds the current wire texture to be drawn.
     QPixmap wirePixmap;
 
     // Change the color to red if the wire tag is A or blue if the wire tag is B.
-    if(!tag.isNull() && tag.toUpper() == "A")
-        color = "red";
-    else if(!tag.isNull() && tag.toUpper() == "B")
+    if(signal)
         color = "blue";
+    else
+        color = "red";
 
     // Grab the UI measurements for scaling.
     int boxWidth = ui->gameBoard->width() / currentLevel->WIDTH;
@@ -243,27 +235,51 @@ void MainWindow::paintWire(int x, int y, Wire::Direction direction, QString tag)
 void MainWindow::loadGatePixmaps() {
     // EAST-facing wires.
     gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::SECOND, Gate::Direction::EAST}},
-                       QPixmap(":/sprites/green_wires/and_bottom_noconnection.png"));
+                       QPixmap(":/sprites/objects/and_bottom.png"));
     gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::FIRST, Gate::Direction::EAST}},
-                       QPixmap(":/sprites/green_wires/and_top_noconnection.png"));
+                       QPixmap(":/sprites/objects/and_top.png"));
+    gatePixmaps.insert({Gate::Operator::OR, {Gate::Alignment::SECOND, Gate::Direction::EAST}},
+                       QPixmap(":/sprites/objects/or_bottom.png"));
+    gatePixmaps.insert({Gate::Operator::OR, {Gate::Alignment::FIRST, Gate::Direction::EAST}},
+                       QPixmap(":/sprites/objects/or_top.png"));
+    gatePixmaps.insert({Gate::Operator::NOT, {Gate::Alignment::FIRST, Gate::Direction::EAST}},
+                       QPixmap(":/sprites/objects/not.png"));
 
     // SOUTH-facing wires.
     gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::SECOND, Gate::Direction::SOUTH}},
-                       QPixmap(":/sprites/green_wires/and_bottom_noconnection.png").transformed(QTransform().rotate(90)));
+                       QPixmap(":/sprites/objects/and_bottom.png").transformed(QTransform().rotate(90)));
     gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::FIRST, Gate::Direction::SOUTH}},
-                       QPixmap(":/sprites/green_wires/and_top_noconnection.png").transformed(QTransform().rotate(90)));
+                       QPixmap(":/sprites/objects/and_top.png").transformed(QTransform().rotate(90)));
+    gatePixmaps.insert({Gate::Operator::OR, {Gate::Alignment::SECOND, Gate::Direction::SOUTH}},
+                       QPixmap(":/sprites/objects/or_bottom.png").transformed(QTransform().rotate(90)));
+    gatePixmaps.insert({Gate::Operator::OR, {Gate::Alignment::FIRST, Gate::Direction::SOUTH}},
+                       QPixmap(":/sprites/objects/or_top.png").transformed(QTransform().rotate(90)));
+    gatePixmaps.insert({Gate::Operator::NOT, {Gate::Alignment::FIRST, Gate::Direction::SOUTH}},
+                       QPixmap(":/sprites/objects/not.png").transformed(QTransform().rotate(90)));
 
     // WEST-facing wires.
     gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::SECOND, Gate::Direction::WEST}},
-                       QPixmap(":/sprites/green_wires/and_bottom_noconnection.png").transformed(QTransform().rotate(180)));
+                       QPixmap(":/sprites/objects/and_bottom.png").transformed(QTransform().rotate(180)));
     gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::FIRST, Gate::Direction::WEST}},
-                       QPixmap(":/sprites/green_wires/and_top_noconnection.png").transformed(QTransform().rotate(180)));
+                       QPixmap(":/sprites/objects/and_top.png").transformed(QTransform().rotate(180)));
+    gatePixmaps.insert({Gate::Operator::OR, {Gate::Alignment::SECOND, Gate::Direction::WEST}},
+                       QPixmap(":/sprites/objects/or_bottom.png").transformed(QTransform().rotate(180)));
+    gatePixmaps.insert({Gate::Operator::OR, {Gate::Alignment::FIRST, Gate::Direction::WEST}},
+                       QPixmap(":/sprites/objects/or_top.png").transformed(QTransform().rotate(180)));
+    gatePixmaps.insert({Gate::Operator::NOT, {Gate::Alignment::FIRST, Gate::Direction::WEST}},
+                       QPixmap(":/sprites/objects/not.png").transformed(QTransform().rotate(180)));
+
     // NORTH-facing wires.
     gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::SECOND, Gate::Direction::NORTH}},
-                       QPixmap(":/sprites/green_wires/and_bottom_noconnection.png").transformed(QTransform().rotate(270)));
+                       QPixmap(":/sprites/objects/and_bottom.png").transformed(QTransform().rotate(270)));
     gatePixmaps.insert({Gate::Operator::AND, {Gate::Alignment::FIRST, Gate::Direction::NORTH}},
-                       QPixmap(":/sprites/green_wires/and_top_noconnection.png").transformed(QTransform().rotate(270)));
-
+                       QPixmap(":/sprites/objects/and_top.png").transformed(QTransform().rotate(270)));
+    gatePixmaps.insert({Gate::Operator::OR, {Gate::Alignment::SECOND, Gate::Direction::NORTH}},
+                       QPixmap(":/sprites/objects/or_bottom.png").transformed(QTransform().rotate(270)));
+    gatePixmaps.insert({Gate::Operator::OR, {Gate::Alignment::FIRST, Gate::Direction::NORTH}},
+                       QPixmap(":/sprites/objects/or_top.png").transformed(QTransform().rotate(270)));
+    gatePixmaps.insert({Gate::Operator::NOT, {Gate::Alignment::FIRST, Gate::Direction::NORTH}},
+                       QPixmap(":/sprites/objects/not.png").transformed(QTransform().rotate(270)));
 }
 
 void MainWindow::paintGate(int x, int y, Gate::Operator op, Gate::Alignment align, Gate::Direction dir) {
@@ -281,7 +297,6 @@ void MainWindow::paintGate(int x, int y, Gate::Operator op, Gate::Alignment alig
         Qt::KeepAspectRatio,
         Qt::FastTransformation);
 
-
     // Set up the painter and link to componentLayer.
     QPainter wirePainter(&componentLayer);
 
@@ -292,18 +307,18 @@ void MainWindow::paintGate(int x, int y, Gate::Operator op, Gate::Alignment alig
     ui->gameBoard->setPixmap(componentLayer);
 }
 
-void MainWindow::paintNode(int x, int y, QString tag) {
+void MainWindow::paintNode(int x, int y, bool signal, QString tag) {
     // Set default color. This color is retained if the tag is not A or B.
-    QString color = "green";
+    QString color = "red";
 
     // Holds the current wire texture to be drawn.
     QPixmap nodePixmap;
 
     // Change the color to red if the wire tag is A or blue if the wire tag is B.
-    if(!tag.isNull() && tag.toUpper() == "A")
-        color = "red";
-    else if(!tag.isNull() && tag.toUpper() == "B")
+    if(signal)
         color = "blue";
+    else
+        color = "red";
     qDebug() << "Node color is " << color << "and its tag is " << tag;
 
     // Grab the UI measurements for scaling.
@@ -332,7 +347,26 @@ void MainWindow::paintNode(int x, int y, QString tag) {
 }
 
 void MainWindow::paintObstacle(int x, int y) {
+    // Grab the UI measurements for scaling.
+    int boxWidth = ui->gameBoard->width() / currentLevel->WIDTH;
+    int boxHeight = ui->gameBoard->height() / currentLevel->HEIGHT;
+    int uiX = x * boxWidth;
+    int uiY = y * boxHeight;
 
+    // Holds the current wire texture to be drawn.
+    QPixmap obstaclePixmap = QPixmap(":/sprites/objects/obsticle.png").scaled(
+        boxWidth, boxHeight,
+        Qt::KeepAspectRatio,
+        Qt::FastTransformation);
+
+    // Set up the painter and link to componentLayer.
+    QPainter obstaclePainter(&componentLayer);
+
+    // Draw to the painter.
+    obstaclePainter.drawPixmap(uiX, uiY, boxWidth, boxHeight, obstaclePixmap);
+
+    // Draw to the UI.
+    ui->gameBoard->setPixmap(componentLayer);
 }
 
 void MainWindow::changeLevel() {
