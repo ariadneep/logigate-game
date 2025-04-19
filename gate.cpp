@@ -85,3 +85,15 @@ Gate::Alignment Gate::getAlignment() {
 Gate::Direction Gate::getDirection() {
     return direction;
 }
+
+bool Gate::getIsInputConnected() {
+    return inputNode->getConnected();
+}
+
+Node::Direction Gate::getInputDirection() {
+    return inputNode->getDirection();
+}
+
+void Gate::connectWire(Wire* connectWire, Wire::Direction connectionDirection) {
+    inputNode->connectWire(connectWire, connectionDirection);
+}

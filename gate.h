@@ -128,6 +128,25 @@ public:
      */
     Direction getDirection();
 
+    /**
+     * @brief Gate::getIsInputConnected
+     * @return
+     */
+    bool getIsInputConnected();
+
+    /**
+     * @brief getInputDirection
+     * @return
+     */
+    Node::Direction getInputDirection();
+
+    /**
+     * @brief connectWire
+     * @param connectWire
+     * @param connectionDirection
+     */
+    void connectWire(Wire* connectWire, Wire::Direction connectionDirection);
+
 private:
     /**
      * @brief gateOperator - whether this object represents

@@ -283,6 +283,15 @@ private:
      * @return The pointer to the neighboring valid node.
      */
     Node* findNode(int x, int y, QString tag, Wire::Direction& wireConnectionDirection);
+    \
+    /**
+     * @brief findGate
+     * @param x
+     * @param y
+     * @param wireConnectionDirection
+     * @return
+     */
+    Gate* findGate(int x, int y, Wire::Direction& wireConnectionDirection);
 
     /**
      * @brief connectWires
