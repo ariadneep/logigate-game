@@ -28,6 +28,25 @@ Gate::Gate(int x, int y, Operator type, Alignment alignment, Direction direction
         break;
     }
 
+    // CHANGE THE AB TAG, JUST FOR TESTING
+    if (alignment == Alignment::SECOND) {
+        outputNode = new Node(this, x, y, Node::Type::ROOT, false, "AB");
+        switch (direction) {
+        case Gate::Direction::NORTH :
+            outputNode->setDirection(Node::Direction::N);
+            break;
+        case Gate::Direction::EAST :
+            outputNode->setDirection(Node::Direction::E);
+            break;
+        case Gate::Direction::SOUTH :
+            outputNode->setDirection(Node::Direction::S);
+            break;
+        case Gate::Direction::WEST :
+            outputNode->setDirection(Node::Direction::W);
+            break;
+        }
+    }
+
     // inputNode = new Node();
     // if(location == Gate::Location::NORTH)
     //     outputNode = new Node();
@@ -58,7 +77,9 @@ QString Gate::convertSignal(bool firstSignal, bool secondSignal, QString firstID
     }
 
     //sets outputSignal to the resulting boolean.
-    outputSignal = newOutput;
+    qDebug() << "Gate signal conversion = " << newOutput;
+    qDebug() << "Gate signal tag = " << outputNode->getTag();
+    outputNode->setSignal(newOutput);
     return newID;
 }
 
@@ -75,7 +96,7 @@ QString Gate::convertSignal(bool input, QString id) {
     }
 
     //sets outputSignal to the resulting boolean.
-    outputSignal = newOutput;
+    outputNode->setSignal(newOutput);
     return id;
 }
 
@@ -108,15 +129,80 @@ Gate::Direction Gate::getDirection() {
     return direction;
 }
 
+Node* Gate::getInputNode() {
+    return inputNode;
+}
+
 bool Gate::getIsInputConnected() {
     return inputNode->getConnected();
+}
+
+bool Gate::getIsBothInputsConnected() {
+    return inputNode->getConnected() && otherHalf->getIsInputConnected();
 }
 
 Node::Direction Gate::getInputDirection() {
     return inputNode->getDirection();
 }
 
+QString Gate::getTag() {
+    // Change this later?
+    if (outputNode == nullptr && otherHalf->getOutputNode()) {
+        qDebug() << "getTag branch 1: " << otherHalf->getOutputNode()->getTag();
+        return otherHalf->getOutputNode()->getTag();
+    }
+    else if (outputNode) {
+        qDebug() << "getTag branch 2: " << outputNode->getTag();
+        return outputNode->getTag();
+    }
+    qDebug() << "getTag branch return";
+    return "";
+    // return outputTag;
+}
+
+Node* Gate::getOutputNode() {
+    return outputNode;
+}
+
+Wire* Gate::getOutputWire() {
+    return outputNode->getWire();
+}
+
+Node::Direction Gate::getOutputDirection() {
+    if (outputNode)
+        return outputNode->getDirection();
+    return Node::Direction::NONE;
+}
+
 void Gate::connectWire(Wire* connectWire, Wire::Direction connectionDirection) {
-    inputNode->setTag(connectWire->getTag());
-    inputNode->connectWire(connectWire, connectionDirection);
+    if (alignment == Alignment::FIRST && connectWire->getHeadConnection()) {
+        inputNode->setTag(connectWire->getTag());
+        inputNode->connectWire(connectWire, connectionDirection);
+        if (gateOperator == Gate::Operator::NOT) {
+            convertSignal(inputNode->getSignal(), inputNode->getTag());
+        }
+    }
+    else {
+        Node::Direction outputDirection = outputNode->getDirection();
+        // DO A DIRECTION CHECK:
+        if ((connectionDirection == Wire::Direction::N && outputDirection == Node::Direction::S) ||
+            (connectionDirection == Wire::Direction::E && outputDirection == Node::Direction::W) ||
+            (connectionDirection == Wire::Direction::S && outputDirection == Node::Direction::N) ||
+            (connectionDirection == Wire::Direction::W && outputDirection == Node::Direction::E)) {
+
+            outputNode->setSignal(outputSignal);
+            outputNode->setTag(getTag());
+            outputNode->connectWire(connectWire, connectionDirection);
+        }
+        else if (connectWire->getHeadConnection()) {
+            inputNode->setTag(connectWire->getTag());
+            inputNode->connectWire(connectWire, connectionDirection);
+
+            bool firstSignal = inputNode->getSignal();
+            QString firstTag = inputNode->getTag();
+            bool secondSignal = otherHalf->getSignal();
+            QString secondTag = otherHalf->getTag();
+            convertSignal(firstSignal, secondSignal, firstTag, secondTag);
+        }
+    }
 }

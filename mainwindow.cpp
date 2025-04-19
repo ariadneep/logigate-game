@@ -452,6 +452,12 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
             currentTag = selectedNode->getTag();
             currentLevel->removeTails(selectedNode);
         }
+        else if (Gate* selectedGate = currentLevel->getGate(gameBoardX, gameBoardY)) {
+            qDebug() << "Removed tails called for gate.";
+            currentTag = selectedGate->getTag();
+            currentLevel->removeTails(selectedGate);
+            qDebug() << "Removed tails called for gate is DONE.";
+        }
         else
             currentLevel->drawWire(gameBoardX, gameBoardY, currentTag);
         newPosition = false;

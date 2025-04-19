@@ -145,6 +145,12 @@ public:
     void removeTails(Node* startingNode);
 
     /**
+     * @brief removeTails
+     * @param startingGate
+     */
+    void removeTails(Gate* startingGate);
+
+    /**
      * @brief drawGate - Draws the Gate at a certain X and Y Coordinate
      * @param x - Given X Coordinate
      * @param y - Given Y Coordinate
@@ -291,7 +297,7 @@ private:
      * @param wireConnectionDirection
      * @return
      */
-    Gate* findGate(int x, int y, Wire::Direction& wireConnectionDirection);
+    Gate* findGate(int x, int y, Wire::Direction& wireConnectionDirection, Wire* headWire);
 
     /**
      * @brief connectWires

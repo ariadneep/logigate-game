@@ -134,16 +134,52 @@ public:
     Direction getDirection();
 
     /**
+     * @brief getInputNode
+     * @return
+     */
+    Node* getInputNode();
+
+    /**
      * @brief Gate::getIsInputConnected
      * @return
      */
     bool getIsInputConnected();
 
     /**
+     * @brief getIsBothInputsConnected
+     * @return
+     */
+    bool getIsBothInputsConnected();
+
+    /**
      * @brief getInputDirection
      * @return
      */
     Node::Direction getInputDirection();
+
+    /**
+     * @brief getOutputNode
+     * @return
+     */
+    Node* getOutputNode();
+
+    /**
+     * @brief getOutputWire
+     * @return
+     */
+    Wire* getOutputWire();
+
+    /**
+     * @brief getOutputDirection
+     * @return
+     */
+    Node::Direction getOutputDirection();
+
+    /**
+     * @brief getTag
+     * @return
+     */
+    QString getTag();
 
     /**
      * @brief connectWire
@@ -163,6 +199,11 @@ private:
      * @brief y
      */
     int y;
+
+    /**
+     * @brief outputTag
+     */
+    QString outputTag;
 
     /**
      * @brief gateOperator - whether this object represents
