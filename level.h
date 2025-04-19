@@ -186,6 +186,11 @@ public:
 private:
 
     /**
+     * @brief levelNum - The current level number.
+     */
+    int levelNum;
+
+    /**
      * @brief description - The prefacing paragraph for the level.
      */
     QString description;

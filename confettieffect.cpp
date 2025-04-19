@@ -38,8 +38,6 @@ ConfettiEffect::ConfettiEffect(float xPos, float yPos, b2World* box2DWorld) : xP
     fixtureDef.friction = 0.3f;
     fixtureDef.restitution = 0.2f;
     box2DBody->CreateFixture(&fixtureDef);
-
-
 }
 
 Confetti::Confetti(QGraphicsScene* graphicsScene, b2World* box2DWorld) : graphicsScene(graphicsScene), box2DWorld(box2DWorld), existingConfetti(0) {
@@ -50,10 +48,10 @@ Confetti::Confetti(QGraphicsScene* graphicsScene, b2World* box2DWorld) : graphic
 }
 
 Confetti::~Confetti() {
-    for(int i = 0; i < existingConfetti; i++) {
-        delete confettiParticles[i];
-        delete rectItems[i];
-    }
+    // for(int i = 0; i < existingConfetti; i++) {
+    //     delete confettiParticles[i];
+    //     delete rectItems[i];
+    // }
 }
 
 void Confetti::spawnConfetti() {

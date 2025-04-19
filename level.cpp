@@ -6,7 +6,7 @@ enum class Component;
 class Wire;
 
 Level::Level(int levelNum, QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent)
-    : QObject{parent},box2DWorld(box2DWorld), graphicsScene(graphicsScene), isVictory(false) {
+    : QObject{parent}, levelNum(levelNum), box2DWorld(box2DWorld), graphicsScene(graphicsScene), isVictory(false) {
 
     confetti = new Confetti(graphicsScene, box2DWorld);
     // Initializes the grids to nullptrs.
@@ -17,7 +17,7 @@ Level::Level(int levelNum, QGraphicsScene* graphicsScene, b2World* box2DWorld, Q
         obstacleGrid[i] = nullptr;
     }
 
-    //Setup the level based on the chosen level.
+    // Setup the level based on the chosen level.
     // levelSetup(levelNum);
 }
 
@@ -54,18 +54,38 @@ void Level::drawWire(int x, int y, QString tag) {
 
         // Attempting to find valid neighboring node:
         if (Node* connectNode = findNode(x, y, tag, nodeConnectionDirection)) {
+            Wire* nodeWire = connectNode->getWire();
             // Check some stuff with the wire to make sure it is valid, namely,
             // are we connecting with a root or an end?
 
             qDebug() << "Node found";
 
-            currentWire = new Wire();
-            setWire(x, y, currentWire);
-            // Checks if there's a head wire and sets it to current node. For the end Node.
-            if (Wire* headWire = findWire(x, y, tag, wireConnectionDirection)) {
-                headWire->connectTail(currentWire, wireConnectionDirection);
+            switch (connectNode->getNodeType()) {
+            case Node::Type::ROOT :
+                currentWire = new Wire();
+                setWire(x, y, currentWire);
+                currentWire->setDirection(nodeConnectionDirection);
+                connectWires(nodeWire, currentWire);
+                break;
+            case Node::Type::END :
+                if(Wire* connectWire = findWire(x, y, tag, wireConnectionDirection)) {
+
+                    // Make wire
+                    currentWire = new Wire();
+                    setWire(x, y, currentWire);
+
+                    // Connect them all
+                    connectWires(currentWire, nodeWire);
+                    connectWires(connectWire, currentWire);
+
+                    // Set the directions
+                    currentWire->setDirection(nodeDualDirector(
+                        nodeConnectionDirection, wireConnectionDirection));
+                    connectWire->setDirection(wireDualDirector(
+                        connectWire, wireConnectionDirection));
+                }
+                break;
             }
-            connectNode->connectWire(currentWire, nodeConnectionDirection);
 
             return;
         }
@@ -75,7 +95,13 @@ void Level::drawWire(int x, int y, QString tag) {
 
             currentWire = new Wire();
             setWire(x, y, currentWire);
-            connectWire->connectTail(currentWire, wireConnectionDirection);
+            currentWire->setDirection(wireConnectionDirection);
+            connectWires(connectWire, currentWire);
+
+            qDebug() << "Head: " << currentWire->getHeadConnection()
+                     << " Tail: " << currentWire->getTailConnection();
+
+            connectWire->setDirection(wireDualDirector(connectWire, wireConnectionDirection));
         }
 
         // wireConnect(x, y, tag, currentWire);
@@ -501,6 +527,7 @@ void Level::clearLevel() {
         }
 
         if(gateGrid[i]) {
+            gateGrid[i]->setOtherHalf(nullptr);
             delete gateGrid[i];
             gateGrid[i] = nullptr;
         }

@@ -12,7 +12,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->gameBoard->setMouseTracking(true);
 
     ui->levelSelectMenu->setStyleSheet("background: 3b3e3f");
+    // ui->lessonWidget->setStyleSheet("background: solid white");
+
     isLevelMenuShowing = false;
+    isLessonShowing = false;
 
     gameBoardX = 0;
     gameBoardY = 0;
@@ -56,6 +59,11 @@ MainWindow::MainWindow(QWidget *parent)
     levelMenuBodyDef.position.Set(-200.0f, 0.0f);
     levelMenuBody = box2DWorld->CreateBody(&levelMenuBodyDef);
 
+    b2BodyDef lessonBodyDef;
+    lessonBodyDef.type = b2_kinematicBody;
+    lessonBodyDef.position.Set(0.0f, -200.0f);
+    lessonBody = box2DWorld->CreateBody(&lessonBodyDef);
+
     currentLevel = new Level(levelNum, graphicsScene, box2DWorld, this);
 
     currentTag = "";
@@ -65,8 +73,6 @@ MainWindow::MainWindow(QWidget *parent)
      */
     // currentLevel->drawGate(0, 2, Gate::Operator::AND);
     // currentLevel->setWireTemp(0, 0, currentTag);
-    currentLevel->setNode(0, 3, true, "A", Node::Type::ROOT);
-    currentLevel->setNode(8, 3, true, "B", Node::Type::END);
 
     // currentLevel->drawGate(11, 1, Gate::Operator::AND, Gate::Direction::EAST);
     // currentLevel->drawGate(10, 7, Gate::Operator::AND, Gate::Direction::SOUTH);
@@ -88,6 +94,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->nextLevelButton, &QPushButton::clicked, this, &MainWindow::nextLevelButtonClicked);
     connect(ui->clearLevelButton, &QPushButton::clicked, this, &MainWindow::clearLevelButtonClicked);
 
+    // Lesson connects
+    connect(ui->closeLessonButton, &QPushButton::clicked, this, &MainWindow::lessonCloseButtonClicked);
+
     // World timer
     connect(timer, &QTimer::timeout, this, &MainWindow::updateWorld);
     timer->start(10);
@@ -108,7 +117,7 @@ void MainWindow::updateWorld() {
     b2Vec2 levelMenuPosition = levelMenuBody->GetPosition();
     ui->levelSelectMenu->move(levelMenuPosition.x * 100.0f, ui->levelSelectMenu->y());
 
-    //Stop levelMenu at specific positions.
+    // Stop levelMenu at specific positions.
     if(isLevelMenuShowing && levelMenuPosition.x * 100.0f >= 125.0f) {
         levelMenuBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         levelMenuBody->SetTransform(b2Vec2(125.0f / 100.0f, 0.0f), 0.0f);
@@ -118,6 +127,27 @@ void MainWindow::updateWorld() {
         levelMenuBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         levelMenuBody->SetTransform(b2Vec2(-200.0f / 100.0f, 0.0f), 0.0f);
         ui->levelSelectMenu->move(-200, 90);
+    }
+
+    b2Vec2 lessonPosition = lessonBody->GetPosition();
+    ui->lessonWidget->move(ui->lessonWidget->x(), lessonPosition.y * 100.0f);
+
+    // Stop lessonWidget at specific positions.
+    if(isLessonShowing && lessonPosition.y * 100.0f >= 60.0f) {
+        // Move the levelMenuBody off the screen.
+        levelMenuBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+        levelMenuBody->SetTransform(b2Vec2(-200.0f / 100.0f, 0.0f), 0.0f);
+        ui->levelSelectMenu->move(-200, 90);
+        isLevelMenuShowing = false;
+
+        lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+        lessonBody->SetTransform(b2Vec2(0.0f, 60.0f / 100.0f), 0.0f);
+        ui->lessonWidget->move(90, 60);
+    }
+    else if (!isLessonShowing && lessonPosition.y * 100.0f <= -500.0f) {
+        lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+        lessonBody->SetTransform(b2Vec2(0.0f, -500.0f / 100.0f), 0.0f);
+        ui->lessonWidget->move(90, -500);
     }
 
     currentLevel->updateLevel();
@@ -374,13 +404,21 @@ void MainWindow::changeLevel() {
      * Procedure: clear level, create a new instance of currentLevel, and then
      * set up the level.
      */
+    qDebug() << "clear level";
+
     currentLevel->clearLevel();
 
     delete currentLevel;
 
+    qDebug() << "delete level";
+
     currentLevel = new Level(levelNum, graphicsScene, box2DWorld, this);
 
+    qDebug() << "new level";
+
     currentLevel->levelSetup(levelNum);
+
+    qDebug() << "setup level";
 
     qDebug() << "Changed to level:" << levelNum;
     repaint();
@@ -500,31 +538,66 @@ void MainWindow::levelOneButtonClicked(){
      * Do the same for the other level button clicked public slots.
      */
     levelNum = 1;
-    changeLevel();
+    // changeLevel();
+
+    if(!isLessonShowing) {
+        lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
+        isLessonShowing = true;
+        ui->lessonText->setText("Level 1");
+    }
+
     repaint();
 }
 
 void MainWindow::levelTwoButtonClicked(){
     levelNum = 2;
     changeLevel();
+
+    if(!isLessonShowing) {
+        lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
+        isLessonShowing = true;
+        ui->lessonText->setText("Level 2");
+    }
+
     repaint();
 }
 
 void MainWindow::levelThreeButtonClicked(){
     levelNum = 3;
     changeLevel();
+
+    if(!isLessonShowing) {
+        lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
+        isLessonShowing = true;
+        ui->lessonText->setText("Level 3");
+    }
+
     repaint();
 }
 
 void MainWindow::levelFourButtonClicked(){
     levelNum = 4;
     changeLevel();
+
+    if(!isLessonShowing) {
+        lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
+        isLessonShowing = true;
+        ui->lessonText->setText("Level 4");
+    }
+
     repaint();
 }
 
 void MainWindow::levelFiveButtonClicked(){
     levelNum = 5;
     changeLevel();
+
+    if(!isLessonShowing) {
+        lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
+        isLessonShowing = true;
+        ui->lessonText->setText("Level 5");
+    }
+
     repaint();
 }
 
@@ -533,7 +606,6 @@ void MainWindow::clearLevelButtonClicked() {
      * Procedure: Clear the level, and set it up again.
      * or, don't clear it at all, and only reset all wires from nodes A and B?
      */
-    // changeLevel();
     currentLevel->clearWires();
     currentLevel->clearGates();
     currentLevel->clearNodes();
@@ -556,4 +628,11 @@ void MainWindow::nextLevelButtonClicked() {
     qDebug() << "levelNum: " << levelNum;
     changeLevel();
     repaint();
+}
+
+void MainWindow::lessonCloseButtonClicked() {
+    if (isLessonShowing) {
+        lessonBody->SetLinearVelocity(b2Vec2(0.0f, -2.0f));
+        isLessonShowing = false;
+    }
 }

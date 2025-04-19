@@ -133,13 +133,6 @@ public:
      */
     void setSignal(bool newSignal);
 
-    /**
-     * @brief connectTail
-     * @param connectWire
-     * @param connectionDirection
-     */
-    void connectTail(Wire* connectWire, Wire::Direction connectionDirection = Wire::Direction::NONE);
-
 private:
     /**
      * @brief tag - represents the wire ID that this wire is a part of.
@@ -206,12 +199,6 @@ private:
      * been hit with a NOT block)
      */
     bool signal;
-
-    /**
-     * @brief wireDualDirector
-     * @param connectionDirection
-     */
-    void wireDualDirector(Wire::Direction connectionDirection);
 };
 
 #endif // WIRE_H
