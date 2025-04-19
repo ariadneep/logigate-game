@@ -140,6 +140,13 @@ public:
      */
     void removeTails();
 
+    /**
+     * @brief connectWire
+     * @param connectWire
+     * @param nodeConnectionDirection
+     */
+    void connectWire(Wire* connectWire, Wire::Direction nodeConnectionDirection);
+
 private:
 
     /**
@@ -173,6 +180,9 @@ private:
     QGraphicsPixmapItem* sprite;
 
     bool connected;
+
+    Wire::Direction nodeDualDirector(Wire::Direction nodeConnectionDirection,
+                                     Wire::Direction wireConnectionDirection);
 };
 
 #endif // NODE_H
