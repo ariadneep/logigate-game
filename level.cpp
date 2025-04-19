@@ -445,8 +445,8 @@ void Level::addGate(int x, int y, Gate::Operator gateType, Gate::Direction dir) 
     Gate::Alignment secondAlignment = Gate::Alignment::FIRST;
 
     // Create related gate objects.
-    Gate* firstHalf = new Gate(gateType, firstAlignment, dir, this);
-    Gate* secondHalf = new Gate(gateType, secondAlignment, dir, this);
+    Gate* firstHalf = new Gate(x, y, gateType, firstAlignment, dir, this);
+    Gate* secondHalf = new Gate(x + xOffset, y + yOffset, gateType, secondAlignment, dir, this);
 
     // TODO: secondHalf should have an output, firstHalf should not.
 
@@ -517,7 +517,7 @@ void Level::removeTails(Node* startingNode) {
         Wire* tailWire = currentWire->getTailConnection();
         int x = currentWire->getX();
         int y = currentWire->getY();
-        if (getNode(x, y))
+        if (getNode(x, y) || getGate(x, y))
             return;
         setWire(x, y, nullptr);
         currentWire = tailWire;

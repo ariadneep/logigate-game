@@ -47,11 +47,16 @@ public:
     };
 
     /**
-     * @brief Gate - Makes a Gate object.
-     * @param type - AND, OR, or NOT gate.
-     * @param parent - The parent object
+     * @brief Gate
+     * @param x
+     * @param y
+     * @param type
+     * @param alignment
+     * @param direction
+     * @param parent
      */
-    explicit Gate(Operator type, Alignment alignment, Direction direction, QObject *parent = nullptr);
+    explicit Gate(int x, int y, Operator type, Alignment alignment, Direction direction,
+                  QObject *parent = nullptr);
 
     /**
      * Destructor for the Gate class.
@@ -148,6 +153,17 @@ public:
     void connectWire(Wire* connectWire, Wire::Direction connectionDirection);
 
 private:
+
+    /**
+     * @brief x
+     */
+    int x;
+
+    /**
+     * @brief y
+     */
+    int y;
+
     /**
      * @brief gateOperator - whether this object represents
      * an AND, OR, or NOT gate.

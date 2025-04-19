@@ -1,10 +1,32 @@
 
 #include "gate.h"
 
-Gate::Gate(Operator type, Alignment alignment, Direction direction, QObject *parent)
+Gate::Gate(int x, int y, Operator type, Alignment alignment, Direction direction, QObject *parent)
     : GridComponent{parent}, gateOperator(type), alignment(alignment), direction(direction) {
     outputSignal = false;
     otherHalf = nullptr;
+    this->x = x;
+    this->y = y;
+    outputNode = nullptr;
+    inputNode = nullptr;
+
+    // Add a switch statement to accurately add Node pointers depending on orientation/type.
+
+    inputNode = new Node(this, x, y, Node::Type::END, true, "");
+    switch (direction) {
+    case Gate::Direction::NORTH :
+        inputNode->setDirection(Node::Direction::S);
+        break;
+    case Gate::Direction::EAST :
+        inputNode->setDirection(Node::Direction::W);
+        break;
+    case Gate::Direction::SOUTH :
+        inputNode->setDirection(Node::Direction::N);
+        break;
+    case Gate::Direction::WEST :
+        inputNode->setDirection(Node::Direction::E);
+        break;
+    }
 
     // inputNode = new Node();
     // if(location == Gate::Location::NORTH)
@@ -95,5 +117,6 @@ Node::Direction Gate::getInputDirection() {
 }
 
 void Gate::connectWire(Wire* connectWire, Wire::Direction connectionDirection) {
+    inputNode->setTag(connectWire->getTag());
     inputNode->connectWire(connectWire, connectionDirection);
 }
