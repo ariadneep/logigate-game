@@ -53,38 +53,18 @@ void Level::drawWire(int x, int y, QString tag) {
 
         // Attempting to find valid neighboring node:
         if (Node* connectNode = findNode(x, y, tag, nodeConnectionDirection)) {
-            Wire* nodeWire = connectNode->getWire();
             // Check some stuff with the wire to make sure it is valid, namely,
             // are we connecting with a root or an end?
 
             qDebug() << "Node found";
 
-            switch (connectNode->getNodeType()) {
-            case Node::Type::ROOT :
-                currentWire = new Wire();
-                setWire(x, y, currentWire);
-                currentWire->setDirection(nodeConnectionDirection);
-                connectWires(nodeWire, currentWire);
-                break;
-            case Node::Type::END :
-                if(Wire* connectWire = findWire(x, y, tag, wireConnectionDirection)) {
-
-                    // Make wire
-                    currentWire = new Wire();
-                    setWire(x, y, currentWire);
-
-                    // Connect them all
-                    connectWires(currentWire, nodeWire);
-                    connectWires(connectWire, currentWire);
-
-                    // Set the directions
-                    currentWire->setDirection(nodeDualDirector(
-                        nodeConnectionDirection, wireConnectionDirection));
-                    connectWire->setDirection(wireDualDirector(
-                        connectWire, wireConnectionDirection));
-                }
-                break;
+            currentWire = new Wire();
+            setWire(x, y, currentWire);
+            // Checks if there's a head wire and sets it to current node. For the end Node.
+            if (Wire* headWire = findWire(x, y, tag, wireConnectionDirection)) {
+                headWire->connectTail(currentWire, wireConnectionDirection);
             }
+            connectNode->connectWire(currentWire, nodeConnectionDirection);
 
             return;
         }
@@ -94,13 +74,7 @@ void Level::drawWire(int x, int y, QString tag) {
 
             currentWire = new Wire();
             setWire(x, y, currentWire);
-            currentWire->setDirection(wireConnectionDirection);
-            connectWires(connectWire, currentWire);
-
-            qDebug() << "Head: " << currentWire->getHeadConnection()
-                     << " Tail: " << currentWire->getTailConnection();
-
-            connectWire->setDirection(wireDualDirector(connectWire, wireConnectionDirection));
+            connectWire->connectTail(currentWire, wireConnectionDirection);
         }
 
         // wireConnect(x, y, tag, currentWire);
