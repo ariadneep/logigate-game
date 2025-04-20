@@ -416,6 +416,7 @@ void Level::levelSetup(int levelNum) {
 
         drawGate(6, 4, Gate::Operator::AND, Gate::Direction::EAST);
         drawGate(10, 4, Gate::Operator::OR, Gate::Direction::EAST);
+        drawGate(8, 7, Gate::Operator::NOT, Gate::Direction::EAST);
         break;
     }
 
@@ -457,12 +458,20 @@ void Level::clearLevel() {
     isVictory = false;
 }
 
-void Level::addGate(int x, int y, Gate::Operator gateType, Gate::Direction dir) {
+void Level::addDoubleGate(int x, int y, Gate::Operator gateType, Gate::Direction dir) {
     // Later, these will depend on a direction (horizontal or vertical) passed into the method.
     int xOffset = 0;
     int yOffset = 0; // Below this Y coordinate.
 
     calculateGateOffset(dir, xOffset, yOffset);
+
+    // Check Location for the second gate
+    if (x + xOffset < 0 || x + xOffset >= WIDTH || y + yOffset < 0 || y + yOffset >= HEIGHT )
+        return;
+
+    if (getGate(x + xOffset, y + yOffset) || getWire(x + xOffset, y + yOffset) ||
+        getNode(x + xOffset, y + yOffset) || getObstacle(x + xOffset, y + yOffset))
+        return;
 
     Gate::Alignment firstAlignment = Gate::Alignment::SECOND;
     Gate::Alignment secondAlignment = Gate::Alignment::FIRST;
@@ -480,6 +489,16 @@ void Level::addGate(int x, int y, Gate::Operator gateType, Gate::Direction dir) 
 
     // Draw a gate adjacent to firstHalf in the specified direction.
     gateGrid[(y + yOffset) * WIDTH + (x + xOffset)] = secondHalf;
+}
+
+void Level::addSingleGate(int x, int y, Gate::Operator gateType, Gate::Direction dir) {
+    Gate::Alignment alignment = Gate::Alignment::SECOND;
+
+    // Create related gate objects.
+    Gate* newNotGate = new Gate(x, y, gateType, alignment, dir, this);
+
+    // Draw a gate at the given x, y position
+    gateGrid[y * WIDTH + x] = newNotGate;
 }
 
 void Level::calculateGateOffset(Gate::Direction dir, int& xOffset, int& yOffset) {
@@ -572,17 +591,8 @@ bool Level::isEmptySpace(int x, int y) {
 
     
 void Level::drawGate(int x, int y, Gate::Operator op, Gate::Direction dir) {
-    // Check bounds for x and y.
-    // TODO: height - 1 is because it places a gate below. This should depend on direction param.
-    int xOffset = 0;
-    int yOffset = 0;
-
-    calculateGateOffset(dir, xOffset, yOffset);
 
     if (x < 0 || x >= WIDTH  || y < 0 || y >= HEIGHT )
-        return;
-
-    if (x + xOffset < 0 || x + xOffset >= WIDTH || y + yOffset < 0 || y + yOffset >= HEIGHT )
         return;
 
 
@@ -590,13 +600,14 @@ void Level::drawGate(int x, int y, Gate::Operator op, Gate::Direction dir) {
     if (getGate(x, y) || getWire(x, y) || getNode(x, y) || getObstacle(x, y))
         return;
 
-    // Location for the second gate
-    if (getGate(x + xOffset, y + yOffset) || getWire(x + xOffset, y + yOffset) ||
-        getNode(x + xOffset, y + yOffset) || getObstacle(x + xOffset, y + yOffset))
-        return;
     // Add the gate to the backend.
-
-    addGate(x, y, op, dir);
+    if(op == Gate::Operator::NOT) {
+        qDebug() << "does this run?";
+        addSingleGate(x, y, op, dir);
+    }
+    else {
+        addDoubleGate(x, y, op, dir);
+    }
 }
 
 void Level::clearWires() {

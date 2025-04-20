@@ -64,6 +64,7 @@ Gate::Operator Gate::getOperator() {
 QString Gate::convertSignal(bool firstSignal, bool secondSignal, QString firstID, QString secondID) {
     bool newOutput;
     QString newID = firstID.append(secondID);
+    std::sort(newID.begin(), newID.end());
     //calls the specific helper method based on the Type
     switch(gateOperator) {
     case Operator::AND:
@@ -96,6 +97,9 @@ QString Gate::convertSignal(bool input, QString id) {
     }
 
     //sets outputSignal to the resulting boolean.
+    qDebug() << "this should fire right before bug";
+    if(outputNode == nullptr)
+        qDebug() << "its a nullptr";
     outputNode->setSignal(newOutput);
     return id;
 }

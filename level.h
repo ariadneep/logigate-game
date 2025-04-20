@@ -333,12 +333,22 @@ private:
     void setWire(int x, int y, Wire* newWire);
 
     /**
-     * @brief addGate - Adds a gate at the specified x and y position into the level.
+     * @brief addDoubleGate - Adds a double gate (AND or OR) at the specified x and y position into the level.
      * @param x - The x position.
      * @param y - The y position.
      * @param gateType - The type of gate.
+     * @param dir - Where the output side of the gate is facing.
      */
-    void addGate(int x, int y, Gate::Operator gateType, Gate::Direction dir);
+    void addDoubleGate(int x, int y, Gate::Operator gateType, Gate::Direction dir);
+
+    /**
+     * @brief addSingleGate - Adds a single gate (NOT) at the specified x and y position
+     * @param x - The x position.
+     * @param y - The y position.
+     * @param gateType - The type of gate.
+     * @param dir - Where the output side of the gate is facing.
+     */
+    void addSingleGate(int x, int y, Gate::Operator gateType, Gate::Direction dir);
 
     /**
      * @brief addNode - Adds a node at the specified x and y position into the level.
