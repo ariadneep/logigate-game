@@ -474,8 +474,8 @@ void Level::addDoubleGate(int x, int y, Gate::Operator gateType, Gate::Direction
         getNode(x + xOffset, y + yOffset) || getObstacle(x + xOffset, y + yOffset))
         return;
 
-    Gate::Alignment firstAlignment = Gate::Alignment::SECOND;
-    Gate::Alignment secondAlignment = Gate::Alignment::FIRST;
+    Gate::Ports firstAlignment = Gate::Ports::INOUT;
+    Gate::Ports secondAlignment = Gate::Ports::IN;
 
     // Create related gate objects.
     Gate* firstHalf = new Gate(x, y, gateType, firstAlignment, dir, this);
@@ -493,7 +493,7 @@ void Level::addDoubleGate(int x, int y, Gate::Operator gateType, Gate::Direction
 }
 
 void Level::addSingleGate(int x, int y, Gate::Operator gateType, Gate::Direction dir) {
-    Gate::Alignment alignment = Gate::Alignment::SECOND;
+    Gate::Ports alignment = Gate::Ports::INOUT;
 
     // Create related gate objects.
     Gate* newNotGate = new Gate(x, y, gateType, alignment, dir, this);

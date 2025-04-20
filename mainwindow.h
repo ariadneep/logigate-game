@@ -150,7 +150,7 @@ private:
      * @brief wirePixmaps - Holds the Gate pixmaps with direction-color pairs as keys
      * and image Pixmaps as values.
      */
-    QHash<QPair<Gate::Operator, QPair<Gate::Alignment, Gate::Direction>>, QPixmap> gatePixmaps;
+    QHash<QPair<Gate::Operator, QPair<Gate::Ports, Gate::Direction>>, QPixmap> gatePixmaps;
 
     /**
      * @brief loadWirePixmaps - Helper method to load all the pixmaps
@@ -192,7 +192,7 @@ private:
      * @param y - the vertical grid square index to draw the gate on.
      * @param align - the alignment of the gate.
      */
-    void paintGate(int x, int y, Gate::Operator op, Gate::Alignment align, Gate::Direction dir);
+    void paintGate(int x, int y, Gate::Operator op, Gate::Ports align, Gate::Direction dir);
 
     /**
      * @brief paintNode - paints a node with the appropriate attributes at the

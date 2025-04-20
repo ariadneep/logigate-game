@@ -1,8 +1,8 @@
 
 #include "gate.h"
 
-Gate::Gate(int x, int y, Operator type, Alignment alignment, Direction direction, QObject *parent)
-    : GridComponent{parent}, gateOperator(type), alignment(alignment), direction(direction) {
+Gate::Gate(int x, int y, Operator type, Ports ports, Direction direction, QObject *parent)
+    : GridComponent{parent}, gateOperator(type), alignment(ports), direction(direction) {
     outputSignal = false;
     otherHalf = nullptr;
     this->x = x;
@@ -29,7 +29,7 @@ Gate::Gate(int x, int y, Operator type, Alignment alignment, Direction direction
     }
 
     // CHANGE THE AB TAG, JUST FOR TESTING
-    if (alignment == Alignment::SECOND) {
+    if (ports == Ports::INOUT) {
         outputNode = new Node(this, x, y, Node::Type::ROOT, false, "AB");
         switch (direction) {
         case Gate::Direction::NORTH :
@@ -94,8 +94,9 @@ QString Gate::convertSignal(bool input, QString id) {
     qDebug() << "this should fire right before bug";
     if(outputNode == nullptr)
         qDebug() << "its a nullptr";
+    else
+        outputNode->setSignal(newOutput);
 
-    outputNode->setSignal(newOutput);
     return id;
 }
 
@@ -120,8 +121,7 @@ void Gate::setOtherHalf(Gate* otherGate) {
     otherHalf = otherGate;
 }
 
-Gate::Alignment Gate::getAlignment() {
-    qDebug() << "getAlignment is running.";
+Gate::Ports Gate::getAlignment() {
     return alignment;
 }
 
@@ -135,7 +135,7 @@ Node* Gate::getInputNode() {
 
 bool Gate::isFullyConnected() {
     if(!otherHalf)
-        return true;
+        return this->inputNode->getConnected();
     return this->inputNode->getConnected() && otherHalf->inputNode->getConnected();
 
 }
@@ -174,7 +174,7 @@ Node::Direction Gate::getOutputDirection() {
 }
 
 void Gate::connectWire(Wire* connectWire, Wire::Direction connectionDirection) {
-    if (alignment == Alignment::FIRST && connectWire->getHeadConnection()) {
+    if (alignment == Ports::IN && connectWire->getHeadConnection()) {
         inputNode->setTag(connectWire->getTag());
         inputNode->connectWire(connectWire, connectionDirection);
         if (gateOperator == Gate::Operator::NOT) {

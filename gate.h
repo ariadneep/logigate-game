@@ -29,11 +29,12 @@ public:
     };
 
     /**
-     * @brief The Alignment enum - Holds information on whether this gate
-     * is a first half or a second half.
+     * @brief The Ports enum - Holds information on where wires can connect to this Gate.
+     * IN means they can only connect to the input side, INOUT means they can connect to both
+     * the input AND the output side.
      */
-    enum class Alignment {
-        FIRST, SECOND
+    enum class Ports {
+        IN, INOUT
     };
 
     /**
@@ -55,7 +56,7 @@ public:
      * @param direction
      * @param parent
      */
-    explicit Gate(int x, int y, Operator type, Alignment alignment, Direction direction,
+    explicit Gate(int x, int y, Operator type, Ports alignment, Direction direction,
                   QObject *parent = nullptr);
 
     /**
@@ -122,10 +123,10 @@ public:
     void setOtherHalf(Gate* otherGate);
 
     /**
-     * @brief getAlignment - Getter method for this Gate's Alignment.
+     * @brief getAlignment - Getter method for this Gate's Ports.
      * @return the alignment of this Gate relative to the center position.
      */
-    Alignment getAlignment();
+    Ports getAlignment();
 
     /**
      * @brief getDirection - Getter method for this Gate's Direction.
@@ -233,7 +234,7 @@ private:
      * @brief alignment - The relative alignment of this Gate with respect to its
      * otherHalf.
      */
-    Alignment alignment;
+    Ports alignment;
 
     /**
      * @brief direction - the direction this Gate has been rotated to face.
