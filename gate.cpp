@@ -85,21 +85,16 @@ QString Gate::convertSignal(bool firstSignal, bool secondSignal, QString firstID
 }
 
 QString Gate::convertSignal(bool input, QString id) {
-    bool newOutput;
-
-    //calls the specific helper method based on the Type
-    switch(gateOperator) {
-    case Operator::NOT:
-        newOutput = !input;
-        break;
-    default:
+    if(gateOperator != Operator::NOT)
         return id;
-    }
+
+    bool newOutput = !input;
 
     //sets outputSignal to the resulting boolean.
     qDebug() << "this should fire right before bug";
     if(outputNode == nullptr)
         qDebug() << "its a nullptr";
+
     outputNode->setSignal(newOutput);
     return id;
 }
@@ -126,6 +121,7 @@ void Gate::setOtherHalf(Gate* otherGate) {
 }
 
 Gate::Alignment Gate::getAlignment() {
+    qDebug() << "getAlignment is running.";
     return alignment;
 }
 
@@ -204,9 +200,18 @@ void Gate::connectWire(Wire* connectWire, Wire::Direction connectionDirection) {
 
             bool firstSignal = inputNode->getSignal();
             QString firstTag = inputNode->getTag();
-            bool secondSignal = otherHalf->getSignal();
-            QString secondTag = otherHalf->getTag();
-            convertSignal(firstSignal, secondSignal, firstTag, secondTag);
+
+            // If there is another half (ergo it's a double gate) run this
+            if(otherHalf) {
+                bool secondSignal = otherHalf->getSignal();
+                QString secondTag = otherHalf->getTag();
+                convertSignal(firstSignal, secondSignal, firstTag, secondTag);
+                return;
+            }
+
+            // If there is no other half (ergo it's a single gate) run only this
+            convertSignal(firstSignal, firstTag);
+            return;
         }
     }
 }

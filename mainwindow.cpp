@@ -242,7 +242,7 @@ void MainWindow::loadGatePixmaps() {
                        QPixmap(":/sprites/objects/or_bottom.png"));
     gatePixmaps.insert({Gate::Operator::OR, {Gate::Alignment::FIRST, Gate::Direction::EAST}},
                        QPixmap(":/sprites/objects/or_top.png"));
-    gatePixmaps.insert({Gate::Operator::NOT, {Gate::Alignment::FIRST, Gate::Direction::EAST}},
+    gatePixmaps.insert({Gate::Operator::NOT, {Gate::Alignment::SECOND, Gate::Direction::EAST}},
                        QPixmap(":/sprites/objects/not.png"));
 
     // SOUTH-facing wires.
@@ -254,7 +254,7 @@ void MainWindow::loadGatePixmaps() {
                        QPixmap(":/sprites/objects/or_bottom.png").transformed(QTransform().rotate(90)));
     gatePixmaps.insert({Gate::Operator::OR, {Gate::Alignment::FIRST, Gate::Direction::SOUTH}},
                        QPixmap(":/sprites/objects/or_top.png").transformed(QTransform().rotate(90)));
-    gatePixmaps.insert({Gate::Operator::NOT, {Gate::Alignment::FIRST, Gate::Direction::SOUTH}},
+    gatePixmaps.insert({Gate::Operator::NOT, {Gate::Alignment::SECOND, Gate::Direction::SOUTH}},
                        QPixmap(":/sprites/objects/not.png").transformed(QTransform().rotate(90)));
 
     // WEST-facing wires.
@@ -266,7 +266,7 @@ void MainWindow::loadGatePixmaps() {
                        QPixmap(":/sprites/objects/or_bottom.png").transformed(QTransform().rotate(180)));
     gatePixmaps.insert({Gate::Operator::OR, {Gate::Alignment::FIRST, Gate::Direction::WEST}},
                        QPixmap(":/sprites/objects/or_top.png").transformed(QTransform().rotate(180)));
-    gatePixmaps.insert({Gate::Operator::NOT, {Gate::Alignment::FIRST, Gate::Direction::WEST}},
+    gatePixmaps.insert({Gate::Operator::NOT, {Gate::Alignment::SECOND, Gate::Direction::WEST}},
                        QPixmap(":/sprites/objects/not.png").transformed(QTransform().rotate(180)));
 
     // NORTH-facing wires.
@@ -278,7 +278,7 @@ void MainWindow::loadGatePixmaps() {
                        QPixmap(":/sprites/objects/or_bottom.png").transformed(QTransform().rotate(270)));
     gatePixmaps.insert({Gate::Operator::OR, {Gate::Alignment::FIRST, Gate::Direction::NORTH}},
                        QPixmap(":/sprites/objects/or_top.png").transformed(QTransform().rotate(270)));
-    gatePixmaps.insert({Gate::Operator::NOT, {Gate::Alignment::FIRST, Gate::Direction::NORTH}},
+    gatePixmaps.insert({Gate::Operator::NOT, {Gate::Alignment::SECOND, Gate::Direction::NORTH}},
                        QPixmap(":/sprites/objects/not.png").transformed(QTransform().rotate(270)));
 }
 

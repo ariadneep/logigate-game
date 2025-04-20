@@ -417,6 +417,7 @@ void Level::levelSetup(int levelNum) {
         drawGate(6, 4, Gate::Operator::AND, Gate::Direction::EAST);
         drawGate(10, 4, Gate::Operator::OR, Gate::Direction::EAST);
         drawGate(8, 7, Gate::Operator::NOT, Gate::Direction::EAST);
+
         break;
     }
 
@@ -499,6 +500,7 @@ void Level::addSingleGate(int x, int y, Gate::Operator gateType, Gate::Direction
 
     // Draw a gate at the given x, y position
     gateGrid[y * WIDTH + x] = newNotGate;
+    qDebug() << "single gate added: " << gateGrid[y * WIDTH + x];
 }
 
 void Level::calculateGateOffset(Gate::Direction dir, int& xOffset, int& yOffset) {
@@ -602,7 +604,6 @@ void Level::drawGate(int x, int y, Gate::Operator op, Gate::Direction dir) {
 
     // Add the gate to the backend.
     if(op == Gate::Operator::NOT) {
-        qDebug() << "does this run?";
         addSingleGate(x, y, op, dir);
     }
     else {
