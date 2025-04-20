@@ -29,11 +29,12 @@ public:
     };
 
     /**
-     * @brief The Alignment enum - Holds information on whether this gate
-     * is a first half or a second half.
+     * @brief The Ports enum - Holds information on where wires can connect to this Gate.
+     * IN means they can only connect to the input side, INOUT means they can connect to both
+     * the input AND the output side.
      */
-    enum class Alignment {
-        FIRST, SECOND
+    enum class Ports {
+        IN, INOUT
     };
 
     /**
@@ -47,11 +48,16 @@ public:
     };
 
     /**
-     * @brief Gate - Makes a Gate object.
-     * @param type - AND, OR, or NOT gate.
-     * @param parent - The parent object
+     * @brief Gate
+     * @param x
+     * @param y
+     * @param type
+     * @param alignment
+     * @param direction
+     * @param parent
      */
-    explicit Gate(Operator type, Alignment alignment, Direction direction, QObject *parent = nullptr);
+    explicit Gate(int x, int y, Operator type, Ports alignment, Direction direction,
+                  QObject *parent = nullptr);
 
     /**
      * Destructor for the Gate class.
@@ -117,10 +123,10 @@ public:
     void setOtherHalf(Gate* otherGate);
 
     /**
-     * @brief getAlignment - Getter method for this Gate's Alignment.
+     * @brief getAlignment - Getter method for this Gate's Ports.
      * @return the alignment of this Gate relative to the center position.
      */
-    Alignment getAlignment();
+    Ports getAlignment();
 
     /**
      * @brief getDirection - Getter method for this Gate's Direction.
@@ -128,7 +134,72 @@ public:
      */
     Direction getDirection();
 
+    /**
+     * @brief getInputNode - getter for this Gate's inputNode.
+     * @return the inputNode of this Gate.
+     */
+    Node* getInputNode();
+
+    /**
+     * @brief isFullyConnected - checks if ALL possible input slots of this Gate are connected
+     * @return true if all input slots connected, false otherwise.
+     */
+    bool isFullyConnected();
+
+    /**
+     * @brief getInputDirection
+     * @return
+     */
+    Node::Direction getInputDirection();
+
+    /**
+     * @brief getOutputNode - getter for this Gate's outputNode.
+     * @return the outputNode of this Gate.
+     */
+    Node* getOutputNode();
+
+    /**
+     * @brief getOutputWire
+     * @return
+     */
+    Wire* getOutputWire();
+
+    /**
+     * @brief getOutputDirection
+     * @return
+     */
+    Node::Direction getOutputDirection();
+
+    /**
+     * @brief getTag
+     * @return
+     */
+    QString getTag();
+
+    /**
+     * @brief connectWire
+     * @param connectWire
+     * @param connectionDirection
+     */
+    void connectWire(Wire* connectWire, Wire::Direction connectionDirection);
+
 private:
+
+    /**
+     * @brief x
+     */
+    int x;
+
+    /**
+     * @brief y
+     */
+    int y;
+
+    /**
+     * @brief outputTag
+     */
+    QString outputTag;
+
     /**
      * @brief gateOperator - whether this object represents
      * an AND, OR, or NOT gate.
@@ -163,7 +234,7 @@ private:
      * @brief alignment - The relative alignment of this Gate with respect to its
      * otherHalf.
      */
-    Alignment alignment;
+    Ports alignment;
 
     /**
      * @brief direction - the direction this Gate has been rotated to face.

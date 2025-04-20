@@ -54,7 +54,9 @@ bool Node::getSignal() {
 }
 
 void Node::setSignal(bool signal) {
+    qDebug() << "current signal: " << signal;
     this->signal = signal;
+    qDebug() << "ran correctly";
 }
 
 Node::Type Node::getNodeType() {
