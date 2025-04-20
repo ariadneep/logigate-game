@@ -659,23 +659,31 @@ void Level::clearNodes() {
     for (int i = 0; i < WIDTH * HEIGHT; i++) {
         if (nodeGrid[i]) {
             Node* node = nodeGrid[i];
-            node->setSignal(true);
-            Wire* backWire = node->getWire();
-            if (backWire) {
-                if(node->getNodeType() == Node::Type::ROOT) {
-                    backWire->setHeadConnection(backWire);
-                    backWire->setTailConnection(nullptr);
-                } else if (node->getNodeType() == Node::Type::END) {
-                    backWire->setHeadConnection(nullptr);
-                    backWire->setTailConnection(backWire);
-                }
 
-                if (backWire->getX() >= 0 && backWire->getX() < WIDTH &&
-                    backWire->getY() >= 0 && backWire->getY() < HEIGHT) {
-                    wireGrid[backWire->getY() * WIDTH + backWire->getX()] = backWire;
-                }
+            Wire* backWire = node->getWire();
+            if (!backWire)
+                continue;
+
+            int bx = backWire->getX();
+            int by = backWire->getY();
+
+            if (bx < 0 || bx >= WIDTH || by < 0 || by >= HEIGHT)
+                continue;
+
+            if (wireGrid[by * WIDTH + bx] != backWire)
+                continue;
+
+            if (node->getNodeType() == Node::Type::ROOT) {
+                backWire->setHeadConnection(backWire);
+                backWire->setTailConnection(nullptr);
+            } else if (node->getNodeType() == Node::Type::END) {
+                backWire->setHeadConnection(nullptr);
+                backWire->setTailConnection(backWire);
             }
+
+            wireGrid[by * WIDTH + bx] = backWire;
         }
     }
 }
+
 

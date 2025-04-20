@@ -53,8 +53,8 @@ Gate::Gate(int x, int y, Operator type, Ports ports, Direction direction, QObjec
 }
 
 Gate::~Gate() {
-    delete inputNode;
-    delete outputNode;
+    //delete inputNode;
+    //delete outputNode;
 }
 
 Gate::Operator Gate::getOperator() {
