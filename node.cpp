@@ -33,7 +33,7 @@ Node::Node(QObject *parent, int x, int y, Node::Type type, bool signal, QString 
 }
 
 Node::~Node() {
-    delete sprite;
+    //delete sprite;
     delete backingWire;
 }
 

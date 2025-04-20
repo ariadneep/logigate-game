@@ -12,8 +12,8 @@ Gate::Gate(Operator type, Alignment alignment, Direction direction, QObject *par
 }
 
 Gate::~Gate() {
-    delete inputNode;
-    delete outputNode;
+    //delete inputNode;
+    //delete outputNode;
 }
 
 Gate::Operator Gate::getOperator() {
