@@ -243,7 +243,7 @@ Gate* Level::findGate(int x, int y, Wire::Direction& wireConnectionDirection, Wi
     if (upGate &&
         ((upGate->getInputDirection() == Node::Direction::S && headWire) ||
         (upGate->getOutputDirection() == Node::Direction::S
-        && upGate->getIsBothInputsConnected()))) {
+        && upGate->isFullyConnected()))) {
         wireConnectionDirection = Wire::Direction::N;
         return upGate;
     }
@@ -252,7 +252,7 @@ Gate* Level::findGate(int x, int y, Wire::Direction& wireConnectionDirection, Wi
     else if (rightGate &&
             ((rightGate->getInputDirection() == Node::Direction::W && headWire) ||
             (rightGate->getOutputDirection() == Node::Direction::W
-            && rightGate->getIsBothInputsConnected()))) {
+            && rightGate->isFullyConnected()))) {
         wireConnectionDirection = Wire::Direction::E;
         return rightGate;
     }
@@ -261,7 +261,7 @@ Gate* Level::findGate(int x, int y, Wire::Direction& wireConnectionDirection, Wi
     else if (downGate &&
             ((downGate->getInputDirection() == Node::Direction::N && headWire) ||
             (downGate->getOutputDirection() == Node::Direction::N
-            && downGate->getIsBothInputsConnected()))) {
+            && downGate->isFullyConnected()))) {
         wireConnectionDirection = Wire::Direction::S;
         return downGate;
     }
@@ -270,7 +270,7 @@ Gate* Level::findGate(int x, int y, Wire::Direction& wireConnectionDirection, Wi
     else if (leftGate &&
             ((leftGate->getInputDirection() == Node::Direction::E && headWire) ||
             (leftGate->getOutputDirection() == Node::Direction::E
-            && leftGate->getIsBothInputsConnected()))) {
+            && leftGate->isFullyConnected()))) {
         wireConnectionDirection = Wire::Direction::W;
         return leftGate;
     }

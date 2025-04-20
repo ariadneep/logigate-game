@@ -133,12 +133,11 @@ Node* Gate::getInputNode() {
     return inputNode;
 }
 
-bool Gate::getIsInputConnected() {
-    return inputNode->getConnected();
-}
+bool Gate::isFullyConnected() {
+    if(!otherHalf)
+        return true;
+    return this->inputNode->getConnected() && otherHalf->inputNode->getConnected();
 
-bool Gate::getIsBothInputsConnected() {
-    return inputNode->getConnected() && otherHalf->getIsInputConnected();
 }
 
 Node::Direction Gate::getInputDirection() {

@@ -134,22 +134,16 @@ public:
     Direction getDirection();
 
     /**
-     * @brief getInputNode
-     * @return
+     * @brief getInputNode - getter for this Gate's inputNode.
+     * @return the inputNode of this Gate.
      */
     Node* getInputNode();
 
     /**
-     * @brief Gate::getIsInputConnected
-     * @return
+     * @brief isFullyConnected - checks if ALL possible input slots of this Gate are connected
+     * @return true if all input slots connected, false otherwise.
      */
-    bool getIsInputConnected();
-
-    /**
-     * @brief getIsBothInputsConnected
-     * @return
-     */
-    bool getIsBothInputsConnected();
+    bool isFullyConnected();
 
     /**
      * @brief getInputDirection
@@ -158,8 +152,8 @@ public:
     Node::Direction getInputDirection();
 
     /**
-     * @brief getOutputNode
-     * @return
+     * @brief getOutputNode - getter for this Gate's outputNode.
+     * @return the outputNode of this Gate.
      */
     Node* getOutputNode();
 
