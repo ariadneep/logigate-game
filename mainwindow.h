@@ -138,6 +138,16 @@ private:
     QPixmap backgroundLayer;
 
     /**
+    * @brief FALSE_COLOR - the color used for false inputs.
+    */
+    const QString FALSE_COLOR = "red";
+
+    /**
+    * @brief TRUE_COLOR - the color used for true inputs.
+    */
+    const QString TRUE_COLOR = "blue";
+
+    /**
      * @brief wirePixmaps - Holds the wire pixmaps with direction-color pairs as keys
      * and image Pixmaps as values.
      */

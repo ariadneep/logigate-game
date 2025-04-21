@@ -217,17 +217,14 @@ void MainWindow::repaint() {
 }
 
 void MainWindow::paintWire(int x, int y, Wire::Direction direction, bool signal) {
-    // Set default color. This color is retained if the tag is not A or B.
-    QString color = "blue";
+    QString color = FALSE_COLOR;
 
     // Holds the current wire texture to be drawn.
     QPixmap wirePixmap;
 
     // Change the color to red if the wire tag is A or blue if the wire tag is B.
     if(signal)
-        color = "blue";
-    else
-        color = "red";
+        color = TRUE_COLOR;
 
     // Grab the UI measurements for scaling.
     int boxWidth = ui->gameBoard->width() / currentLevel->WIDTH;
@@ -304,7 +301,6 @@ void MainWindow::loadGatePixmaps() {
 }
 
 void MainWindow::paintGate(int x, int y, Gate::Operator op, Gate::Ports align, Gate::Direction dir) {
-    // Holds the current gate texture to be drawn.
     QPixmap gatePixmap;
     // Grab the UI measurements for scaling.
     int boxWidth = ui->gameBoard->width() / currentLevel->WIDTH;
@@ -330,16 +326,15 @@ void MainWindow::paintGate(int x, int y, Gate::Operator op, Gate::Ports align, G
 
 void MainWindow::paintNode(int x, int y, bool signal, QString tag) {
     // Set default color. This color is retained if the tag is not A or B.
-    QString color = "red";
+    QString color = FALSE_COLOR;
 
     // Holds the current wire texture to be drawn.
     QPixmap nodePixmap;
 
     // Change the color to red if the wire tag is A or blue if the wire tag is B.
     if(signal)
-        color = "blue";
-    else
-        color = "red";
+        color = TRUE_COLOR;
+
     qDebug() << "Node color is " << color << "and its tag is " << tag;
 
     // Grab the UI measurements for scaling.
