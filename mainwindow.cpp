@@ -541,6 +541,7 @@ void MainWindow::levelOneButtonClicked() {
     levelNum = 1;
     changeLevel();
     setLessonText();
+    ui->nextLevelButton->setDisabled(false);
 
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
@@ -555,6 +556,7 @@ void MainWindow::levelTwoButtonClicked() {
     levelNum = 2;
     changeLevel();
     setLessonText();
+    ui->nextLevelButton->setDisabled(false);
 
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
@@ -570,6 +572,7 @@ void MainWindow::levelThreeButtonClicked() {
     levelNum = 3;
     changeLevel();
     setLessonText();
+    ui->nextLevelButton->setDisabled(false);
 
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
@@ -584,6 +587,7 @@ void MainWindow::levelFourButtonClicked() {
     levelNum = 4;
     changeLevel();
     setLessonText();
+    ui->nextLevelButton->setDisabled(false);
 
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
@@ -598,6 +602,7 @@ void MainWindow::levelFiveButtonClicked() {
     levelNum = 5;
     changeLevel();
     setLessonText();
+    ui->nextLevelButton->setDisabled(true);
 
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
@@ -641,8 +646,9 @@ void MainWindow::nextLevelButtonClicked() {
      */
     levelNum++;
     //If already on highest level, loop back to level one.
-    if(levelNum > 5) {
-        levelNum = 1;
+    if(levelNum >= 5) {
+        levelNum = 5;
+        ui->nextLevelButton->setDisabled(true);
     }
 
     setLessonText();

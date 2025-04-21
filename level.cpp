@@ -28,7 +28,9 @@ Level::~Level() {
         delete nodeGrid[i];
         delete obstacleGrid[i];
     }
-    delete confetti;
+    if (confetti) {
+        delete confetti;
+    }
 }
 
 void Level::drawWire(int x, int y, QString tag) {
@@ -650,7 +652,32 @@ void Level::clearWires() {
 void Level::clearGates() {
     for(int i = 0; i < WIDTH * HEIGHT; i++) {
         if (gateGrid[i]) {
-            gateGrid[i]->setSignal(false);
+            Gate* gate = gateGrid[i];
+            gate->setSignal(false);
+
+            Node* inputNode = gate->getInputNode();
+            if (inputNode) {
+                Wire* inputWire = inputNode->getWire();
+                if (inputWire && inputNode->getNodeType() == Node::Type::ROOT) {
+                    inputWire->setHeadConnection(inputWire);
+                    inputWire->setTailConnection(nullptr);
+                } else if (inputWire && inputNode->getNodeType() == Node::Type::END) {
+                    inputWire->setHeadConnection(nullptr);
+                    inputWire->setTailConnection(inputWire);
+                }
+            }
+            Node* outputNode = gate->getOutputNode();
+            if (outputNode) {
+                outputNode->setConnected(false);
+                Wire* outputWire = outputNode->getWire();
+                if (outputWire && outputNode->getNodeType() == Node::Type::ROOT) {
+                    outputWire->setHeadConnection(outputWire);
+                    outputWire->setTailConnection(nullptr);
+                } else if (outputWire && outputNode->getNodeType() == Node::Type::END) {
+                    outputWire->setHeadConnection(outputWire);
+                    outputWire->setTailConnection(nullptr);
+                }
+            }
         }
     }
 }
@@ -659,7 +686,6 @@ void Level::clearNodes() {
     for (int i = 0; i < WIDTH * HEIGHT; i++) {
         if (nodeGrid[i]) {
             Node* node = nodeGrid[i];
-
             Wire* backWire = node->getWire();
             if (!backWire)
                 continue;
