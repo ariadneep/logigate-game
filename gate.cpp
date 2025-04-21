@@ -78,8 +78,9 @@ QString Gate::convertSignal(bool firstSignal, bool secondSignal, QString firstID
     }
 
     //sets outputSignal to the resulting boolean.
-    qDebug() << "Gate signal conversion = " << newOutput;
-    qDebug() << "Gate signal tag = " << outputNode->getTag();
+    qDebug() << "Converting double-gate signals " << firstSignal << " and " << secondSignal <<
+        " (tags " << firstID << " and " << secondID << ")" << " to signal " << newOutput <<
+        " with tag " << secondID;
     outputNode->setSignal(newOutput);
     return newID;
 }
@@ -92,9 +93,10 @@ QString Gate::convertSignal(bool input, QString id) {
 
     //sets outputSignal to the resulting boolean.
     qDebug() << "this should fire right before bug";
-    if(outputNode == nullptr)
-        qDebug() << "its a nullptr";
-    else
+
+    qDebug() << "Converting single-gate signal " << input << " to signal " << newOutput << " with tag " << id;
+
+    if(outputNode)
         outputNode->setSignal(newOutput);
 
     return id;
