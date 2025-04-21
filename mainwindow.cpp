@@ -12,10 +12,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->gameBoard->setMouseTracking(true);
 
     ui->levelSelectMenu->setStyleSheet("background: 3b3e3f");
-    ui->lessonWidget->setStyleSheet("background: solid white");
 
     isLevelMenuShowing = false;
     isLessonShowing = false;
+    lessonText = "";
 
     gameBoardX = 0;
     gameBoardY = 0;
@@ -531,7 +531,7 @@ void MainWindow::levelMenuButtonClicked() {
     }
 }
 
-void MainWindow::levelOneButtonClicked(){
+void MainWindow::levelOneButtonClicked() {
     /*
      * Procedure:
      * 1. Call the clearLevel method.
@@ -540,65 +540,69 @@ void MainWindow::levelOneButtonClicked(){
      */
     levelNum = 1;
     changeLevel();
+    setLessonText();
 
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
         isLessonShowing = true;
-        ui->lessonText->setText("Level 1");
+        ui->lessonText->setText(lessonText);
     }
 
     repaint();
 }
 
-void MainWindow::levelTwoButtonClicked(){
+void MainWindow::levelTwoButtonClicked() {
     levelNum = 2;
     changeLevel();
-
+    setLessonText();
 
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
         isLessonShowing = true;
-        ui->lessonText->setText("Level 2");
+        ui->lessonText->setText(lessonText);
     }
 
 
     repaint();
 }
 
-void MainWindow::levelThreeButtonClicked(){
+void MainWindow::levelThreeButtonClicked() {
     levelNum = 3;
     changeLevel();
+    setLessonText();
 
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
         isLessonShowing = true;
-        ui->lessonText->setText("Level 3");
+        ui->lessonText->setText(lessonText);
     }
 
     repaint();
 }
 
-void MainWindow::levelFourButtonClicked(){
+void MainWindow::levelFourButtonClicked() {
     levelNum = 4;
     changeLevel();
+    setLessonText();
 
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
         isLessonShowing = true;
-        ui->lessonText->setText("Level 4");
+        ui->lessonText->setText(lessonText);
     }
 
     repaint();
 }
 
-void MainWindow::levelFiveButtonClicked(){
+void MainWindow::levelFiveButtonClicked() {
     levelNum = 5;
     changeLevel();
+    setLessonText();
 
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
         isLessonShowing = true;
-        ui->lessonText->setText("Level 5");
+        ui->lessonText->setText(lessonText);
     }
 
     repaint();
@@ -614,11 +618,23 @@ void MainWindow::clearLevelButtonClicked() {
     currentLevel->clearGates();
     currentLevel->clearNodes();
 
+    qDebug() << "SETTING LEVEL" << levelNum;
+
+    setLessonText();
+
+    if(!isLessonShowing) {
+        lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
+        isLessonShowing = true;
+
+        ui->lessonText->setText(lessonText);
+    }
+
     repaint();
     qDebug() << "clearing level";
 }
 
 void MainWindow::nextLevelButtonClicked() {
+
     qDebug() << "next level loading";
     /*
      * Procedure: Clear the level, and then set up the next one.
@@ -627,6 +643,15 @@ void MainWindow::nextLevelButtonClicked() {
     //If already on highest level, loop back to level one.
     if(levelNum > 5) {
         levelNum = 1;
+    }
+
+    setLessonText();
+
+    if(!isLessonShowing) {
+        lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
+        isLessonShowing = true;
+
+        ui->lessonText->setText(lessonText);
     }
 
     qDebug() << "levelNum: " << levelNum;
@@ -639,5 +664,33 @@ void MainWindow::lessonCloseButtonClicked() {
     if (isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, -2.0f));
         isLessonShowing = false;
+    }
+}
+
+void MainWindow::setLessonText() {
+    /*
+     * TODO: Change lessonText to be the description for each level.
+     */
+    qDebug() << "SETTING LEVEL" << levelNum;
+
+    switch (levelNum) {
+    case 1:
+        lessonText = "Level 1";
+        break;
+    case 2:
+        lessonText = "Level 2";
+        break;
+    case 3:
+        lessonText = "Level 3";
+        break;
+    case 4:
+        lessonText = "Level 4";
+        break;
+    case 5:
+        lessonText = "Level 5";
+        break;
+    default:
+        lessonText = "Tutorial - Level 0";
+        break;
     }
 }
