@@ -334,7 +334,7 @@ void Level::setWireTemp(int x, int y, QString tag) {
     wireGrid[y * WIDTH + x] = addWire;
 }
 
-void Level::setNode(int x, int y, bool signal, QString tag, Node::Type type) {
+void Level::drawNode(int x, int y, bool signal, QString tag, Node::Type type) {
 
     if (getGate(x, y) || getWire(x, y) || getNode(x, y) || getObstacle(x, y))
         return;
@@ -381,15 +381,15 @@ void Level::levelSetup(int levelNum) {
 
     switch (levelNum) {
     case 1:
-        setNode(0, 3, false, "A", Node::Type::ROOT);
-        setNode(8, 3, false, "A", Node::Type::END);
+        drawNode(0, 3, false, "A", Node::Type::ROOT);
+        drawNode(8, 3, false, "A", Node::Type::END);
 
         drawGate(6, 4, Gate::Operator::AND, Gate::Direction::EAST);
         break;
 
     case 2:
-        setNode(3, 3, false, "A", Node::Type::ROOT);
-        setNode(19, 5, false, "A", Node::Type::END);
+        drawNode(3, 3, false, "A", Node::Type::ROOT);
+        drawNode(19, 5, false, "A", Node::Type::END);
 
         drawGate(11, 1, Gate::Operator::AND, Gate::Direction::EAST);
         drawGate(10, 7, Gate::Operator::AND, Gate::Direction::SOUTH);
@@ -409,9 +409,9 @@ void Level::levelSetup(int levelNum) {
         break;
 
     default:
-        setNode(0, 3, true, "A", Node::Type::ROOT);
-        setNode(0, 5, false, "B", Node::Type::ROOT);
-        setNode(8, 3, true, "AB", Node::Type::END);
+        drawNode(0, 3, true, "A", Node::Type::ROOT);
+        drawNode(0, 5, false, "B", Node::Type::ROOT);
+        drawNode(8, 3, true, "AB", Node::Type::END);
         addObstacle(0, 0);
 
         drawGate(6, 4, Gate::Operator::AND, Gate::Direction::EAST);
@@ -527,22 +527,6 @@ void Level::calculateGateOffset(Gate::Direction dir, int& xOffset, int& yOffset)
         break;
     }
 
-}
-
-void Level::addNode(int x, int y, QString& tag, Node::Type nodeType, bool signal) {
-    if (getGate(x, y) || getWire(x, y) || getNode(x, y) || getObstacle(x, y))
-        return;
-
-    if(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
-        if(nodeGrid[y * WIDTH + x] == nullptr) {
-            nodeGrid[y * WIDTH + x] = new Node(this);
-            // TODO: refactor parameters;
-            // nodeGrid[y * WIDTH + x] = new Node(tag, nodeType, graphicsScene, x, y, this);
-            if(nodeType == Node::Type::ROOT) {
-                nodeGrid[y * WIDTH + x]->setSignal(signal);
-            }
-        }
-    }
 }
 
 void Level::addObstacle(int x, int y) {

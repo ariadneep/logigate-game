@@ -100,11 +100,15 @@ public:
     Node* getNode(int x, int y);
 
     /**
-     * @brief setNode TEMP METHOD, REMOVE LATER
-     * @param x
-     * @param y
-     */
-    void setNode(int x, int y, bool signal, QString tag, Node::Type type);
+    * @brief drawNode - Adds a node at the specified x and y position into the level.
+    * @brief drawNode - Adds a node at the specified x and y position into the level.
+    * @param x - The x position.
+    * @param y - The y position.
+    * @param signal - The output value, true or false.
+    * @param tag - The ID of the node.
+    * @param type - Specifies whether it is a ROOT or END node.
+    */
+    void drawNode(int x, int y, bool signal, QString tag, Node::Type type);
 
     /**
      * @brief getObstacle
@@ -349,16 +353,6 @@ private:
      * @param dir - Where the output side of the gate is facing.
      */
     void addSingleGate(int x, int y, Gate::Operator gateType, Gate::Direction dir);
-
-    /**
-     * @brief addNode - Adds a node at the specified x and y position into the level.
-     * @param x - The x position.
-     * @param y - The y position.
-     * @param tag - The input node.
-     * @param nodeType - Specifies whether it is a ROOT or END node.
-     * @param signal - The output value, true or false.
-     */
-    void addNode(int x, int y, QString& tag, Node::Type nodeType, bool signal);
 
     /**
      * @brief addObstacle - Adds an obstacle at x and y position into the level.

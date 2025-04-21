@@ -1,13 +1,11 @@
 #include "node.h"
 
 Node::Node(QObject *parent, int x, int y, Node::Type type, bool signal, QString tag)
-    : GridComponent{parent}
+    : GridComponent{parent}, tag(tag), signal(signal), nodeType(type)
 {
-    this->signal = signal;
     connected = false;
-    nodeType = type;
-    this->tag = tag;
-    this->direction = Node::Direction::NONE;
+    direction = Node::Direction::NONE;
+
     backingWire = new Wire();
     backingWire->setTag(tag);
     backingWire->setSignal(signal);
@@ -22,18 +20,10 @@ Node::Node(QObject *parent, int x, int y, Node::Type type, bool signal, QString 
         qDebug() << "From the constructor: END";
         backingWire->setTailConnection(backingWire);
     }
-
-    Node::Type result = this->getNodeType();
-    if (result == Node::Type::ROOT) {
-        qDebug() << "I'm da ROOT!";
-    }
-    else if (result == Node::Type::END) {
-        qDebug() << "I'm da END!";
-    }
 }
 
+
 Node::~Node() {
-    //delete sprite;
     delete backingWire;
 }
 
@@ -54,9 +44,8 @@ bool Node::getSignal() {
 }
 
 void Node::setSignal(bool signal) {
-    qDebug() << "current signal: " << signal;
+    backingWire->setSignal(signal);
     this->signal = signal;
-    qDebug() << "ran correctly";
 }
 
 Node::Type Node::getNodeType() {
