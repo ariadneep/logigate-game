@@ -15,6 +15,8 @@
 #include <QMouseEvent>
 #include <Box2D/Box2D.h>
 #include <QGraphicsScene>
+#include <QPushButton>
+#include <QLabel>
 
 #include "level.h"
 #include "node.h"
@@ -113,6 +115,12 @@ private slots:
      * @brief levelFiveButtonClicked - Event for when levelFiveButton is clicked.
      */
     void levelFiveButtonClicked();
+
+    /**
+     * @brief lessonCloseButtonClicked - Event for when the closeLessonButton is clicked.
+     */
+    void lessonCloseButtonClicked();
+
 
 private:
     /**
@@ -275,5 +283,16 @@ private:
      * @brief isLevelMenuShowing - Bool for sliding levelMenu on or off screen.
      */
     bool isLevelMenuShowing;
+
+    /**
+     * @brief lessonBody - Box2D for lessonWidget QWidget.
+     */
+    b2Body* lessonBody;
+
+    /**
+     * @brief isLessonShowing - Bool for sliding lessonWidget on or off screen.
+     */
+    bool isLessonShowing;
+
 };
 #endif // MAINWINDOW_H
