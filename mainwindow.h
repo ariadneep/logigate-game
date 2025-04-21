@@ -294,5 +294,15 @@ private:
      */
     bool isLessonShowing;
 
+    /**
+     * @brief lessonText - The text to be shown on the lessonWidget.
+     */
+    QString lessonText;
+
+    /**
+     * @brief setLessonText - A method for setting lessonText.
+     */
+    void setLessonText();
+
 };
 #endif // MAINWINDOW_H
