@@ -19,7 +19,6 @@
 #include <QLabel>
 
 #include "level.h"
-#include "node.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -128,13 +127,30 @@ private:
      */
     Ui::MainWindow *ui;
 
-    //gameBoard positions
+    /**
+     * @brief gameBoardX - Stores the x-coordinate on the gameboard of the last placed item.
+     */
     int gameBoardX;
+
+    /**
+     * @brief gameBoardY - Stores the y-coordinate on the gameboard of the last placed item.
+     */
     int gameBoardY;
+
+    /**
+     * @brief newPosition - Designates whether or not the position set is different from the last
+     * stored gameboard position.
+     */
     bool newPosition;
 
-    //pixmap layers
+    /**
+     * @brief componentLayer -
+     */
     QPixmap componentLayer;
+
+    /**
+     * @brief backgroundLayer -
+     */
     QPixmap backgroundLayer;
 
     /**
