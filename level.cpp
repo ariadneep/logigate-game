@@ -411,11 +411,11 @@ void Level::levelSetup(int levelNum) {
     default:
         setNode(0, 3, true, "A", Node::Type::ROOT);
         setNode(0, 5, false, "B", Node::Type::ROOT);
-        setNode(8, 3, true, "A", Node::Type::END);
+        setNode(8, 3, true, "AB", Node::Type::END);
         addObstacle(0, 0);
 
         drawGate(6, 4, Gate::Operator::AND, Gate::Direction::EAST);
-        drawGate(10, 4, Gate::Operator::OR, Gate::Direction::EAST);
+        drawGate(7, 1, Gate::Operator::OR, Gate::Direction::SOUTH);
         drawGate(8, 7, Gate::Operator::NOT, Gate::Direction::EAST);
 
         break;

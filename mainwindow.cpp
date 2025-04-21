@@ -68,19 +68,7 @@ MainWindow::MainWindow(QWidget *parent)
     currentLevel = new Level(levelNum, graphicsScene, box2DWorld, this);
 
     currentTag = "";
-    // \/ CHANGE \/
-    /* this needs to be edited: you shouldn't be able to draw a wire when the square
-     * in the direction you're drawing in is occupied
-     */
-    // currentLevel->drawGate(0, 2, Gate::Operator::AND);
-    // currentLevel->setWireTemp(0, 0, currentTag);
-    currentLevel->setNode(0, 3, true, "A", Node::Type::ROOT);
-    currentLevel->setNode(8, 3, true, "B", Node::Type::END);
 
-    // currentLevel->drawGate(11, 1, Gate::Operator::AND, Gate::Direction::EAST);
-    // currentLevel->drawGate(10, 7, Gate::Operator::AND, Gate::Direction::SOUTH);
-    // currentLevel->drawGate(0, 6, Gate::Operator::AND, Gate::Direction::WEST);
-    // currentLevel->drawGate(1, 3, Gate::Operator::AND, Gate::Direction::NORTH);
     currentLevel->levelSetup(levelNum);
 
     repaint();
