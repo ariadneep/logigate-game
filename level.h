@@ -28,12 +28,11 @@ class Level : public QObject {
 public:
     /**
      * @brief Level - Default constructor.
-     * @param levelNum - The level chosen to set up.
      * @param graphicsScene - The graphics scene
      * @param box2DWorld - The Box2D world.
      * @param parent - the parent object.
      */
-    explicit Level(int levelNum, QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent);
+    explicit Level(QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent);
 
     /**
      * Destructor for the level class.
@@ -351,16 +350,6 @@ private:
     void addSingleGate(int x, int y, Gate::Operator gateType, Gate::Direction dir);
 
     /**
-     * @brief addNode - Adds a node at the specified x and y position into the level.
-     * @param x - The x position.
-     * @param y - The y position.
-     * @param tag - The input node.
-     * @param nodeType - Specifies whether it is a ROOT or END node.
-     * @param signal - The output value, true or false.
-     */
-    void addNode(int x, int y, QString& tag, Node::Type nodeType, bool signal);
-
-    /**
      * @brief addObstacle - Adds an obstacle at x and y position into the level.
      * @param x - The x position.
      * @param y - The y position.
@@ -379,6 +368,10 @@ private:
     void calculateGateOffset(Gate::Direction dir, int& xOffset, int& yOffset);
 
 signals:
+
+    /**
+     * @brief update - Denotes that the state of the level has been updated.
+     */
     void update();
 };
 

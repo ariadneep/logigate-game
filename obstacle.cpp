@@ -1,13 +1,9 @@
 #include "obstacle.h"
 
 Obstacle::Obstacle(QObject *parent)
-    : GridComponent{parent}
+    : QObject{parent}
 {}
 
 Obstacle::~Obstacle() {
 
-}
-
-GridComponent::Type Obstacle::getType() {
-    return GridComponent::Type::OBSTACLE;
 }
