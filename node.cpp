@@ -1,7 +1,7 @@
 #include "node.h"
 
 Node::Node(QObject *parent, int x, int y, Node::Type type, bool signal, QString tag)
-    : GridComponent{parent}, tag(tag), signal(signal), nodeType(type)
+    : GridComponent{parent}, tag(tag), nodeType(type)
 {
     connected = false;
     direction = Node::Direction::NONE;
@@ -39,12 +39,11 @@ QString Node::getTag() {
 }
 
 bool Node::getSignal() {
-    return signal;
+    return backingWire->getSignal();
 }
 
 void Node::setSignal(bool signal) {
     backingWire->setSignal(signal);
-    this->signal = signal;
 }
 
 Node::Type Node::getNodeType() {

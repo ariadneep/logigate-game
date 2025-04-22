@@ -160,11 +160,6 @@ private:
     QString tag;
 
     /**
-     * @brief signal - The signal value of a node.
-     */
-    bool signal;
-
-    /**
      * @brief backingWire
      */
     Wire* backingWire;
