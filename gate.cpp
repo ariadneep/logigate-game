@@ -181,7 +181,7 @@ void Gate::connectWire(Wire* connectWire, Wire::Direction connectionDirection) {
     else {
         Node::Direction outputDirection = outputNode->getDirection();
         // DO A DIRECTION CHECK: ensure the wire connects to the right side of the gate.
-        // Runs when something has connected to the output side.
+        // Runs when something has connected to the output-only side.
         if ((connectionDirection == Wire::Direction::N && outputDirection == Node::Direction::S) ||
             (connectionDirection == Wire::Direction::E && outputDirection == Node::Direction::W) ||
             (connectionDirection == Wire::Direction::S && outputDirection == Node::Direction::N) ||
@@ -189,25 +189,26 @@ void Gate::connectWire(Wire* connectWire, Wire::Direction connectionDirection) {
 
             outputNode->setTag(getTag());
             outputNode->connectWire(connectWire, connectionDirection); //also sets signal
+
         }
         else if (connectWire->getHeadConnection()) {
             inputNode->setTag(connectWire->getTag());
             inputNode->connectWire(connectWire, connectionDirection);
+        }
 
-            bool firstSignal = inputNode->getSignal();
-            QString firstTag = inputNode->getTag();
+        //no matter which port type is connected, this should run.
+        bool firstSignal = inputNode->getSignal();
+        QString firstTag = inputNode->getTag();
 
-            // If there is another half (ergo it's a double gate) run this
-            if(otherHalf) {
-                bool secondSignal = otherHalf->inputNode->getSignal();
-                QString secondTag = otherHalf->inputNode->getTag();
-                convertSignal(firstSignal, secondSignal, firstTag, secondTag);
-                return;
-            }
-
-            // If there is no other half (ergo it's a single gate) run only this
-            convertSignal(firstSignal, firstTag);
+        // If there is another half (ergo it's a double gate) run this
+        if(otherHalf) {
+            bool secondSignal = otherHalf->inputNode->getSignal();
+            QString secondTag = otherHalf->inputNode->getTag();
+            convertSignal(firstSignal, secondSignal, firstTag, secondTag);
             return;
         }
+
+        // If there is no other half (ergo it's a single gate) run only this
+        convertSignal(firstSignal, firstTag);
     }
 }
