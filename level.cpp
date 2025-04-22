@@ -5,7 +5,7 @@
 enum class Component;
 class Wire;
 
-Level::Level(int levelNum, QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent)
+Level::Level(QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent)
     : QObject{parent},box2DWorld(box2DWorld), graphicsScene(graphicsScene), isVictory(false) {
 
     confetti = new Confetti(graphicsScene, box2DWorld);
@@ -47,14 +47,17 @@ void Level::drawWire(int x, int y, QString tag) {
 
     if (isEmptySpace(x, y)) {
 
+
+        Wire::Direction wireConnectionDirection = Wire::Direction::NONE;
+        Wire* connectWire = findWire(x, y, tag, wireConnectionDirection);
+
         qDebug() << "empty space, attempting to place wire";
 
         Wire* currentWire = nullptr;
-        Wire::Direction wireConnectionDirection = Wire::Direction::NONE;
         Wire::Direction nodeConnectionDirection = Wire::Direction::NONE;
 
         // Attempting to find valid neighboring node:
-        if (Node* connectNode = findNode(x, y, tag, nodeConnectionDirection)) {
+        if (Node* connectNode = findNode(x, y, tag, nodeConnectionDirection, connectWire)) {
             // Check some stuff with the wire to make sure it is valid, namely,
             // are we connecting with a root or an end?
 
@@ -63,8 +66,8 @@ void Level::drawWire(int x, int y, QString tag) {
             currentWire = new Wire();
             setWire(x, y, currentWire);
             // Checks if there's a head wire and sets it to current node. For the end Node.
-            if (Wire* headWire = findWire(x, y, tag, wireConnectionDirection)) {
-                headWire->connectTail(currentWire, wireConnectionDirection);
+            if (connectWire) {
+                connectWire->connectTail(currentWire, wireConnectionDirection);
             }
             connectNode->connectWire(currentWire, nodeConnectionDirection);
 
@@ -72,15 +75,15 @@ void Level::drawWire(int x, int y, QString tag) {
         }
 
         // Attempting to find neighboring valid gate:
-        else if (Gate* connectGate = findGate(x, y, nodeConnectionDirection, findWire(x, y, tag, wireConnectionDirection))) {
+        else if (Gate* connectGate = findGate(x, y, nodeConnectionDirection, connectWire)) {
             qDebug() << "Gate found";
 
             currentWire = new Wire();
             currentWire->setTag(tag);
             setWire(x, y, currentWire);
             // Checks if there's a head wire and sets it to current node. For the end Node.
-            if (Wire* headWire = findWire(x, y, tag, wireConnectionDirection)) {
-                headWire->connectTail(currentWire, wireConnectionDirection);
+            if (connectWire) {
+                connectWire->connectTail(currentWire, wireConnectionDirection);
             }
             connectGate->connectWire(currentWire, nodeConnectionDirection);
 
@@ -88,7 +91,7 @@ void Level::drawWire(int x, int y, QString tag) {
         }
 
         // Attempting to find neighboring valid wire:
-        else if (Wire* connectWire = findWire(x, y, tag, wireConnectionDirection)) {
+        else if (connectWire) {
 
             qDebug() << "Attempting to create a new wire.";
             currentWire = new Wire();
@@ -187,7 +190,7 @@ void Level::wireRemove(Wire* currentWire) {
     }
 }
 
-Node* Level::findNode(int x, int y, QString tag, Wire::Direction& wireConnectionDirection) {
+Node* Level::findNode(int x, int y, QString tag, Wire::Direction& wireConnectionDirection, Wire* connectWire) {
 
     qDebug() << "In find node";
     Node* upNode = getNode(x, y - 1);
@@ -202,25 +205,33 @@ Node* Level::findNode(int x, int y, QString tag, Wire::Direction& wireConnection
 
     if (upNode != nullptr && upNode->getTag() == tag && !upNode->getConnected()
         && (upNode->getDirection() == Node::Direction::NONE
-            || upNode->getDirection() == Node::Direction::S)) {
+        || upNode->getDirection() == Node::Direction::S) &&
+        (upNode->getNodeType() == Node::Type::ROOT ||
+        (connectWire && upNode->getSignal() == connectWire->getSignal()))) {
         wireConnectionDirection = Wire::Direction::N;
         return upNode;
     }
     else if (rightNode != nullptr && rightNode->getTag() == tag && !rightNode->getConnected()
-             && (rightNode->getDirection() == Node::Direction::NONE
-                 || rightNode->getDirection() == Node::Direction::W)) {
+            && (rightNode->getDirection() == Node::Direction::NONE
+            || rightNode->getDirection() == Node::Direction::W) &&
+            (rightNode->getNodeType() == Node::Type::ROOT ||
+            (connectWire && rightNode->getSignal() == connectWire->getSignal()))) {
         wireConnectionDirection = Wire::Direction::E;
         return rightNode;
     }
     else if (downNode != nullptr && downNode->getTag() == tag && !downNode->getConnected()
-             && (downNode->getDirection() == Node::Direction::NONE
-                 || downNode->getDirection() == Node::Direction::N)) {
+            && (downNode->getDirection() == Node::Direction::NONE
+            || downNode->getDirection() == Node::Direction::N) &&
+            (downNode->getNodeType() == Node::Type::ROOT ||
+            (connectWire && downNode->getSignal() == connectWire->getSignal()))) {
         wireConnectionDirection = Wire::Direction::S;
         return downNode;
     }
     else if (leftNode != nullptr && leftNode->getTag() == tag && !leftNode->getConnected()
-             && (leftNode->getDirection() == Node::Direction::NONE
-                 || leftNode->getDirection() == Node::Direction::E)) {
+            && (leftNode->getDirection() == Node::Direction::NONE
+            || leftNode->getDirection() == Node::Direction::E) &&
+            (leftNode->getNodeType() == Node::Type::ROOT ||
+            (connectWire && leftNode->getSignal() == connectWire->getSignal()))) {
         wireConnectionDirection = Wire::Direction::W;
         return leftNode;
     }
@@ -336,7 +347,7 @@ void Level::setWireTemp(int x, int y, QString tag) {
     wireGrid[y * WIDTH + x] = addWire;
 }
 
-void Level::setNode(int x, int y, bool signal, QString tag, Node::Type type) {
+void Level::drawNode(int x, int y, bool signal, QString tag, Node::Type type) {
 
     if (getGate(x, y) || getWire(x, y) || getNode(x, y) || getObstacle(x, y))
         return;
@@ -383,15 +394,15 @@ void Level::levelSetup(int levelNum) {
 
     switch (levelNum) {
     case 1:
-        setNode(0, 3, false, "A", Node::Type::ROOT);
-        setNode(8, 3, false, "A", Node::Type::END);
+        drawNode(0, 3, false, "A", Node::Type::ROOT);
+        drawNode(8, 3, false, "A", Node::Type::END);
 
         drawGate(6, 4, Gate::Operator::AND, Gate::Direction::EAST);
         break;
 
     case 2:
-        setNode(3, 3, false, "A", Node::Type::ROOT);
-        setNode(19, 5, false, "A", Node::Type::END);
+        drawNode(3, 3, false, "A", Node::Type::ROOT);
+        drawNode(19, 5, false, "A", Node::Type::END);
 
         drawGate(11, 1, Gate::Operator::AND, Gate::Direction::EAST);
         drawGate(10, 7, Gate::Operator::AND, Gate::Direction::SOUTH);
@@ -411,13 +422,13 @@ void Level::levelSetup(int levelNum) {
         break;
 
     default:
-        setNode(0, 3, true, "A", Node::Type::ROOT);
-        setNode(0, 5, false, "B", Node::Type::ROOT);
-        setNode(8, 3, true, "A", Node::Type::END);
+        drawNode(0, 3, true, "A", Node::Type::ROOT);
+        drawNode(0, 5, false, "B", Node::Type::ROOT);
+        drawNode(8, 3, true, "AB", Node::Type::END);
         addObstacle(0, 0);
 
         drawGate(6, 4, Gate::Operator::AND, Gate::Direction::EAST);
-        drawGate(10, 4, Gate::Operator::OR, Gate::Direction::EAST);
+        drawGate(7, 1, Gate::Operator::OR, Gate::Direction::SOUTH);
         drawGate(8, 7, Gate::Operator::NOT, Gate::Direction::EAST);
 
         break;
@@ -528,23 +539,6 @@ void Level::calculateGateOffset(Gate::Direction dir, int& xOffset, int& yOffset)
         yOffset = 0;
         break;
     }
-
-}
-
-void Level::addNode(int x, int y, QString& tag, Node::Type nodeType, bool signal) {
-    if (getGate(x, y) || getWire(x, y) || getNode(x, y) || getObstacle(x, y))
-        return;
-
-    if(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
-        if(nodeGrid[y * WIDTH + x] == nullptr) {
-            nodeGrid[y * WIDTH + x] = new Node(this);
-            // TODO: refactor parameters;
-            // nodeGrid[y * WIDTH + x] = new Node(tag, nodeType, graphicsScene, x, y, this);
-            if(nodeType == Node::Type::ROOT) {
-                nodeGrid[y * WIDTH + x]->setSignal(signal);
-            }
-        }
-    }
 }
 
 void Level::addObstacle(int x, int y) {
@@ -574,8 +568,7 @@ void Level::removeTails(Gate* startingGate) {
     if (startingGate->getOutputNode() == nullptr)
         return;
 
-    qDebug() << "output wire found. " << startingGate->getOutputWire();
-    Wire* currentWire = startingGate->getOutputWire()->getTailConnection();
+    Wire* currentWire = startingGate->getOutputNode()->getWire()->getTailConnection();
     while (currentWire) {
         Wire* tailWire = currentWire->getTailConnection();
         int x = currentWire->getX();

@@ -4,7 +4,7 @@
 class Node;
 
 Wire::Wire(QObject *parent)
-    : GridComponent{parent}
+    : QObject{parent}
 {
     headConnection = nullptr;
     tailConnection = nullptr;

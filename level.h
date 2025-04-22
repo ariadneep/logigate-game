@@ -28,12 +28,11 @@ class Level : public QObject {
 public:
     /**
      * @brief Level - Default constructor.
-     * @param levelNum - The level chosen to set up.
      * @param graphicsScene - The graphics scene
      * @param box2DWorld - The Box2D world.
      * @param parent - the parent object.
      */
-    explicit Level(int levelNum, QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent);
+    explicit Level(QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent);
 
     /**
      * Destructor for the level class.
@@ -100,11 +99,15 @@ public:
     Node* getNode(int x, int y);
 
     /**
-     * @brief setNode TEMP METHOD, REMOVE LATER
-     * @param x
-     * @param y
-     */
-    void setNode(int x, int y, bool signal, QString tag, Node::Type type);
+    * @brief drawNode - Adds a node at the specified x and y position into the level.
+    * @brief drawNode - Adds a node at the specified x and y position into the level.
+    * @param x - The x position.
+    * @param y - The y position.
+    * @param signal - The output value, true or false.
+    * @param tag - The ID of the node.
+    * @param type - Specifies whether it is a ROOT or END node.
+    */
+    void drawNode(int x, int y, bool signal, QString tag, Node::Type type);
 
     /**
      * @brief getObstacle
@@ -286,10 +289,11 @@ private:
      * @param tag - The tag of the node to link up to.
      * @param wireConnectionDirection - The relative direction of where the node was found at the
      * coordinates.
+     * @param connectWire - Checks for head wire data if it exists.
      * @return The pointer to the neighboring valid node.
      */
-    Node* findNode(int x, int y, QString tag, Wire::Direction& wireConnectionDirection);
-    \
+    Node* findNode(int x, int y, QString tag, Wire::Direction& wireConnectionDirection, Wire* connectWire);
+
     /**
      * @brief findGate
      * @param x
@@ -351,16 +355,6 @@ private:
     void addSingleGate(int x, int y, Gate::Operator gateType, Gate::Direction dir);
 
     /**
-     * @brief addNode - Adds a node at the specified x and y position into the level.
-     * @param x - The x position.
-     * @param y - The y position.
-     * @param tag - The input node.
-     * @param nodeType - Specifies whether it is a ROOT or END node.
-     * @param signal - The output value, true or false.
-     */
-    void addNode(int x, int y, QString& tag, Node::Type nodeType, bool signal);
-
-    /**
      * @brief addObstacle - Adds an obstacle at x and y position into the level.
      * @param x - The x position.
      * @param y - The y position.
@@ -379,6 +373,10 @@ private:
     void calculateGateOffset(Gate::Direction dir, int& xOffset, int& yOffset);
 
 signals:
+
+    /**
+     * @brief update - Denotes that the state of the level has been updated.
+     */
     void update();
 };
 
