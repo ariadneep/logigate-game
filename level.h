@@ -267,6 +267,7 @@ private:
     /**
      * @brief findWire - Checks all coordinates nearby and returns a pointer to a valid wire
      * nearby. Valid wires are: Same tag, not connected to a tail, not null.
+     * Only head-connecting wires are valid.
      * The Wire::Direction enum reference is passed through to store the direction at which the
      * wire was found.
      * @param x - The coordinate x position to check around.
@@ -274,21 +275,26 @@ private:
      * @param tag - The tag of the wire to link up to.
      * @param wireConnectionDirection - The relative direction of where the wire was found at the
      * coordinates.
-     * @return The pointer to the neighboring valid wire.
+     * @return The pointer to the neighboring valid wire. Returns nullptr otherwise.
      */
     Wire* findWire(int x, int y, QString tag, Wire::Direction& wireConnectionDirection);
 
     /**
-     * @brief findInputNode
-     * @param x
-     * @param y
-     * @param wireConnectionDirection
-     * @return
+     * @brief findInputNode - Checks all coordinates nearby for a valid END node. Valid nodes are:
+     * any END node. This should only be called if the head connection of the current wire has
+     * already been established.
+     * The Wire::Direction enum reference is passed through to store the direction at which the
+     * node was found.
+     * @param x - The coordinate x position to check around.
+     * @param y - The coordinate y position to check around.
+     * @param wireConnectionDirection - The relative direction of where the node was found at the
+     * coordinates.
+     * @return The pointer to the neighboring valid END node. Returns nullptr otherwise.
      */
     Node* findInputNode(int x, int y, Wire::Direction& wireConnectionDirection);
 
     /**
-     * @brief findNode - Checks all coordinates nearby and returns a pointer to a valid node
+     * @brief findOutputNode - Checks all coordinates nearby and returns a pointer to a valid ROOT node.
      * nearby. Valid nodes are: Same tag, not connected, not null, in a connection direction
      * equal to where the node was found or has a direction of NONE.
      * The Wire::Direction enum reference is passed through to store the direction at which the
@@ -298,59 +304,42 @@ private:
      * @param tag - The tag of the node to link up to.
      * @param wireConnectionDirection - The relative direction of where the node was found at the
      * coordinates.
-     * @return The pointer to the neighboring valid node.
+     * @return The pointer to the neighboring valid ROOT node. Returns nullptr otherwise.
      */
     Node* findOutputNode(int x, int y, QString tag, Wire::Direction& wireConnectionDirection);
 
     /**
-     * @brief findInputGate
-     * @param x
-     * @param y
-     * @param wireConnectionDirection
-     * @return
+     * @brief findInputGate - Checks all coordinates nearby and returns a pointer to a valid
+     * gate input. Valid gates are: Not fully connected, matching input direction.
+     * The Wire::Direction enum reference is passed through to store the direction at which the
+     * node was found.
+     * @param x - The coordinate x position to check around.
+     * @param y - The coordinate y position to check around.
+     * @param wireConnectionDirection - The relative direction of where the node was found at the
+     * coordinates.
+     * @return The pointer to the neighboring valid input gate. Returns nullptr otherwise.
      */
     Gate* findInputGate(int x, int y, Wire::Direction& wireConnectionDirection);
 
     /**
-     * @brief findOutputGate
-     * @param x
-     * @param y
-     * @param tag
-     * @param wireConnectionDirection
-     * @return
+     * @brief findOutputGate - Checks all coordinates nearby and returns a pointer to a valid
+     * gate output. Valid gates are: Fully connected, matching output direction, matching tag.
+     * The Wire::Direction enum reference is passed through to store the direction at which the
+     * node was found.
+     * @param x - The coordinate x position to check around.
+     * @param y - The coordinate y position to check around.
+     * @param wireConnectionDirection - The relative direction of where the node was found at the
+     * coordinates.
+     * @return The pointer to the neighboring valid output gate. Returns nullptr otherwise.
      */
     Gate* findOutputGate(int x, int y, QString tag, Wire::Direction& wireConnectionDirection);
 
     /**
-     * @brief connectWires
-     * @param x
-     * @param y
-     * @param headWire
-     * @param tailWire
-     */
-    void connectWires(Wire* headWire, Wire* tailWire);
-
-    /**
-     * @brief nodeDualDirector
-     * @param nodeDirection
-     * @param wireDirection
-     * @return
-     */
-    Wire::Direction nodeDualDirector(Wire::Direction nodeDirection, Wire::Direction wireDirection);
-
-    /**
-     * @brief wireDualDirector
-     * @param connectWire
-     * @param wireDirection
-     * @return
-     */
-    Wire::Direction wireDualDirector(Wire* connectWire, Wire::Direction wireDirection);
-
-    /**
-     * @brief setWire
-     * @param x
-     * @param y
-     * @param newWire
+     * @brief setWire - Updates the wire pointer on the grid and sets the head and tail connections
+     * to match.
+     * @param x - The x-coordinate of the Wire to change.
+     * @param y - The y-coordinate of the Wire to change.
+     * @param newWire - The new Wire pointer to set to.
      */
     void setWire(int x, int y, Wire* newWire);
 

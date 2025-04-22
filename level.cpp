@@ -178,7 +178,7 @@ Node* Level::findOutputNode(int x, int y, QString tag, Wire::Direction& wireConn
     Node* leftNode = getNode(x - 1, y);
 
     // Check node above:
-    if (upNode != nullptr && upNode->getTag() == tag && !upNode->getConnected()
+    if (upNode && upNode->getTag() == tag && !upNode->getConnected()
         && upNode->getNodeType() == Node::Type::ROOT &&
         (upNode->getDirection() == Node::Direction::NONE
             || upNode->getDirection() == Node::Direction::S)) {
