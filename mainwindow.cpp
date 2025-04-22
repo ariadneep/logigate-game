@@ -7,11 +7,17 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow), box2DWorld(nullptr), box2DBody(nullptr), timer(new QTimer(this)), frameCount(0), levelNum(0)
 {
+    //Adding/setting up the font used.
+    QFontDatabase::addApplicationFont(":/Code 7x5.ttf");
+    // QFont code7x5("Code 7x5", 20);
+
     ui->setupUi(this);
     setMouseTracking(true);
     ui->gameBoard->setMouseTracking(true);
 
     ui->levelSelectMenu->setStyleSheet("background: 3b3e3f");
+    ui->startingScreen->move(0, 0);
+    ui->levelSelectMenu->move(0, 0);
 
     isLevelMenuShowing = false;
     isLessonShowing = false;
@@ -87,6 +93,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Lesson connects
     connect(ui->closeLessonButton, &QPushButton::clicked, this, &MainWindow::lessonCloseButtonClicked);
+
+    // Start menu connects.
+    connect(ui->startButton, &QPushButton::clicked, this, &MainWindow::closeStartScreen);
 
     // World timer
     connect(timer, &QTimer::timeout, this, &MainWindow::updateWorld);
@@ -715,4 +724,8 @@ void MainWindow::setLessonText() {
         lessonText = "Tutorial - Level 0";
         break;
     }
+}
+
+void MainWindow::closeStartScreen() {
+    ui->startingScreen->hide();
 }

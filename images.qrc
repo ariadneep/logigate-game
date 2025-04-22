@@ -3,6 +3,8 @@
         <file>arrow.png</file>
         <file>menu.png</file>
         <file>trash.png</file>
+        <file>start-button-pressed.png</file>
+        <file>start-button.png</file>
     </qresource>
     <qresource prefix="/sprites">
         <file>grid-12x8.png</file>
