@@ -48,92 +48,44 @@ void Level::drawWire(int x, int y, QString tag) {
 
     if (isEmptySpace(x, y)) {
 
-        // Search for surrounding grid elements:
+        // Search for surrounding grid elements and initialize directions:
         Wire::Direction wireConnectionDirection = Wire::Direction::NONE;
         Wire::Direction nodeConnectionDirection = Wire::Direction::NONE;
         Wire::Direction gateConnectionDirection = Wire::Direction::NONE;
 
-        qDebug() << "empty space, attempting to place wire";
-
         Wire* currentWire = nullptr;
-        Wire* connectWire = findWire(x, y, tag, wireConnectionDirection);
-        Node* connectNode = findNode(x, y, tag, nodeConnectionDirection, connectWire);
-        Gate* connectGate = findGate(x, y, tag, gateConnectionDirection);
+        Wire* headWire = findWire(x, y, tag, wireConnectionDirection);
+        Node* headNode = findOutputNode(x, y, tag, nodeConnectionDirection);
+        Gate* headGate = findOutputGate(x, y, tag, gateConnectionDirection);
 
         // Create a new wire at the (x, y) coords if a connection was found:
-        if (connectWire || connectNode || connectGate) {
+        if (headWire || headNode || headGate) {
             currentWire = new Wire();
             setWire(x, y, currentWire);
 
             // Head connection:
-            if (connectWire)
-                connectWire->connectTail(currentWire, wireConnectionDirection);
-            else if (connectNode && connectNode->getNodeType() == Node::Type::ROOT)
-                connectNode->connectWire(currentWire, nodeConnectionDirection);
-            else if (connectGate && connectGate->getAlignment() == Gate::Ports::INOUT)
-                connectGate->connectWire(currentWire, gateConnectionDirection);
+            if (headWire)
+                headWire->connectTail(currentWire, wireConnectionDirection);
+            else if (headNode && headNode->getNodeType() == Node::Type::ROOT)
+                headNode->connectWire(currentWire, nodeConnectionDirection);
+            else if (headGate && headGate->getAlignment() == Gate::Ports::INOUT)
+                headGate->connectWire(currentWire, gateConnectionDirection);
+
 
             // Tail connection (Note: tails should only be made if the currentWire has a head):
-            if (currentWire->getHeadConnection()) {
-                if (connectNode && connectNode->getNodeType() == Node::Type::END)
-                    connectNode->connectWire(currentWire, nodeConnectionDirection);
-                else if (connectGate && !connectGate->isFullyConnected())
-                    connectGate->connectWire(currentWire, gateConnectionDirection);
-            }
+            Node* tailNode = findInputNode(x, y, nodeConnectionDirection);
+            Gate* tailGate = findInputGate(x, y, gateConnectionDirection);
+            if (tailNode)
+               tailNode->connectWire(currentWire, nodeConnectionDirection);
+            else if (tailGate)
+                tailGate->connectWire(currentWire, gateConnectionDirection);
         }
-
-        // some shit with the setTag() method here???? idk it was in the gate conn branch.
-
-        // Attempting to find valid neighboring node:
-        // if (connectNode) {
-        //     // Check some stuff with the wire to make sure it is valid, namely,
-        //     // are we connecting with a root or an end?
-
-        //     qDebug() << "Node found";
-
-        //     currentWire = new Wire();
-        //     setWire(x, y, currentWire);
-        //     // Checks if there's a head wire and sets it to current node. For the end Node.
-        //     if (connectWire) {
-        //         connectWire->connectTail(currentWire, wireConnectionDirection);
-        //     }
-        //     connectNode->connectWire(currentWire, nodeConnectionDirection);
-
-        //     return;
-        // }
-
-        // // Attempting to find neighboring valid gate:
-        // else if (connectGate) {
-        //     qDebug() << "Gate found";
-
-        //     currentWire = new Wire();
-        //     currentWire->setTag(tag);
-        //     setWire(x, y, currentWire);
-        //     // Checks if there's a head wire and sets it to current node. For the end Node.
-        //     if (connectWire) {
-        //         connectWire->connectTail(currentWire, wireConnectionDirection);
-        //     }
-        //     connectGate->connectWire(currentWire, nodeConnectionDirection);
-
-        //     return;
-        // }
-
-        // // Attempting to find neighboring valid wire:
-        // else if (connectWire) {
-
-        //     qDebug() << "Attempting to create a new wire.";
-        //     currentWire = new Wire();
-        //     setWire(x, y, currentWire);
-        //     connectWire->connectTail(currentWire, wireConnectionDirection);
-        // }
     }
     else if (currentWire && currentWire->getTailConnection() != nullptr
              && currentWire->getTailConnection()->getTailConnection() == nullptr) {
+
         // Is this wire directly connected to an incomplete end?
         // If so, "go back" one wire.
-
-        qDebug() << "deleted wire at " << x << ", " << y;
-
         wireRemove(currentWire);
     }
 
@@ -218,104 +170,159 @@ void Level::wireRemove(Wire* currentWire) {
     }
 }
 
-Node* Level::findOutputNode(int x, int y, QString tag, Wire::Direction& wireConnectionDirection, Wire* connectWire) {
+Node* Level::findOutputNode(int x, int y, QString tag, Wire::Direction& wireConnectionDirection) {
 
-    qDebug() << "In find node";
     Node* upNode = getNode(x, y - 1);
     Node* rightNode = getNode(x + 1, y);
     Node* downNode = getNode(x, y + 1);
     Node* leftNode = getNode(x - 1, y);
-    qDebug() << "passed pointer collection";
-    qDebug() << "upNode " << upNode;
-    qDebug() << "rightNode " << rightNode;
-    qDebug() << "downNode " << downNode;
-    qDebug() << "leftNode " << leftNode;
 
+    // Check node above:
     if (upNode != nullptr && upNode->getTag() == tag && !upNode->getConnected()
-        && (upNode->getDirection() == Node::Direction::NONE
-        || upNode->getDirection() == Node::Direction::S) &&
-        (upNode->getNodeType() == Node::Type::ROOT ||
-        (connectWire && upNode->getSignal() == connectWire->getSignal()))) {
+        && upNode->getNodeType() == Node::Type::ROOT &&
+        (upNode->getDirection() == Node::Direction::NONE
+            || upNode->getDirection() == Node::Direction::S)) {
         wireConnectionDirection = Wire::Direction::N;
         return upNode;
     }
-    else if (rightNode != nullptr && rightNode->getTag() == tag && !rightNode->getConnected()
-            && (rightNode->getDirection() == Node::Direction::NONE
-            || rightNode->getDirection() == Node::Direction::W) &&
-            (rightNode->getNodeType() == Node::Type::ROOT ||
-            (connectWire && rightNode->getSignal() == connectWire->getSignal()))) {
+
+    // Check node right:
+    else if (rightNode && rightNode->getTag() == tag && !rightNode->getConnected()
+            && rightNode->getNodeType() == Node::Type::ROOT &&
+            (rightNode->getDirection() == Node::Direction::NONE
+                || rightNode->getDirection() == Node::Direction::W)) {
         wireConnectionDirection = Wire::Direction::E;
         return rightNode;
     }
-    else if (downNode != nullptr && downNode->getTag() == tag && !downNode->getConnected()
-            && (downNode->getDirection() == Node::Direction::NONE
-            || downNode->getDirection() == Node::Direction::N) &&
-            (downNode->getNodeType() == Node::Type::ROOT ||
-            (connectWire && downNode->getSignal() == connectWire->getSignal()))) {
+
+    // Check node down:
+    else if (downNode && downNode->getTag() == tag && !downNode->getConnected()
+            && downNode->getNodeType() == Node::Type::ROOT &&
+            (downNode->getDirection() == Node::Direction::NONE
+                || downNode->getDirection() == Node::Direction::N)) {
         wireConnectionDirection = Wire::Direction::S;
         return downNode;
     }
-    else if (leftNode != nullptr && leftNode->getTag() == tag && !leftNode->getConnected()
-            && (leftNode->getDirection() == Node::Direction::NONE
-            || leftNode->getDirection() == Node::Direction::E) &&
-            (leftNode->getNodeType() == Node::Type::ROOT ||
-            (connectWire && leftNode->getSignal() == connectWire->getSignal()))) {
+
+    // Check node left:
+    else if (leftNode && leftNode->getTag() == tag && !leftNode->getConnected()
+            && leftNode->getNodeType() == Node::Type::ROOT &&
+            (leftNode->getDirection() == Node::Direction::NONE
+                || leftNode->getDirection() == Node::Direction::E)) {
         wireConnectionDirection = Wire::Direction::W;
         return leftNode;
     }
-    qDebug() << "No node found";
+
+    return nullptr;
+}
+
+Node* Level::findInputNode(int x, int y, Wire::Direction& wireConnectionDirection) {
+
+    Node* upNode = getNode(x, y - 1);
+    Node* rightNode = getNode(x + 1, y);
+    Node* downNode = getNode(x, y + 1);
+    Node* leftNode = getNode(x - 1, y);
+
+    // Check nodes above:
+    if (upNode && upNode->getNodeType() == Node::Type::END) {
+        wireConnectionDirection = Wire::Direction::N;
+        return upNode;
+    }
+
+    // Check nodes right:
+    else if (rightNode && rightNode->getNodeType() == Node::Type::END) {
+        wireConnectionDirection = Wire::Direction::E;
+        return rightNode;
+    }
+
+    // Check nodes down:
+    else if (downNode && downNode->getNodeType() == Node::Type::END) {
+        wireConnectionDirection = Wire::Direction::S;
+        return downNode;
+    }
+
+    // Check nodes left:
+    else if (leftNode && leftNode->getNodeType() == Node::Type::END) {
+        wireConnectionDirection = Wire::Direction::W;
+        return leftNode;
+    }
+
     return nullptr;
 }
 
 Gate* Level::findOutputGate(int x, int y, QString tag, Wire::Direction& wireConnectionDirection) {
 
-    qDebug() << "In find gate";
     Gate* upGate = getGate(x, y - 1);
     Gate* rightGate = getGate(x + 1, y);
     Gate* downGate = getGate(x, y + 1);
     Gate* leftGate = getGate(x - 1, y);
 
-    qDebug() << "upGate: " << upGate;
-    qDebug() << "rightGate: " << rightGate;
-    qDebug() << "downGate: " << downGate;
-    qDebug() << "leftGate: " << leftGate;
-
     // Check gates above:
-    if (upGate &&
-        ((upGate->getInputDirection() == Node::Direction::S) ||
-        (upGate->getOutputDirection() == Node::Direction::S
-        && upGate->isFullyConnected() && tag == upGate->getTag()))) {
+    if (upGate && (upGate->getOutputDirection() == Node::Direction::S
+        && upGate->isFullyConnected() && tag == upGate->getTag())) {
         wireConnectionDirection = Wire::Direction::N;
         return upGate;
     }
 
-    // Check gates to the right:
-    else if (rightGate &&
-            ((rightGate->getInputDirection() == Node::Direction::W) ||
-            (rightGate->getOutputDirection() == Node::Direction::W
-            && rightGate->isFullyConnected() && tag == rightGate->getTag()))) {
+    // Check gates right:
+    else if (rightGate && (rightGate->getOutputDirection() == Node::Direction::W
+            && rightGate->isFullyConnected() && tag == rightGate->getTag())) {
         wireConnectionDirection = Wire::Direction::E;
         return rightGate;
     }
 
     // Check gates below:
-    else if (downGate &&
-            ((downGate->getInputDirection() == Node::Direction::N) ||
-            (downGate->getOutputDirection() == Node::Direction::N
-            && downGate->isFullyConnected() && tag == downGate->getTag()))) {
+    else if (downGate && (downGate->getOutputDirection() == Node::Direction::N
+            && downGate->isFullyConnected() && tag == downGate->getTag())) {
         wireConnectionDirection = Wire::Direction::S;
         return downGate;
     }
 
     // Check gates left:
-    else if (leftGate &&
-            ((leftGate->getInputDirection() == Node::Direction::E) ||
-            (leftGate->getOutputDirection() == Node::Direction::E
-            && leftGate->isFullyConnected() && tag == leftGate->getTag()))) {
+    else if (leftGate && (leftGate->getOutputDirection() == Node::Direction::E
+            && leftGate->isFullyConnected() && tag == leftGate->getTag())) {
         wireConnectionDirection = Wire::Direction::W;
         return leftGate;
     }
-    qDebug() << "No gate found";
+
+    return nullptr;
+}
+
+Gate* Level::findInputGate(int x, int y, Wire::Direction& wireConnectionDirection) {
+
+    Gate* upGate = getGate(x, y - 1);
+    Gate* rightGate = getGate(x + 1, y);
+    Gate* downGate = getGate(x, y + 1);
+    Gate* leftGate = getGate(x - 1, y);
+
+    // Check gates above:
+    if (upGate && !upGate->isFullyConnected() &&
+        upGate->getInputDirection() == Node::Direction::S) {
+        wireConnectionDirection = Wire::Direction::N;
+        return upGate;
+    }
+
+    // Check gates right:
+    else if (rightGate && !rightGate->isFullyConnected() &&
+               rightGate->getInputDirection() == Node::Direction::W) {
+        wireConnectionDirection = Wire::Direction::E;
+        return rightGate;
+    }
+
+    // Check gates below:
+    else if (downGate && !downGate->isFullyConnected() &&
+               downGate->getInputDirection() == Node::Direction::N) {
+        wireConnectionDirection = Wire::Direction::S;
+        return downGate;
+    }
+
+    // Check gates left:
+    else if (leftGate && !leftGate->isFullyConnected() &&
+               downGate->getInputDirection() == Node::Direction::E) {
+        wireConnectionDirection = Wire::Direction::W;
+        return leftGate;
+    }
+
     return nullptr;
 }
 

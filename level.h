@@ -279,6 +279,15 @@ private:
     Wire* findWire(int x, int y, QString tag, Wire::Direction& wireConnectionDirection);
 
     /**
+     * @brief findInputNode
+     * @param x
+     * @param y
+     * @param wireConnectionDirection
+     * @return
+     */
+    Node* findInputNode(int x, int y, Wire::Direction& wireConnectionDirection);
+
+    /**
      * @brief findNode - Checks all coordinates nearby and returns a pointer to a valid node
      * nearby. Valid nodes are: Same tag, not connected, not null, in a connection direction
      * equal to where the node was found or has a direction of NONE.
@@ -289,19 +298,28 @@ private:
      * @param tag - The tag of the node to link up to.
      * @param wireConnectionDirection - The relative direction of where the node was found at the
      * coordinates.
-     * @param connectWire - Checks for head wire data if it exists.
      * @return The pointer to the neighboring valid node.
      */
-    Node* findNode(int x, int y, QString tag, Wire::Direction& wireConnectionDirection, Wire* connectWire);
+    Node* findOutputNode(int x, int y, QString tag, Wire::Direction& wireConnectionDirection);
 
     /**
-     * @brief findGate
+     * @brief findInputGate
      * @param x
      * @param y
      * @param wireConnectionDirection
      * @return
      */
-    Gate* findGate(int x, int y, Wire::Direction& wireConnectionDirection, Wire* headWire);
+    Gate* findInputGate(int x, int y, Wire::Direction& wireConnectionDirection);
+
+    /**
+     * @brief findOutputGate
+     * @param x
+     * @param y
+     * @param tag
+     * @param wireConnectionDirection
+     * @return
+     */
+    Gate* findOutputGate(int x, int y, QString tag, Wire::Direction& wireConnectionDirection);
 
     /**
      * @brief connectWires
