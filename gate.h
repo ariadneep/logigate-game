@@ -92,9 +92,8 @@ public:
      * @param secondSignal - the signal of the wire in the gate's second input slot.
      * @param firstID - the ID linked with the first signal.
      * @param secondID - the ID linked with the second signal.
-     * @return - the new, concatenated ID of the resulting signal conversion/transformation.
      */
-    QString convertSignal(bool firstSignal, bool secondSignal, QString firstID, QString secondID);
+    void convertSignal(bool firstSignal, bool secondSignal, QString firstID, QString secondID);
 
     /**
      * @brief convertSignal - sets the output signal to an opertion
@@ -102,9 +101,8 @@ public:
      * track of the ID of the input passed into it.
      * @param input - the boolean signal sent in by the input wire.
      * @param id - the ID associated with the input signal.
-     * @return the unchanged ID of the resulting signal conversion/transformation.
      */
-    QString convertSignal(bool input, QString id);
+    void convertSignal(bool input, QString id);
 
     /**
      * @brief getType - Returns the type of GridComponent object this is as an enum.

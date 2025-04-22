@@ -45,14 +45,17 @@ void Level::drawWire(int x, int y, QString tag) {
 
     if (isEmptySpace(x, y)) {
 
+
+        Wire::Direction wireConnectionDirection = Wire::Direction::NONE;
+        Wire* connectWire = findWire(x, y, tag, wireConnectionDirection);
+
         qDebug() << "empty space, attempting to place wire";
 
         Wire* currentWire = nullptr;
-        Wire::Direction wireConnectionDirection = Wire::Direction::NONE;
         Wire::Direction nodeConnectionDirection = Wire::Direction::NONE;
 
         // Attempting to find valid neighboring node:
-        if (Node* connectNode = findNode(x, y, tag, nodeConnectionDirection)) {
+        if (Node* connectNode = findNode(x, y, tag, nodeConnectionDirection, connectWire)) {
             // Check some stuff with the wire to make sure it is valid, namely,
             // are we connecting with a root or an end?
 
@@ -61,8 +64,8 @@ void Level::drawWire(int x, int y, QString tag) {
             currentWire = new Wire();
             setWire(x, y, currentWire);
             // Checks if there's a head wire and sets it to current node. For the end Node.
-            if (Wire* headWire = findWire(x, y, tag, wireConnectionDirection)) {
-                headWire->connectTail(currentWire, wireConnectionDirection);
+            if (connectWire) {
+                connectWire->connectTail(currentWire, wireConnectionDirection);
             }
             connectNode->connectWire(currentWire, nodeConnectionDirection);
 
@@ -70,15 +73,15 @@ void Level::drawWire(int x, int y, QString tag) {
         }
 
         // Attempting to find neighboring valid gate:
-        else if (Gate* connectGate = findGate(x, y, nodeConnectionDirection, findWire(x, y, tag, wireConnectionDirection))) {
+        else if (Gate* connectGate = findGate(x, y, nodeConnectionDirection, connectWire)) {
             qDebug() << "Gate found";
 
             currentWire = new Wire();
             currentWire->setTag(tag);
             setWire(x, y, currentWire);
             // Checks if there's a head wire and sets it to current node. For the end Node.
-            if (Wire* headWire = findWire(x, y, tag, wireConnectionDirection)) {
-                headWire->connectTail(currentWire, wireConnectionDirection);
+            if (connectWire) {
+                connectWire->connectTail(currentWire, wireConnectionDirection);
             }
             connectGate->connectWire(currentWire, nodeConnectionDirection);
 
@@ -86,7 +89,7 @@ void Level::drawWire(int x, int y, QString tag) {
         }
 
         // Attempting to find neighboring valid wire:
-        else if (Wire* connectWire = findWire(x, y, tag, wireConnectionDirection)) {
+        else if (connectWire) {
 
             qDebug() << "Attempting to create a new wire.";
             currentWire = new Wire();
@@ -185,7 +188,7 @@ void Level::wireRemove(Wire* currentWire) {
     }
 }
 
-Node* Level::findNode(int x, int y, QString tag, Wire::Direction& wireConnectionDirection) {
+Node* Level::findNode(int x, int y, QString tag, Wire::Direction& wireConnectionDirection, Wire* connectWire) {
 
     qDebug() << "In find node";
     Node* upNode = getNode(x, y - 1);
@@ -200,25 +203,33 @@ Node* Level::findNode(int x, int y, QString tag, Wire::Direction& wireConnection
 
     if (upNode != nullptr && upNode->getTag() == tag && !upNode->getConnected()
         && (upNode->getDirection() == Node::Direction::NONE
-            || upNode->getDirection() == Node::Direction::S)) {
+        || upNode->getDirection() == Node::Direction::S) &&
+        (upNode->getNodeType() == Node::Type::ROOT ||
+        (connectWire && upNode->getSignal() == connectWire->getSignal()))) {
         wireConnectionDirection = Wire::Direction::N;
         return upNode;
     }
     else if (rightNode != nullptr && rightNode->getTag() == tag && !rightNode->getConnected()
-             && (rightNode->getDirection() == Node::Direction::NONE
-                 || rightNode->getDirection() == Node::Direction::W)) {
+            && (rightNode->getDirection() == Node::Direction::NONE
+            || rightNode->getDirection() == Node::Direction::W) &&
+            (rightNode->getNodeType() == Node::Type::ROOT ||
+            (connectWire && rightNode->getSignal() == connectWire->getSignal()))) {
         wireConnectionDirection = Wire::Direction::E;
         return rightNode;
     }
     else if (downNode != nullptr && downNode->getTag() == tag && !downNode->getConnected()
-             && (downNode->getDirection() == Node::Direction::NONE
-                 || downNode->getDirection() == Node::Direction::N)) {
+            && (downNode->getDirection() == Node::Direction::NONE
+            || downNode->getDirection() == Node::Direction::N) &&
+            (downNode->getNodeType() == Node::Type::ROOT ||
+            (connectWire && downNode->getSignal() == connectWire->getSignal()))) {
         wireConnectionDirection = Wire::Direction::S;
         return downNode;
     }
     else if (leftNode != nullptr && leftNode->getTag() == tag && !leftNode->getConnected()
-             && (leftNode->getDirection() == Node::Direction::NONE
-                 || leftNode->getDirection() == Node::Direction::E)) {
+            && (leftNode->getDirection() == Node::Direction::NONE
+            || leftNode->getDirection() == Node::Direction::E) &&
+            (leftNode->getNodeType() == Node::Type::ROOT ||
+            (connectWire && leftNode->getSignal() == connectWire->getSignal()))) {
         wireConnectionDirection = Wire::Direction::W;
         return leftNode;
     }

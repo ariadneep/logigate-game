@@ -290,10 +290,11 @@ private:
      * @param tag - The tag of the node to link up to.
      * @param wireConnectionDirection - The relative direction of where the node was found at the
      * coordinates.
+     * @param connectWire - Checks for head wire data if it exists.
      * @return The pointer to the neighboring valid node.
      */
-    Node* findNode(int x, int y, QString tag, Wire::Direction& wireConnectionDirection);
-    \
+    Node* findNode(int x, int y, QString tag, Wire::Direction& wireConnectionDirection, Wire* connectWire);
+
     /**
      * @brief findGate
      * @param x

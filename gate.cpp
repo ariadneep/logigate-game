@@ -28,9 +28,8 @@ Gate::Gate(int x, int y, Operator type, Ports ports, Direction direction, QObjec
         break;
     }
 
-    // CHANGE THE AB TAG, JUST FOR TESTING
     if (ports == Ports::INOUT) {
-        outputNode = new Node(this, x, y, Node::Type::ROOT, false, "AB");
+        outputNode = new Node(this, x, y, Node::Type::ROOT, false, "");
         switch (direction) {
         case Gate::Direction::NORTH :
             outputNode->setDirection(Node::Direction::N);
@@ -61,9 +60,11 @@ Gate::Operator Gate::getOperator() {
     return gateOperator;
 }
 
-QString Gate::convertSignal(bool firstSignal, bool secondSignal, QString firstID, QString secondID) {
+void Gate::convertSignal(bool firstSignal, bool secondSignal, QString firstID, QString secondID) {
     bool newOutput;
-    QString newID = firstID.append(secondID);
+    QString newID = firstID;
+    newID.append(secondID);
+
     std::sort(newID.begin(), newID.end());
     //calls the specific helper method based on the Type
     switch(gateOperator) {
@@ -74,7 +75,7 @@ QString Gate::convertSignal(bool firstSignal, bool secondSignal, QString firstID
         newOutput = firstSignal || secondSignal;
         break;
     default:
-        return newID;
+        return;
     }
 
     //sets outputSignal to the resulting boolean.
@@ -82,13 +83,12 @@ QString Gate::convertSignal(bool firstSignal, bool secondSignal, QString firstID
         " (tags " << firstID << " and " << secondID << ")" << " to signal " << newOutput <<
         " with tag " << newID;
     outputNode->setSignal(newOutput);
-    // outputNode->setTag(newID);
-    return newID;
+    outputNode->setTag(newID);
 }
 
-QString Gate::convertSignal(bool input, QString id) {
+void Gate::convertSignal(bool input, QString id) {
     if(gateOperator != Operator::NOT)
-        return id;
+        return;
 
     bool newOutput = !input;
 
@@ -99,8 +99,7 @@ QString Gate::convertSignal(bool input, QString id) {
 
     if(outputNode)
         outputNode->setSignal(newOutput);
-
-    return id;
+    outputNode->setTag(id);
 }
 
 bool Gate::getSignal() {
