@@ -73,7 +73,8 @@ void Level::drawWire(int x, int y, QString tag) {
 
 
             // Tail connection (Note: tails should only be made if the currentWire has a head):
-            Node* tailNode = findInputNode(x, y, nodeConnectionDirection);
+            Node* tailNode = findInputNode(x, y, tag, currentWire->getSignal(),
+                                           nodeConnectionDirection);
             Gate* tailGate = findInputGate(x, y, gateConnectionDirection);
             if (tailNode)
                tailNode->connectWire(currentWire, nodeConnectionDirection);
@@ -218,7 +219,7 @@ Node* Level::findOutputNode(int x, int y, QString tag, Wire::Direction& wireConn
     return nullptr;
 }
 
-Node* Level::findInputNode(int x, int y, Wire::Direction& wireConnectionDirection) {
+Node* Level::findInputNode(int x, int y, QString tag, bool signal, Wire::Direction& wireConnectionDirection) {
 
     Node* upNode = getNode(x, y - 1);
     Node* rightNode = getNode(x + 1, y);
@@ -226,25 +227,29 @@ Node* Level::findInputNode(int x, int y, Wire::Direction& wireConnectionDirectio
     Node* leftNode = getNode(x - 1, y);
 
     // Check nodes above:
-    if (upNode && upNode->getNodeType() == Node::Type::END) {
+    if (upNode && upNode->getNodeType() == Node::Type::END && upNode->getTag() == tag
+        && upNode->getSignal() == signal) {
         wireConnectionDirection = Wire::Direction::N;
         return upNode;
     }
 
     // Check nodes right:
-    else if (rightNode && rightNode->getNodeType() == Node::Type::END) {
+    else if (rightNode && rightNode->getNodeType() == Node::Type::END && rightNode->getTag() == tag
+             && rightNode->getSignal() == signal) {
         wireConnectionDirection = Wire::Direction::E;
         return rightNode;
     }
 
     // Check nodes down:
-    else if (downNode && downNode->getNodeType() == Node::Type::END) {
+    else if (downNode && downNode->getNodeType() == Node::Type::END && downNode->getTag() == tag
+             && downNode->getSignal() == signal) {
         wireConnectionDirection = Wire::Direction::S;
         return downNode;
     }
 
     // Check nodes left:
-    else if (leftNode && leftNode->getNodeType() == Node::Type::END) {
+    else if (leftNode && leftNode->getNodeType() == Node::Type::END && leftNode->getTag() == tag
+             && leftNode->getSignal() == signal) {
         wireConnectionDirection = Wire::Direction::W;
         return leftNode;
     }
@@ -320,7 +325,7 @@ Gate* Level::findInputGate(int x, int y, Wire::Direction& wireConnectionDirectio
 
     // Check gates left:
     else if (leftGate && !leftGate->isFullyConnected() &&
-               downGate->getInputDirection() == Node::Direction::E) {
+               leftGate->getInputDirection() == Node::Direction::E) {
         wireConnectionDirection = Wire::Direction::W;
         return leftGate;
     }
@@ -471,33 +476,40 @@ void Level::levelSetup(int levelNum) {
 
     case 3:
         // Top Row
-        for(int x = 0; x < 12; x++) {
+        for(int x = 0; x <= 11; x++) {
             for(int y = 0; y < 2; y++) {
                 addObstacle(x, y);
             }
         }
         // Left Side
-        for(int x = 0; x < 2; x++) {
+        for(int x = 0; x <= 1; x++) {
             for(int y = 0; y < 8; y++) {
                 addObstacle(x, y);
             }
         }
 
         // Right side
-        for(int x = 10; x < 12; x++) {
+        for(int x = 10; x <= 11; x++) {
             for(int y = 0; y < 8; y++) {
                 addObstacle(x, y);
             }
+        }
+
+        // Bottom side
+        for(int x = 0; x <= 11; x++) {
+            addObstacle(x, 7);
         }
 
         addObstacle(8, 5);
         addObstacle(8, 6);
         addObstacle(8, 4);
         addObstacle(8, 7);
+        addObstacle(2, 2);
+        addObstacle(3, 2);
 
-        setNode(6, 7, false, "B", Node::Type::ROOT);
-        setNode(7, 2, true, "A", Node::Type::ROOT);
-        setNode(9, 7, true, "AB", Node::Type::END);
+        setNode(6, 6, false, "B", Node::Type::ROOT);
+        setNode(9, 2, false, "A", Node::Type::ROOT);
+        setNode(9, 6, true, "AB", Node::Type::END);
 
         drawGate(3, 5, Gate::Operator::OR, Gate::Direction::EAST);
         drawGate(7, 5, Gate::Operator::NOT, Gate::Direction::NORTH);

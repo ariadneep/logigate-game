@@ -287,11 +287,13 @@ private:
      * node was found.
      * @param x - The coordinate x position to check around.
      * @param y - The coordinate y position to check around.
+     * @param tag - The current tag to match.
+     * @param signal - The signal to compare to.
      * @param wireConnectionDirection - The relative direction of where the node was found at the
      * coordinates.
      * @return The pointer to the neighboring valid END node. Returns nullptr otherwise.
      */
-    Node* findInputNode(int x, int y, Wire::Direction& wireConnectionDirection);
+    Node* findInputNode(int x, int y, QString tag, bool signal, Wire::Direction& wireConnectionDirection);
 
     /**
      * @brief findOutputNode - Checks all coordinates nearby and returns a pointer to a valid ROOT node.
@@ -301,7 +303,7 @@ private:
      * node was found.
      * @param x - The coordinate x position to check around.
      * @param y - The coordinate y position to check around.
-     * @param tag - The tag of the node to link up to.
+     * @param tag - The current tag to match.
      * @param wireConnectionDirection - The relative direction of where the node was found at the
      * coordinates.
      * @return The pointer to the neighboring valid ROOT node. Returns nullptr otherwise.
