@@ -661,7 +661,6 @@ void Level::clearGates() {
             }
             Node* outputNode = gate->getOutputNode();
             if (outputNode) {
-                outputNode->setConnected(false);
                 Wire* outputWire = outputNode->getWire();
                 if (outputWire && outputNode->getNodeType() == Node::Type::ROOT) {
                     outputWire->setHeadConnection(outputWire);

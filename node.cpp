@@ -65,10 +65,6 @@ bool Node::getConnected() {
     return backingWire->isFullyConnected();
 }
 
-void Node::setConnected(bool connection) {
-    this->connected = connection;
-}
-
 Wire* Node::getWire() {
     return backingWire;
 }

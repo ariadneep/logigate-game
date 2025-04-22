@@ -208,7 +208,7 @@ void MainWindow::repaint() {
             if(currentGate)
                 paintGate(x, y, currentGate->getOperator(), currentGate->getAlignment(), currentGate->getDirection());
             if(currentNode)
-                paintNode(x, y, currentNode->getSignal(), currentNode->getTag());
+                paintNode(x, y, currentNode->getSignal());
             if(currentObstacle)
                 paintObstacle(x, y);
         }
@@ -324,7 +324,7 @@ void MainWindow::paintGate(int x, int y, Gate::Operator op, Gate::Ports ports, G
     ui->gameBoard->setPixmap(componentLayer);
 }
 
-void MainWindow::paintNode(int x, int y, bool signal, QString tag) {
+void MainWindow::paintNode(int x, int y, bool signal) {
     // Set default color. This color is retained if the tag is not A or B.
     QString color = FALSE_COLOR;
 

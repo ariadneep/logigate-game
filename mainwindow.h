@@ -236,7 +236,7 @@ private:
      * @param tag - the tag associated with the tag of the Node.
      * @param signal - the signal associated with the color of the Node
      */
-    void paintNode(int x, int y, bool signal, QString tag);
+    void paintNode(int x, int y, bool signal);
 
     /**
      * @brief paintObstacle - paints an obstacle with the appropriate attributes at the

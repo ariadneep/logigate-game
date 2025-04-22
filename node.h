@@ -116,12 +116,6 @@ public:
     bool getConnected();
 
     /**
-     * @brief setConnected - Sets the connection to true or false.
-     * @param connection Bool of the connection
-     */
-    void setConnected(bool connection);
-
-    /**
      * @brief getWire - Getter for the backing wire this Node uses.
      * @return A Pointer for the backing wire.
      */
