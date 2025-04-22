@@ -14,10 +14,8 @@ Node::Node(QObject *parent, int x, int y, Node::Type type, bool signal, QString 
     switch (nodeType) {
     case Node::Type::ROOT :
         backingWire->setHeadConnection(backingWire);
-        qDebug() << "From the constructor: ROOT";
         break;
     case Node::Type::END :
-        qDebug() << "From the constructor: END";
         backingWire->setTailConnection(backingWire);
     }
 }
@@ -33,6 +31,7 @@ GridComponent::Type Node::getType() {
 
 void Node::setTag(QString newTag) {
     tag = newTag;
+    backingWire->setTag(tag);
 }
 
 QString Node::getTag() {

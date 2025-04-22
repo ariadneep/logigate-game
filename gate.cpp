@@ -80,8 +80,9 @@ QString Gate::convertSignal(bool firstSignal, bool secondSignal, QString firstID
     //sets outputSignal to the resulting boolean.
     qDebug() << "Converting double-gate signals " << firstSignal << " and " << secondSignal <<
         " (tags " << firstID << " and " << secondID << ")" << " to signal " << newOutput <<
-        " with tag " << secondID;
+        " with tag " << newID;
     outputNode->setSignal(newOutput);
+    // outputNode->setTag(newID);
     return newID;
 }
 
@@ -176,24 +177,22 @@ Node::Direction Gate::getOutputDirection() {
 }
 
 void Gate::connectWire(Wire* connectWire, Wire::Direction connectionDirection) {
+    //checks if this is an input-only wire
     if (alignment == Ports::IN && connectWire->getHeadConnection()) {
         inputNode->setTag(connectWire->getTag());
         inputNode->connectWire(connectWire, connectionDirection);
-        if (gateOperator == Gate::Operator::NOT) {
-            convertSignal(inputNode->getSignal(), inputNode->getTag());
-        }
     }
     else {
         Node::Direction outputDirection = outputNode->getDirection();
-        // DO A DIRECTION CHECK:
+        // DO A DIRECTION CHECK: ensure the wire connects to the right side of the gate.
+        // Runs when something has connected to the output side.
         if ((connectionDirection == Wire::Direction::N && outputDirection == Node::Direction::S) ||
             (connectionDirection == Wire::Direction::E && outputDirection == Node::Direction::W) ||
             (connectionDirection == Wire::Direction::S && outputDirection == Node::Direction::N) ||
             (connectionDirection == Wire::Direction::W && outputDirection == Node::Direction::E)) {
 
-            outputNode->setSignal(outputSignal);
             outputNode->setTag(getTag());
-            outputNode->connectWire(connectWire, connectionDirection);
+            outputNode->connectWire(connectWire, connectionDirection); //also sets signal
         }
         else if (connectWire->getHeadConnection()) {
             inputNode->setTag(connectWire->getTag());
@@ -204,8 +203,8 @@ void Gate::connectWire(Wire* connectWire, Wire::Direction connectionDirection) {
 
             // If there is another half (ergo it's a double gate) run this
             if(otherHalf) {
-                bool secondSignal = otherHalf->getSignal();
-                QString secondTag = otherHalf->getTag();
+                bool secondSignal = otherHalf->inputNode->getSignal();
+                QString secondTag = otherHalf->inputNode->getTag();
                 convertSignal(firstSignal, secondSignal, firstTag, secondTag);
                 return;
             }

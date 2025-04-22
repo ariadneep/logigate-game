@@ -300,7 +300,7 @@ void MainWindow::loadGatePixmaps() {
                        QPixmap(":/sprites/objects/not.png").transformed(QTransform().rotate(270)));
 }
 
-void MainWindow::paintGate(int x, int y, Gate::Operator op, Gate::Ports align, Gate::Direction dir) {
+void MainWindow::paintGate(int x, int y, Gate::Operator op, Gate::Ports ports, Gate::Direction dir) {
     QPixmap gatePixmap;
     // Grab the UI measurements for scaling.
     int boxWidth = ui->gameBoard->width() / currentLevel->WIDTH;
@@ -309,7 +309,7 @@ void MainWindow::paintGate(int x, int y, Gate::Operator op, Gate::Ports align, G
     int uiY = y * boxHeight;
 
     // Set the current gate texture, scaled relative to the.
-    gatePixmap = gatePixmaps.value({op, {align, dir}}).scaled(
+    gatePixmap = gatePixmaps.value({op, {ports, dir}}).scaled(
         boxWidth, boxHeight,
         Qt::KeepAspectRatio,
         Qt::FastTransformation);
@@ -335,8 +335,6 @@ void MainWindow::paintNode(int x, int y, bool signal, QString tag) {
     if(signal)
         color = TRUE_COLOR;
 
-    qDebug() << "Node color is " << color << "and its tag is " << tag;
-
     // Grab the UI measurements for scaling.
     int boxWidth = ui->gameBoard->width() / currentLevel->WIDTH;
     int boxHeight = ui->gameBoard->height() / currentLevel->HEIGHT;
@@ -348,8 +346,6 @@ void MainWindow::paintNode(int x, int y, bool signal, QString tag) {
         boxWidth, boxHeight,
         Qt::KeepAspectRatio,
         Qt::FastTransformation);
-
-    qDebug() << "Node pixmap is null???" << nodePixmap.isNull();
 
     // Set up the painter and link to componentLayer.
     QPainter nodePainter(&componentLayer);
@@ -451,7 +447,6 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
         mouseX = mouseX - gameBoard->pos().x();
         mouseY = mouseY - gameBoard->pos().y();
 
-        // TODO: add in a divisor of the level's width
         gameBoardX = (int)(mouseX / (gameBoard->width() / currentLevel->WIDTH));
         gameBoardY = (int)(mouseY / (gameBoard->height() / currentLevel->HEIGHT));
 
