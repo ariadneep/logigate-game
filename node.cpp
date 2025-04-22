@@ -3,7 +3,6 @@
 Node::Node(QObject *parent, int x, int y, Node::Type type, bool signal, QString tag)
     : QObject{parent}
 {
-    this->signal = signal;
     nodeType = type;
     this->tag = tag;
     this->direction = Node::Direction::NONE;
