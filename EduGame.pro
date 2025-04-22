@@ -136,4 +136,5 @@ DISTFILES += \
     Box2D/CMakeLists.txt
 
 RESOURCES += \
+    fonts.qrc \
     images.qrc
