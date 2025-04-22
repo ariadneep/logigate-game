@@ -372,6 +372,12 @@ private:
      */
     void calculateGateOffset(Gate::Direction dir, int& xOffset, int& yOffset);
 
+    /**
+     * @brief placeBorder - Helper method that places a 2-block wide obstacle border in the
+     * current level.
+     */
+    void placeBorder();
+
 signals:
 
     /**
