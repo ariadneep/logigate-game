@@ -112,7 +112,7 @@ border-image: url(:/sprites/grid-12x8.png);</string>
    <widget class="QWidget" name="levelSelectMenu" native="true">
     <property name="geometry">
      <rect>
-      <x>0</x>
+      <x>-200</x>
       <y>0</y>
       <width>200</width>
       <height>500</height>
