@@ -189,10 +189,12 @@ void MainWindow::loadWirePixmaps() {
 
 void MainWindow::loadNodePixmaps() {
     // Red buttons
-    nodePixmaps.insert("red", QPixmap(":/sprites/red_wires/red_node_root.png"));
+    nodePixmaps.insert({false, Node::Type::ROOT}, QPixmap(":/sprites/red_wires/red_node_root.png"));
+    nodePixmaps.insert({false, Node::Type::END}, QPixmap(":/sprites/red_wires/red_node_end.png"));
 
     // Blue buttons
-    nodePixmaps.insert("blue", QPixmap(":/sprites/blue_wires/blue_node_root.png"));
+    nodePixmaps.insert({true, Node::Type::ROOT}, QPixmap(":/sprites/blue_wires/blue_node_root.png"));
+    nodePixmaps.insert({true, Node::Type::END}, QPixmap(":/sprites/blue_wires/blue_node_end.png"));
 }
 
 void MainWindow::repaint() {
@@ -220,7 +222,7 @@ void MainWindow::repaint() {
             if(currentGate)
                 paintGate(x, y, currentGate->getOperator(), currentGate->getAlignment(), currentGate->getDirection());
             if(currentNode)
-                paintNode(x, y, currentNode->getSignal(), currentNode->getTag());
+                paintNode(x, y, currentNode->getSignal(), currentNode->getNodeType());
             if(currentObstacle)
                 paintObstacle(x, y);
         }
@@ -340,7 +342,7 @@ void MainWindow::paintGate(int x, int y, Gate::Operator op, Gate::Ports align, G
     ui->gameBoard->setPixmap(componentLayer);
 }
 
-void MainWindow::paintNode(int x, int y, bool signal, QString tag) {
+void MainWindow::paintNode(int x, int y, bool signal, Node::Type nodeType) {
     // Set default color. This color is retained if the tag is not A or B.
     QString color = "red";
 
@@ -352,7 +354,7 @@ void MainWindow::paintNode(int x, int y, bool signal, QString tag) {
         color = "blue";
     else
         color = "red";
-    qDebug() << "Node color is " << color << "and its tag is " << tag;
+    qDebug() << "Node color is: " << color;
 
     // Grab the UI measurements for scaling.
     int boxWidth = ui->gameBoard->width() / currentLevel->WIDTH;
@@ -361,7 +363,7 @@ void MainWindow::paintNode(int x, int y, bool signal, QString tag) {
     int uiY = y * boxHeight;
 
     // Set the current wire texture, scaled relative to the.
-    nodePixmap = nodePixmaps.value(color).scaled(
+    nodePixmap = nodePixmaps.value({signal, nodeType}).scaled(
         boxWidth, boxHeight,
         Qt::KeepAspectRatio,
         Qt::FastTransformation);

@@ -147,7 +147,7 @@ private:
      * @brief nodePixmaps - Holds the node pixmaps with color as a key
      * and image Pixmaps as values.
      */
-    QHash<QString, QPixmap> nodePixmaps;
+    QHash<QPair<bool, Node::Type>, QPixmap> nodePixmaps;
 
     /**
      * @brief obstaclePixmaps - Holds the obstacle sprite
@@ -207,10 +207,10 @@ private:
      * given x, y position.
      * @param x - the horizontal grid square index to draw the node on.
      * @param y - the vertical grid square index to draw the node on.
-     * @param tag - the tag associated with the tag of the Node.
      * @param signal - the signal associated with the color of the Node
+     * @param nodeType - this determines if this node will be a root or end.
      */
-    void paintNode(int x, int y, bool signal, QString tag);
+    void paintNode(int x, int y, bool signal, Node::Type nodeType);
 
     /**
      * @brief paintObstacle - paints an obstacle with the appropriate attributes at the
