@@ -388,13 +388,22 @@ void MainWindow::changeLevel() {
      * Procedure: clear level, create a new instance of currentLevel, and then
      * set up the level.
      */
+
+    ui->nextLevelButton->setDisabled(true);
+
     currentLevel->clearLevel();
 
     delete currentLevel;
 
     currentLevel = new Level(graphicsScene, box2DWorld, this);
 
+    connect(currentLevel, &Level::levelCompleted, this, [this]() {
+        qDebug() << "Level completed signal received!";
+        ui->nextLevelButton->setEnabled(true);
+    });
+
     currentLevel->levelSetup(levelNum);
+
 
     qDebug() << "Changed to level:" << levelNum;
     repaint();
@@ -529,6 +538,8 @@ void MainWindow::levelOneButtonClicked() {
         ui->lessonText->setText(lessonText);
     }
 
+    ui->nextLevelButton->setDisabled(true);
+
     repaint();
 }
 
@@ -544,6 +555,7 @@ void MainWindow::levelTwoButtonClicked() {
         ui->lessonText->setText(lessonText);
     }
 
+    ui->nextLevelButton->setDisabled(true);
 
     repaint();
 }
@@ -560,6 +572,8 @@ void MainWindow::levelThreeButtonClicked() {
         ui->lessonText->setText(lessonText);
     }
 
+    ui->nextLevelButton->setDisabled(true);
+
     repaint();
 }
 
@@ -574,6 +588,8 @@ void MainWindow::levelFourButtonClicked() {
         isLessonShowing = true;
         ui->lessonText->setText(lessonText);
     }
+
+    ui->nextLevelButton->setDisabled(true);
 
     repaint();
 }
@@ -590,6 +606,8 @@ void MainWindow::levelFiveButtonClicked() {
         ui->lessonText->setText(lessonText);
     }
 
+    ui->nextLevelButton->setDisabled(true);
+
     repaint();
 }
 
@@ -602,6 +620,7 @@ void MainWindow::clearLevelButtonClicked() {
     currentLevel->clearWires();
     currentLevel->clearGates();
     currentLevel->clearNodes();
+    currentLevel->removeConfetti();
 
     qDebug() << "SETTING LEVEL" << levelNum;
 

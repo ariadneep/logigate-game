@@ -378,6 +378,11 @@ signals:
      * @brief update - Denotes that the state of the level has been updated.
      */
     void update();
+
+    /**
+     * @brief levelCompleted - Signal to enable nextLevel button.
+     */
+    void levelCompleted();
 };
 
 #endif // LEVEL_H

@@ -110,6 +110,8 @@ void Level::drawWire(int x, int y, QString tag) {
     }
 
     qDebug() << "//////////////";
+
+    victory();
 }
 
 Wire* Level::findWire(int x, int y, QString tag, Wire::Direction& wireConnectionDirection) {
@@ -369,9 +371,11 @@ void Level::victory() {
             victory = false;
         }
     }
-    if(victory) {
+    if(victory && !isVictory) {
         spawnConfetti();
         isVictory = true;
+        emit levelCompleted();
+
     }
 }
 
