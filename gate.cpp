@@ -69,9 +69,11 @@ void Gate::convertSignal(bool firstSignal, bool secondSignal, QString firstID, Q
     //calls the specific helper method based on the Type
     switch(gateOperator) {
     case Operator::AND:
+        qDebug() << "twas a AND gate! It's signals were " << firstSignal << " & " << secondSignal;
         newOutput = firstSignal && secondSignal;
         break;
     case Operator::OR:
+        qDebug() << "twas a OR gate! It's signals were " << firstSignal << " & " << secondSignal;
         newOutput = firstSignal || secondSignal;
         break;
     default:
