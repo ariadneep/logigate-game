@@ -279,7 +279,7 @@ border-image: url(:/sprites/grid-12x8.png);</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(26, 63, 16)</string>
     </property>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="startButton">
      <property name="geometry">
       <rect>
        <x>250</x>
@@ -299,6 +299,7 @@ border-image: url(:/sprites/grid-12x8.png);</string>
      <property name="styleSheet">
       <string notr="true">QPushButton {
 	border-image: url(:/icons/start-button.png);
+	font: 20pt ;
 	font: 20pt &quot;Code 7x5&quot;;
 	color: &quot;white&quot;;
 }

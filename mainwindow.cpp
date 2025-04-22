@@ -7,8 +7,9 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow), box2DWorld(nullptr), box2DBody(nullptr), timer(new QTimer(this)), frameCount(0), levelNum(0)
 {
-    //Adding the font used.
-    QFontDatabase::addApplicationFont(":/fonts/Code7x5.ttf");
+    //Adding/setting up the font used.
+    QFontDatabase::addApplicationFont(":/Code 7x5.ttf");
+    // QFont code7x5("Code 7x5", 20);
 
     ui->setupUi(this);
     setMouseTracking(true);
