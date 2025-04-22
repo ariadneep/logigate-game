@@ -111,9 +111,15 @@ public:
 
     /**
      * @brief getConnected - Returns if the node has been connected
-     * @return bool of if it's connected
+     * @return Bool of if it's connected
      */
     bool getConnected();
+
+    /**
+     * @brief setConnected - Sets the connection to true or false.
+     * @param connection Bool of the connection
+     */
+    void setConnected(bool connection);
 
     /**
      * @brief getWire - Getter for the backing wire this Node uses.
