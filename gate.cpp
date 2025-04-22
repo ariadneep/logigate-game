@@ -112,6 +112,10 @@ void Gate::setSignal(bool signal) {
     outputSignal = signal;
 }
 
+Gate* Gate::getOtherHalf() {
+    return otherHalf;
+}
+
 void Gate::setOtherHalf(Gate* otherGate) {
     // Conditions wherein this method should do nothing.
     if(this->gateOperator == Operator::NOT || this->gateOperator != otherGate->gateOperator)

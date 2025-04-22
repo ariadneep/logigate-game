@@ -693,8 +693,26 @@ void Level::removeTails(Node* startingNode) {
         Wire* tailWire = currentWire->getTailConnection();
         int x = currentWire->getX();
         int y = currentWire->getY();
-        if (getNode(x, y) || getGate(x, y))
+        if (getNode(x, y))
             return;
+        else if (getGate(x, y)) {
+            Gate* checkGate = getGate(x, y);
+            qDebug() << "found gate: " << checkGate;
+
+            // Gets the valid output wire:
+            if (checkGate->getAlignment() == Gate::Ports::INOUT)
+                currentWire = checkGate->getOutputNode()->getWire();
+            else
+                currentWire = checkGate->getOtherHalf()->getOutputNode()->getWire();
+
+            // Checks to see if the gate wire continues. If so, continue the loop.
+            currentWire = currentWire->getTailConnection();
+            if (currentWire == nullptr)
+                return;
+            x = currentWire->getX();
+            y = currentWire->getY();
+            tailWire = currentWire->getTailConnection();
+        }
         setWire(x, y, nullptr);
         currentWire = tailWire;
     }
@@ -702,7 +720,6 @@ void Level::removeTails(Node* startingNode) {
 
 void Level::removeTails(Gate* startingGate) {
 
-    qDebug() << "remove tails gate: " << startingGate;
     if (startingGate->getOutputNode() == nullptr)
         return;
 
@@ -711,8 +728,26 @@ void Level::removeTails(Gate* startingGate) {
         Wire* tailWire = currentWire->getTailConnection();
         int x = currentWire->getX();
         int y = currentWire->getY();
-        if (getNode(x, y) || getGate(x, y))
+        if (getNode(x, y))
             return;
+        else if (getGate(x, y)) {
+            Gate* checkGate = getGate(x, y);
+            qDebug() << "found gate: " << checkGate;
+
+            // Gets the valid output wire:
+            if (checkGate->getAlignment() == Gate::Ports::INOUT)
+                currentWire = checkGate->getOutputNode()->getWire();
+            else
+                currentWire = checkGate->getOtherHalf()->getOutputNode()->getWire();
+
+            // Checks to see if the gate wire continues. If so, continue the loop.
+            currentWire = currentWire->getTailConnection();
+            if (currentWire == nullptr)
+                return;
+            x = currentWire->getX();
+            y = currentWire->getY();
+            tailWire = currentWire->getTailConnection();
+        }
         setWire(x, y, nullptr);
         currentWire = tailWire;
     }
