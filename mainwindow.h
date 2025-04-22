@@ -19,7 +19,6 @@
 #include <QLabel>
 
 #include "level.h"
-#include "node.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -128,14 +127,41 @@ private:
      */
     Ui::MainWindow *ui;
 
-    //gameBoard positions
+    /**
+     * @brief gameBoardX - Stores the x-coordinate on the gameboard of the last placed item.
+     */
     int gameBoardX;
+
+    /**
+     * @brief gameBoardY - Stores the y-coordinate on the gameboard of the last placed item.
+     */
     int gameBoardY;
+
+    /**
+     * @brief newPosition - Designates whether or not the position set is different from the last
+     * stored gameboard position.
+     */
     bool newPosition;
 
-    //pixmap layers
+    /**
+     * @brief componentLayer -
+     */
     QPixmap componentLayer;
+
+    /**
+     * @brief backgroundLayer -
+     */
     QPixmap backgroundLayer;
+
+    /**
+    * @brief FALSE_COLOR - the color used for false inputs.
+    */
+    const QString FALSE_COLOR = "red";
+
+    /**
+    * @brief TRUE_COLOR - the color used for true inputs.
+    */
+    const QString TRUE_COLOR = "blue";
 
     /**
      * @brief wirePixmaps - Holds the wire pixmaps with direction-color pairs as keys
@@ -210,7 +236,7 @@ private:
      * @param tag - the tag associated with the tag of the Node.
      * @param signal - the signal associated with the color of the Node
      */
-    void paintNode(int x, int y, bool signal, QString tag);
+    void paintNode(int x, int y, bool signal);
 
     /**
      * @brief paintObstacle - paints an obstacle with the appropriate attributes at the
@@ -293,6 +319,16 @@ private:
      * @brief isLessonShowing - Bool for sliding lessonWidget on or off screen.
      */
     bool isLessonShowing;
+
+    /**
+     * @brief lessonText - The text to be shown on the lessonWidget.
+     */
+    QString lessonText;
+
+    /**
+     * @brief setLessonText - A method for setting lessonText.
+     */
+    void setLessonText();
 
 };
 #endif // MAINWINDOW_H

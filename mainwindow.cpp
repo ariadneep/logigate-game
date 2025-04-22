@@ -12,10 +12,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->gameBoard->setMouseTracking(true);
 
     ui->levelSelectMenu->setStyleSheet("background: 3b3e3f");
-    ui->lessonWidget->setStyleSheet("background: solid white");
 
     isLevelMenuShowing = false;
     isLessonShowing = false;
+    lessonText = "";
 
     gameBoardX = 0;
     gameBoardY = 0;
@@ -65,22 +65,10 @@ MainWindow::MainWindow(QWidget *parent)
     lessonBody = box2DWorld->CreateBody(&lessonBodyDef);
 
 
-    currentLevel = new Level(levelNum, graphicsScene, box2DWorld, this);
+    currentLevel = new Level(graphicsScene, box2DWorld, this);
 
     currentTag = "";
-    // \/ CHANGE \/
-    /* this needs to be edited: you shouldn't be able to draw a wire when the square
-     * in the direction you're drawing in is occupied
-     */
-    // currentLevel->drawGate(0, 2, Gate::Operator::AND);
-    // currentLevel->setWireTemp(0, 0, currentTag);
-    currentLevel->setNode(0, 3, true, "A", Node::Type::ROOT);
-    currentLevel->setNode(8, 3, true, "B", Node::Type::END);
 
-    // currentLevel->drawGate(11, 1, Gate::Operator::AND, Gate::Direction::EAST);
-    // currentLevel->drawGate(10, 7, Gate::Operator::AND, Gate::Direction::SOUTH);
-    // currentLevel->drawGate(0, 6, Gate::Operator::AND, Gate::Direction::WEST);
-    // currentLevel->drawGate(1, 3, Gate::Operator::AND, Gate::Direction::NORTH);
     currentLevel->levelSetup(levelNum);
 
     repaint();
@@ -220,7 +208,7 @@ void MainWindow::repaint() {
             if(currentGate)
                 paintGate(x, y, currentGate->getOperator(), currentGate->getAlignment(), currentGate->getDirection());
             if(currentNode)
-                paintNode(x, y, currentNode->getSignal(), currentNode->getTag());
+                paintNode(x, y, currentNode->getSignal());
             if(currentObstacle)
                 paintObstacle(x, y);
         }
@@ -229,17 +217,14 @@ void MainWindow::repaint() {
 }
 
 void MainWindow::paintWire(int x, int y, Wire::Direction direction, bool signal) {
-    // Set default color. This color is retained if the tag is not A or B.
-    QString color = "blue";
+    QString color = FALSE_COLOR;
 
     // Holds the current wire texture to be drawn.
     QPixmap wirePixmap;
 
     // Change the color to red if the wire tag is A or blue if the wire tag is B.
     if(signal)
-        color = "blue";
-    else
-        color = "red";
+        color = TRUE_COLOR;
 
     // Grab the UI measurements for scaling.
     int boxWidth = ui->gameBoard->width() / currentLevel->WIDTH;
@@ -315,8 +300,7 @@ void MainWindow::loadGatePixmaps() {
                        QPixmap(":/sprites/objects/not.png").transformed(QTransform().rotate(270)));
 }
 
-void MainWindow::paintGate(int x, int y, Gate::Operator op, Gate::Ports align, Gate::Direction dir) {
-    // Holds the current gate texture to be drawn.
+void MainWindow::paintGate(int x, int y, Gate::Operator op, Gate::Ports ports, Gate::Direction dir) {
     QPixmap gatePixmap;
     // Grab the UI measurements for scaling.
     int boxWidth = ui->gameBoard->width() / currentLevel->WIDTH;
@@ -325,7 +309,7 @@ void MainWindow::paintGate(int x, int y, Gate::Operator op, Gate::Ports align, G
     int uiY = y * boxHeight;
 
     // Set the current gate texture, scaled relative to the.
-    gatePixmap = gatePixmaps.value({op, {align, dir}}).scaled(
+    gatePixmap = gatePixmaps.value({op, {ports, dir}}).scaled(
         boxWidth, boxHeight,
         Qt::KeepAspectRatio,
         Qt::FastTransformation);
@@ -340,19 +324,16 @@ void MainWindow::paintGate(int x, int y, Gate::Operator op, Gate::Ports align, G
     ui->gameBoard->setPixmap(componentLayer);
 }
 
-void MainWindow::paintNode(int x, int y, bool signal, QString tag) {
+void MainWindow::paintNode(int x, int y, bool signal) {
     // Set default color. This color is retained if the tag is not A or B.
-    QString color = "red";
+    QString color = FALSE_COLOR;
 
     // Holds the current wire texture to be drawn.
     QPixmap nodePixmap;
 
     // Change the color to red if the wire tag is A or blue if the wire tag is B.
     if(signal)
-        color = "blue";
-    else
-        color = "red";
-    qDebug() << "Node color is " << color << "and its tag is " << tag;
+        color = TRUE_COLOR;
 
     // Grab the UI measurements for scaling.
     int boxWidth = ui->gameBoard->width() / currentLevel->WIDTH;
@@ -365,8 +346,6 @@ void MainWindow::paintNode(int x, int y, bool signal, QString tag) {
         boxWidth, boxHeight,
         Qt::KeepAspectRatio,
         Qt::FastTransformation);
-
-    qDebug() << "Node pixmap is null???" << nodePixmap.isNull();
 
     // Set up the painter and link to componentLayer.
     QPainter nodePainter(&componentLayer);
@@ -411,7 +390,7 @@ void MainWindow::changeLevel() {
 
     delete currentLevel;
 
-    currentLevel = new Level(levelNum, graphicsScene, box2DWorld, this);
+    currentLevel = new Level(graphicsScene, box2DWorld, this);
 
     currentLevel->levelSetup(levelNum);
 
@@ -468,7 +447,6 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
         mouseX = mouseX - gameBoard->pos().x();
         mouseY = mouseY - gameBoard->pos().y();
 
-        // TODO: add in a divisor of the level's width
         gameBoardX = (int)(mouseX / (gameBoard->width() / currentLevel->WIDTH));
         gameBoardY = (int)(mouseY / (gameBoard->height() / currentLevel->HEIGHT));
 
@@ -531,7 +509,7 @@ void MainWindow::levelMenuButtonClicked() {
     }
 }
 
-void MainWindow::levelOneButtonClicked(){
+void MainWindow::levelOneButtonClicked() {
     /*
      * Procedure:
      * 1. Call the clearLevel method.
@@ -540,65 +518,74 @@ void MainWindow::levelOneButtonClicked(){
      */
     levelNum = 1;
     changeLevel();
+    setLessonText();
+    ui->nextLevelButton->setDisabled(false);
 
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
         isLessonShowing = true;
-        ui->lessonText->setText("Level 1");
+        ui->lessonText->setText(lessonText);
     }
 
     repaint();
 }
 
-void MainWindow::levelTwoButtonClicked(){
+void MainWindow::levelTwoButtonClicked() {
     levelNum = 2;
     changeLevel();
-
+    setLessonText();
+    ui->nextLevelButton->setDisabled(false);
 
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
         isLessonShowing = true;
-        ui->lessonText->setText("Level 2");
+        ui->lessonText->setText(lessonText);
     }
 
 
     repaint();
 }
 
-void MainWindow::levelThreeButtonClicked(){
+void MainWindow::levelThreeButtonClicked() {
     levelNum = 3;
     changeLevel();
+    setLessonText();
+    ui->nextLevelButton->setDisabled(false);
 
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
         isLessonShowing = true;
-        ui->lessonText->setText("Level 3");
+        ui->lessonText->setText(lessonText);
     }
 
     repaint();
 }
 
-void MainWindow::levelFourButtonClicked(){
+void MainWindow::levelFourButtonClicked() {
     levelNum = 4;
     changeLevel();
+    setLessonText();
+    ui->nextLevelButton->setDisabled(false);
 
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
         isLessonShowing = true;
-        ui->lessonText->setText("Level 4");
+        ui->lessonText->setText(lessonText);
     }
 
     repaint();
 }
 
-void MainWindow::levelFiveButtonClicked(){
+void MainWindow::levelFiveButtonClicked() {
     levelNum = 5;
     changeLevel();
+    setLessonText();
+    ui->nextLevelButton->setDisabled(true);
 
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
         isLessonShowing = true;
-        ui->lessonText->setText("Level 5");
+        ui->lessonText->setText(lessonText);
     }
 
     repaint();
@@ -614,19 +601,50 @@ void MainWindow::clearLevelButtonClicked() {
     currentLevel->clearGates();
     currentLevel->clearNodes();
 
+    qDebug() << "SETTING LEVEL" << levelNum;
+
+    setLessonText();
+
+    if(!isLessonShowing) {
+        lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
+        isLessonShowing = true;
+
+        ui->lessonText->setText(lessonText);
+    }
+
     repaint();
     qDebug() << "clearing level";
 }
 
 void MainWindow::nextLevelButtonClicked() {
+
     qDebug() << "next level loading";
     /*
      * Procedure: Clear the level, and then set up the next one.
      */
     levelNum++;
     //If already on highest level, loop back to level one.
-    if(levelNum > 5) {
-        levelNum = 1;
+    if(levelNum >= 5) {
+        levelNum = 5;
+        ui->nextLevelButton->setDisabled(true);
+    }
+
+    setLessonText();
+
+    if(!isLessonShowing) {
+        lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
+        isLessonShowing = true;
+
+        ui->lessonText->setText(lessonText);
+    }
+
+    setLessonText();
+
+    if(!isLessonShowing) {
+        lessonBody->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
+        isLessonShowing = true;
+
+        ui->lessonText->setText(lessonText);
     }
 
     qDebug() << "levelNum: " << levelNum;
@@ -639,5 +657,33 @@ void MainWindow::lessonCloseButtonClicked() {
     if (isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, -2.0f));
         isLessonShowing = false;
+    }
+}
+
+void MainWindow::setLessonText() {
+    /*
+     * TODO: Change lessonText to be the description for each level.
+     */
+    qDebug() << "SETTING LEVEL" << levelNum;
+
+    switch (levelNum) {
+    case 1:
+        lessonText = "Level 1";
+        break;
+    case 2:
+        lessonText = "Level 2";
+        break;
+    case 3:
+        lessonText = "Level 3";
+        break;
+    case 4:
+        lessonText = "Level 4";
+        break;
+    case 5:
+        lessonText = "Level 5";
+        break;
+    default:
+        lessonText = "Tutorial - Level 0";
+        break;
     }
 }

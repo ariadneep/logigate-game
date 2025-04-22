@@ -4,14 +4,11 @@
  * a charge) or the end node (which confirms that the
  * final wire's boolean charge is correct.
  *
- * A node is a grid component.
- *
  * @authors Max Donaldson, Jason Khong,
  * Ariadne Petroulakis, Evan Tucker, and Ian Weller
  *
  * @version 7 April 2025
  */
-
 
 #ifndef NODE_H
 #define NODE_H
@@ -19,10 +16,11 @@
 #include <QObject>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
-#include "gridcomponent.h"
 #include "wire.h"
 
-class Node : public GridComponent {
+class Node : public QObject {
+
+    Q_OBJECT
 
 public:
     enum class Type {
@@ -43,27 +41,13 @@ public:
                   Node::Type type = Node::Type::ROOT, bool signal = true, QString tag = "A");
 
     /**
-     * @brief setPosition
-     * @param x
-     * @param y
-     */
-    void setPosition(int x, int y);
-
-    /**
      * Destructor for the Node class.
      */
     ~Node();
 
     /**
-     * @brief getType - Returns the type of GridComponent object this is as an enum.
-     * By default, this is NODE.
-     * @return A Operator enum.
-     */
-    GridComponent::Type getType() override;
-
-    /**
-     * @brief setTag
-     * @param newTag
+     * @brief setTag = Sets the tag used for connect wire comparisons.
+     * @param newTag - The new QString to set th tag to.
      */
     void setTag(QString newTag);
 
@@ -100,14 +84,16 @@ public:
     bool checkSignal(QString& tag, bool signal);
 
     /**
-     * @brief getDirection
-     * @return
+     * @brief getDirection - Getter method for the direction the Node requires output/input
+     * from. NONE does not limit the node direction.
+     * @return The Node::Direction for the direction specifications of the Node.
      */
     Node::Direction getDirection();
 
     /**
-     * @brief setDirection
-     * @param newDirection
+     * @brief setDirection - Setter method of the node direction. Sets the backing direction to
+     * the specified value.
+     * @param newDirection - The Node::Direction to set to.
      */
     void setDirection(Node::Direction newDirection);
 
@@ -125,32 +111,29 @@ public:
 
     /**
      * @brief getConnected - Returns if the node has been connected
-     * @return bool of if it's connected
+     * @return Bool of if it's connected
      */
     bool getConnected();
 
     /**
-     * @brief getWire
-     * @return
+     * @brief getWire - Getter for the backing wire this Node uses.
+     * @return A Pointer for the backing wire.
      */
     Wire* getWire();
 
     /**
-     * @brief removeTails
-     */
-    void removeTails();
-
-    /**
-     * @brief connectWire
-     * @param connectWire
-     * @param nodeConnectionDirection
+     * @brief connectWire - Attaches the given wire pointer to the backing wire. Altering
+     * functionality for different Node types.
+     * @param connectWire - The pointer of the wire to connect to. Does not create a new wire.
+     * @param nodeConnectionDirection - The direction the connection was made in.
      */
     void connectWire(Wire* connectWire, Wire::Direction nodeConnectionDirection);
 
 private:
 
     /**
-     * @brief direction
+     * @brief direction - Stores the direction the Node requires output/input from. NONE does not
+     * limit the node direction.
      */
     Node::Direction direction;
 
@@ -160,12 +143,8 @@ private:
     QString tag;
 
     /**
-     * @brief signal - The signal value of a node.
-     */
-    bool signal;
-
-    /**
-     * @brief backingWire
+     * @brief backingWire - Stores the wire for the Node. Necessary for managing data storage and
+     * wire connections.
      */
     Wire* backingWire;
 
@@ -178,11 +157,6 @@ private:
      * @brief sprite - The sprite of the node.
      */
     QGraphicsPixmapItem* sprite;
-
-    bool connected;
-
-    Wire::Direction nodeDualDirector(Wire::Direction nodeConnectionDirection,
-                                     Wire::Direction wireConnectionDirection);
 };
 
 #endif // NODE_H

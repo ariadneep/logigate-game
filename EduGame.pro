@@ -57,7 +57,6 @@ SOURCES += \
     Box2D/Rope/b2Rope.cpp \
     confettieffect.cpp \
     gate.cpp \
-    gridcomponent.cpp \
     level.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -116,7 +115,6 @@ HEADERS += \
     confettieffect.h \
     confettieffect.h \
     gate.h \
-    gridcomponent.h \
     level.h \
     mainwindow.h \
     node.h \
