@@ -394,30 +394,168 @@ void Level::levelSetup(int levelNum) {
 
     switch (levelNum) {
     case 1:
-        drawNode(0, 3, false, "A", Node::Type::ROOT);
-        drawNode(8, 3, false, "A", Node::Type::END);
+        setNode(0, 0, true, "A", Node::Type::ROOT);
+        setNode(0, 7, true, "B", Node::Type::ROOT);
+        for(int x = 1; x < 12; x++) {
+            for(int y = 0; y < 3; y++) {
+                addObstacle(x, y);
+            }
+        }
+
+        for(int x = 1; x < 12; x++) {
+            for(int y = 5; y < 8; y++) {
+                addObstacle(x, y);
+            }
+        }
 
         drawGate(6, 4, Gate::Operator::AND, Gate::Direction::EAST);
+        setNode(11, 4, true, "AB", Node::Type::END);
+        break;
         break;
 
     case 2:
-        drawNode(3, 3, false, "A", Node::Type::ROOT);
-        drawNode(19, 5, false, "A", Node::Type::END);
+        setNode(2, 2, false, "A", Node::Type::ROOT);
+        drawGate(4 ,3, Gate::Operator::NOT, Gate::Direction::SOUTH);
+        setNode(2, 5, false, "A", Node::Type::ROOT);
+        addObstacle(6,2);
+        addObstacle(7,2);
+        addObstacle(8,2);
+        addObstacle(9,2);
+        addObstacle(6,3);
+        addObstacle(7,3);
+        addObstacle(8,3);
+        addObstacle(9,3);
+        // Top two rows
+        for(int x = 0; x < 12; x++) {
+            for(int y = 0; y < 2; y++) {
+                addObstacle(x, y);
+            }
+        }
+        // Bottom Row
+        for(int x = 0; x < 12; x++) {
+            for(int y = 6; y < 8; y++) {
+                addObstacle(x, y);
+            }
+        }
+        // Left side
+        for(int x = 0; x < 2; x++) {
+            for(int y = 0; y < 7; y++) {
+                addObstacle(x, y);
+            }
+        }
+        // Right side
+        for(int x = 10; x < 12; x++) {
+            for(int y = 0; y < 7; y++) {
+                addObstacle(x, y);
+            }
+        }
 
-        drawGate(11, 1, Gate::Operator::AND, Gate::Direction::EAST);
-        drawGate(10, 7, Gate::Operator::AND, Gate::Direction::SOUTH);
+        drawGate(6, 5, Gate::Operator::AND, Gate::Direction::EAST);
+        setNode(9, 5, true, "AB", Node::Type::END);
 
         break;
 
     case 3:
+        // Top Row
+        for(int x = 0; x < 12; x++) {
+            for(int y = 0; y < 2; y++) {
+                addObstacle(x, y);
+            }
+        }
+        // Left Side
+        for(int x = 0; x < 2; x++) {
+            for(int y = 0; y < 8; y++) {
+                addObstacle(x, y);
+            }
+        }
+
+        // Right side
+        for(int x = 10; x < 12; x++) {
+            for(int y = 0; y < 8; y++) {
+                addObstacle(x, y);
+            }
+        }
+
+        addObstacle(8, 5);
+        addObstacle(8, 6);
+        addObstacle(8, 4);
+        addObstacle(8, 7);
+
+        setNode(6, 7, false, "B", Node::Type::ROOT);
+        setNode(7, 2, true, "A", Node::Type::ROOT);
+        setNode(9, 7, true, "AB", Node::Type::END);
+
+        drawGate(3, 5, Gate::Operator::OR, Gate::Direction::EAST);
+        drawGate(7, 5, Gate::Operator::NOT, Gate::Direction::NORTH);
 
         break;
 
     case 4:
+        // Top two rows
+        for(int x = 0; x < 12; x++) {
+            for(int y = 0; y < 2; y++) {
+                addObstacle(x, y);
+            }
+        }
+        // Bottom Row
+        for(int x = 0; x < 12; x++) {
+            for(int y = 7; y < 8; y++) {
+                addObstacle(x, y);
+            }
+        }
+        // Left side
+        for(int x = 0; x < 1; x++) {
+            for(int y = 0; y < 7; y++) {
+                addObstacle(x, y);
+            }
+        }
+        // Right side
+        for(int x = 11; x < 12; x++) {
+            for(int y = 0; y < 7; y++) {
+                addObstacle(x, y);
+            }
+        }
+
+        setNode(1, 2, false, "A", Node::Type::ROOT);
+        setNode(6, 2, false, "B", Node::Type::ROOT);
+        setNode(5, 4, false, "C", Node::Type::ROOT);
+        setNode(7, 3, true, "ABC", Node::Type::END);
+        drawGate(1, 5, Gate::Operator::OR, Gate::Direction::SOUTH);
+        drawGate(5, 3, Gate::Operator::NOT, Gate::Direction::EAST);
+        drawGate(7, 6, Gate::Operator::OR, Gate::Direction::EAST);
+        drawGate(10, 3, Gate::Operator::NOT, Gate::Direction::NORTH);
 
         break;
 
     case 5:
+        setNode(0, 0, false, "A", Node::Type::ROOT);
+        setNode(0, 3, true, "D", Node::Type::ROOT);
+        setNode(3, 1, true, "D", Node::Type::ROOT);
+        setNode(4, 1, false, "C", Node::Type::ROOT);
+        setNode(1, 7, true, "B", Node::Type::ROOT);
+        drawGate(1, 2, Gate::Operator::NOT, Gate::Direction::EAST);
+        drawGate(1, 5, Gate::Operator::OR, Gate::Direction::SOUTH);
+        addObstacle(3,5);
+        addObstacle(3,6);
+        drawGate(6, 1, Gate::Operator::OR, Gate::Direction::EAST);
+        drawGate(5, 4, Gate::Operator::AND, Gate::Direction::EAST);
+        setNode(6, 3, true, "B", Node::Type::ROOT);
+        drawGate(5, 7, Gate::Operator::AND, Gate::Direction::EAST);
+        drawGate(8, 7, Gate::Operator::NOT, Gate::Direction::EAST);
+        setNode(9, 1, false, "C", Node::Type::ROOT);
+        drawGate(8, 3, Gate::Operator::AND, Gate::Direction::SOUTH);
+        drawGate(9, 4, Gate::Operator::NOT, Gate::Direction::EAST);
+        drawGate(10, 6, Gate::Operator::AND, Gate::Direction::SOUTH);
+        setNode(11, 7, true, "ABCD", Node::Type::END);
+
+        addObstacle(6,6);
+        addObstacle(7,6);
+        addObstacle(7,5);
+        addObstacle(8,5);
+        addObstacle(7,4);
+        addObstacle(7,3);
+        addObstacle(7,2);
+        addObstacle(10,1);
 
         break;
 
