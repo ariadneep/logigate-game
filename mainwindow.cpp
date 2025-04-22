@@ -103,7 +103,7 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::updateWorld() {
-    box2DWorld->Step(1.0f / 60.0f, 6, 2);
+    box2DWorld->Step(2.0f / 60.0f, 6, 2);
 
     b2Vec2 levelMenuPosition = levelMenuBody->GetPosition();
     ui->levelSelectMenu->move(levelMenuPosition.x * 100.0f, ui->levelSelectMenu->y());
@@ -112,12 +112,12 @@ void MainWindow::updateWorld() {
     if(isLevelMenuShowing && levelMenuPosition.x * 100.0f >= 125.0f) {
         levelMenuBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         levelMenuBody->SetTransform(b2Vec2(125.0f / 100.0f, 0.0f), 0.0f);
-        ui->levelSelectMenu->move(125, 90);
+        ui->levelSelectMenu->move(125, ui->levelSelectMenu->y());
     }
     else if (!isLevelMenuShowing && levelMenuPosition.x * 100.0f <= -200.0f) {
         levelMenuBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         levelMenuBody->SetTransform(b2Vec2(-200.0f / 100.0f, 0.0f), 0.0f);
-        ui->levelSelectMenu->move(-200, 90);
+        ui->levelSelectMenu->move(-200, ui->levelSelectMenu->y());
     }
 
     // Acceleration
