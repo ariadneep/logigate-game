@@ -96,9 +96,8 @@ public:
      * @param secondSignal - The signal of the wire in the gate's second input slot.
      * @param firstID - The ID linked with the first signal.
      * @param secondID - The ID linked with the second signal.
-     * @return The new, concatenated ID of the resulting signal conversion/transformation.
      */
-    QString convertSignal(bool firstSignal, bool secondSignal, QString firstID, QString secondID);
+    void convertSignal(bool firstSignal, bool secondSignal, QString firstID, QString secondID);
 
     /**
      * @brief convertSignal - Sets the output signal to an opertion
@@ -106,9 +105,8 @@ public:
      * track of the ID of the input passed into it.
      * @param input - The boolean signal sent in by the input wire.
      * @param id - The ID associated with the input signal.
-     * @return The unchanged ID of the resulting signal conversion/transformation.
      */
-    QString convertSignal(bool input, QString id);
+    void convertSignal(bool input, QString id);
 
     /**
      * @brief setOtherHalf - Sets a pointer to the other half of this gate.

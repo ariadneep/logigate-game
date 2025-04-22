@@ -143,11 +143,6 @@ private:
     QString tag;
 
     /**
-     * @brief signal - The signal value of a node.
-     */
-    bool signal;
-
-    /**
      * @brief backingWire - Stores the wire for the Node. Necessary for managing data storage and
      * wire connections.
      */

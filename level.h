@@ -99,11 +99,15 @@ public:
     Node* getNode(int x, int y);
 
     /**
-     * @brief setNode TEMP METHOD, REMOVE LATER
-     * @param x
-     * @param y
-     */
-    void setNode(int x, int y, bool signal, QString tag, Node::Type type);
+    * @brief drawNode - Adds a node at the specified x and y position into the level.
+    * @brief drawNode - Adds a node at the specified x and y position into the level.
+    * @param x - The x position.
+    * @param y - The y position.
+    * @param signal - The output value, true or false.
+    * @param tag - The ID of the node.
+    * @param type - Specifies whether it is a ROOT or END node.
+    */
+    void drawNode(int x, int y, bool signal, QString tag, Node::Type type);
 
     /**
      * @brief getObstacle
@@ -285,10 +289,11 @@ private:
      * @param tag - The tag of the node to link up to.
      * @param wireConnectionDirection - The relative direction of where the node was found at the
      * coordinates.
+     * @param connectWire - Checks for head wire data if it exists.
      * @return The pointer to the neighboring valid node.
      */
-    Node* findNode(int x, int y, QString tag, Wire::Direction& wireConnectionDirection);
-    \
+    Node* findNode(int x, int y, QString tag, Wire::Direction& wireConnectionDirection, Wire* connectWire);
+
     /**
      * @brief findGate
      * @param x

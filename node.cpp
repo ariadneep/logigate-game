@@ -15,29 +15,20 @@ Node::Node(QObject *parent, int x, int y, Node::Type type, bool signal, QString 
     switch (nodeType) {
     case Node::Type::ROOT :
         backingWire->setHeadConnection(backingWire);
-        qDebug() << "From the constructor: ROOT";
         break;
     case Node::Type::END :
-        qDebug() << "From the constructor: END";
         backingWire->setTailConnection(backingWire);
-    }
-
-    Node::Type result = this->getNodeType();
-    if (result == Node::Type::ROOT) {
-        qDebug() << "I'm da ROOT!";
-    }
-    else if (result == Node::Type::END) {
-        qDebug() << "I'm da END!";
     }
 }
 
+
 Node::~Node() {
-    //delete sprite;
     delete backingWire;
 }
 
 void Node::setTag(QString newTag) {
     tag = newTag;
+    backingWire->setTag(tag);
 }
 
 QString Node::getTag() {
@@ -45,13 +36,11 @@ QString Node::getTag() {
 }
 
 bool Node::getSignal() {
-    return signal;
+    return backingWire->getSignal();
 }
 
 void Node::setSignal(bool signal) {
-    qDebug() << "current signal: " << signal;
-    this->signal = signal;
-    qDebug() << "ran correctly";
+    backingWire->setSignal(signal);
 }
 
 Node::Type Node::getNodeType() {
