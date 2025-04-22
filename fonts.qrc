@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/fonts"/>
+    <qresource prefix="/">
+        <file>Code 7x5.ttf</file>
+    </qresource>
+</RCC>
