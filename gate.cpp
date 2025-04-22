@@ -84,8 +84,15 @@ void Gate::convertSignal(bool firstSignal, bool secondSignal, QString firstID, Q
     qDebug() << "Converting double-gate signals " << firstSignal << " and " << secondSignal <<
         " (tags " << firstID << " and " << secondID << ")" << " to signal " << newOutput <<
         " with tag " << newID;
-    outputNode->setSignal(newOutput);
-    outputNode->setTag(newID);
+
+    if(outputNode) {
+        outputNode->setSignal(newOutput);
+        outputNode->setTag(newID);
+    }
+    else if (otherHalf->outputNode) {
+        otherHalf->outputNode->setSignal(newOutput);
+        otherHalf->outputNode->setTag(newID);
+    }
 }
 
 void Gate::convertSignal(bool input, QString id) {
@@ -99,9 +106,10 @@ void Gate::convertSignal(bool input, QString id) {
 
     qDebug() << "Converting single-gate signal " << input << " to signal " << newOutput << " with tag " << id;
 
-    if(outputNode)
+    if(outputNode){
         outputNode->setSignal(newOutput);
-    outputNode->setTag(id);
+        outputNode->setTag(id);
+    }
 }
 
 bool Gate::getSignal() {
@@ -195,20 +203,23 @@ void Gate::connectWire(Wire* connectWire, Wire::Direction connectionDirection) {
             inputNode->setTag(connectWire->getTag());
             inputNode->connectWire(connectWire, connectionDirection);
         }
-
-        //no matter which port type is connected, this should run.
-        bool firstSignal = inputNode->getSignal();
-        QString firstTag = inputNode->getTag();
-
-        // If there is another half (ergo it's a double gate) run this
-        if(otherHalf) {
-            bool secondSignal = otherHalf->inputNode->getSignal();
-            QString secondTag = otherHalf->inputNode->getTag();
-            convertSignal(firstSignal, secondSignal, firstTag, secondTag);
-            return;
-        }
-
-        // If there is no other half (ergo it's a single gate) run only this
-        convertSignal(firstSignal, firstTag);
     }
+
+    if(!connectWire->getHeadConnection())
+        return;
+
+    //no matter which port type is connected, this should run.
+    bool firstSignal = inputNode->getSignal();
+    QString firstTag = inputNode->getTag();
+
+    // If there is another half (ergo it's a double gate) run this
+    if(otherHalf) {
+        bool secondSignal = otherHalf->inputNode->getSignal();
+        QString secondTag = otherHalf->inputNode->getTag();
+        convertSignal(firstSignal, secondSignal, firstTag, secondTag);
+        return;
+    }
+
+    // If there is no other half (ergo it's a single gate) run only this
+    convertSignal(firstSignal, firstTag);
 }
