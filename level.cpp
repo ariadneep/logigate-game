@@ -36,6 +36,7 @@ Level::~Level() {
 void Level::drawWire(int x, int y, QString tag) {
 
     qDebug() << "///////////\nChecked at (" << x << ", " << y << ")";
+    qDebug() << "Tag = " << tag;
 
     if ((x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
         || tag == "") {
@@ -47,65 +48,44 @@ void Level::drawWire(int x, int y, QString tag) {
 
     if (isEmptySpace(x, y)) {
 
-
+        // Search for surrounding grid elements and initialize directions:
         Wire::Direction wireConnectionDirection = Wire::Direction::NONE;
-        Wire* connectWire = findWire(x, y, tag, wireConnectionDirection);
-
-        qDebug() << "empty space, attempting to place wire";
+        Wire::Direction nodeConnectionDirection = Wire::Direction::NONE;
+        Wire::Direction gateConnectionDirection = Wire::Direction::NONE;
 
         Wire* currentWire = nullptr;
-        Wire::Direction nodeConnectionDirection = Wire::Direction::NONE;
+        Wire* headWire = findWire(x, y, tag, wireConnectionDirection);
+        Node* headNode = findOutputNode(x, y, tag, nodeConnectionDirection);
+        Gate* headGate = findOutputGate(x, y, tag, gateConnectionDirection);
 
-        // Attempting to find valid neighboring node:
-        if (Node* connectNode = findNode(x, y, tag, nodeConnectionDirection, connectWire)) {
-            // Check some stuff with the wire to make sure it is valid, namely,
-            // are we connecting with a root or an end?
-
-            qDebug() << "Node found";
-
+        // Create a new wire at the (x, y) coords if a connection was found:
+        if (headWire || headNode || headGate) {
             currentWire = new Wire();
             setWire(x, y, currentWire);
-            // Checks if there's a head wire and sets it to current node. For the end Node.
-            if (connectWire) {
-                connectWire->connectTail(currentWire, wireConnectionDirection);
-            }
-            connectNode->connectWire(currentWire, nodeConnectionDirection);
 
-            return;
-        }
+            // Head connection:
+            if (headWire)
+                headWire->connectTail(currentWire, wireConnectionDirection);
+            else if (headNode && headNode->getNodeType() == Node::Type::ROOT)
+                headNode->connectWire(currentWire, nodeConnectionDirection);
+            else if (headGate && headGate->getAlignment() == Gate::Ports::INOUT)
+                headGate->connectWire(currentWire, gateConnectionDirection);
 
-        // Attempting to find neighboring valid gate:
-        else if (Gate* connectGate = findGate(x, y, nodeConnectionDirection, connectWire)) {
-            qDebug() << "Gate found";
 
-            currentWire = new Wire();
-            currentWire->setTag(tag);
-            setWire(x, y, currentWire);
-            // Checks if there's a head wire and sets it to current node. For the end Node.
-            if (connectWire) {
-                connectWire->connectTail(currentWire, wireConnectionDirection);
-            }
-            connectGate->connectWire(currentWire, nodeConnectionDirection);
-
-            return;
-        }
-
-        // Attempting to find neighboring valid wire:
-        else if (connectWire) {
-
-            qDebug() << "Attempting to create a new wire.";
-            currentWire = new Wire();
-            setWire(x, y, currentWire);
-            connectWire->connectTail(currentWire, wireConnectionDirection);
+            // Tail connection (Note: tails should only be made if the currentWire has a head):
+            Node* tailNode = findInputNode(x, y, nodeConnectionDirection);
+            Gate* tailGate = findInputGate(x, y, gateConnectionDirection);
+            if (tailNode)
+               tailNode->connectWire(currentWire, nodeConnectionDirection);
+            else if (tailGate)
+                tailGate->connectWire(currentWire, gateConnectionDirection);
         }
     }
     else if (currentWire && currentWire->getTailConnection() != nullptr
              && currentWire->getTailConnection()->getTailConnection() == nullptr) {
+
         // Is this wire directly connected to an incomplete end?
         // If so, "go back" one wire.
-
-        qDebug() << "deleted wire at " << x << ", " << y;
-
         wireRemove(currentWire);
     }
 
@@ -192,104 +172,159 @@ void Level::wireRemove(Wire* currentWire) {
     }
 }
 
-Node* Level::findNode(int x, int y, QString tag, Wire::Direction& wireConnectionDirection, Wire* connectWire) {
+Node* Level::findOutputNode(int x, int y, QString tag, Wire::Direction& wireConnectionDirection) {
 
-    qDebug() << "In find node";
     Node* upNode = getNode(x, y - 1);
     Node* rightNode = getNode(x + 1, y);
     Node* downNode = getNode(x, y + 1);
     Node* leftNode = getNode(x - 1, y);
-    qDebug() << "passed pointer collection";
-    qDebug() << "upNode " << upNode;
-    qDebug() << "rightNode " << rightNode;
-    qDebug() << "downNode " << downNode;
-    qDebug() << "leftNode " << leftNode;
 
-    if (upNode != nullptr && upNode->getTag() == tag && !upNode->getConnected()
-        && (upNode->getDirection() == Node::Direction::NONE
-        || upNode->getDirection() == Node::Direction::S) &&
-        (upNode->getNodeType() == Node::Type::ROOT ||
-        (connectWire && upNode->getSignal() == connectWire->getSignal()))) {
+    // Check node above:
+    if (upNode && upNode->getTag() == tag && !upNode->getConnected()
+        && upNode->getNodeType() == Node::Type::ROOT &&
+        (upNode->getDirection() == Node::Direction::NONE
+            || upNode->getDirection() == Node::Direction::S)) {
         wireConnectionDirection = Wire::Direction::N;
         return upNode;
     }
-    else if (rightNode != nullptr && rightNode->getTag() == tag && !rightNode->getConnected()
-            && (rightNode->getDirection() == Node::Direction::NONE
-            || rightNode->getDirection() == Node::Direction::W) &&
-            (rightNode->getNodeType() == Node::Type::ROOT ||
-            (connectWire && rightNode->getSignal() == connectWire->getSignal()))) {
+
+    // Check node right:
+    else if (rightNode && rightNode->getTag() == tag && !rightNode->getConnected()
+            && rightNode->getNodeType() == Node::Type::ROOT &&
+            (rightNode->getDirection() == Node::Direction::NONE
+                || rightNode->getDirection() == Node::Direction::W)) {
         wireConnectionDirection = Wire::Direction::E;
         return rightNode;
     }
-    else if (downNode != nullptr && downNode->getTag() == tag && !downNode->getConnected()
-            && (downNode->getDirection() == Node::Direction::NONE
-            || downNode->getDirection() == Node::Direction::N) &&
-            (downNode->getNodeType() == Node::Type::ROOT ||
-            (connectWire && downNode->getSignal() == connectWire->getSignal()))) {
+
+    // Check node down:
+    else if (downNode && downNode->getTag() == tag && !downNode->getConnected()
+            && downNode->getNodeType() == Node::Type::ROOT &&
+            (downNode->getDirection() == Node::Direction::NONE
+                || downNode->getDirection() == Node::Direction::N)) {
         wireConnectionDirection = Wire::Direction::S;
         return downNode;
     }
-    else if (leftNode != nullptr && leftNode->getTag() == tag && !leftNode->getConnected()
-            && (leftNode->getDirection() == Node::Direction::NONE
-            || leftNode->getDirection() == Node::Direction::E) &&
-            (leftNode->getNodeType() == Node::Type::ROOT ||
-            (connectWire && leftNode->getSignal() == connectWire->getSignal()))) {
+
+    // Check node left:
+    else if (leftNode && leftNode->getTag() == tag && !leftNode->getConnected()
+            && leftNode->getNodeType() == Node::Type::ROOT &&
+            (leftNode->getDirection() == Node::Direction::NONE
+                || leftNode->getDirection() == Node::Direction::E)) {
         wireConnectionDirection = Wire::Direction::W;
         return leftNode;
     }
-    qDebug() << "No node found";
+
     return nullptr;
 }
 
-Gate* Level::findGate(int x, int y, Wire::Direction& wireConnectionDirection, Wire* headWire) {
+Node* Level::findInputNode(int x, int y, Wire::Direction& wireConnectionDirection) {
 
-    qDebug() << "In find gate";
+    Node* upNode = getNode(x, y - 1);
+    Node* rightNode = getNode(x + 1, y);
+    Node* downNode = getNode(x, y + 1);
+    Node* leftNode = getNode(x - 1, y);
+
+    // Check nodes above:
+    if (upNode && upNode->getNodeType() == Node::Type::END) {
+        wireConnectionDirection = Wire::Direction::N;
+        return upNode;
+    }
+
+    // Check nodes right:
+    else if (rightNode && rightNode->getNodeType() == Node::Type::END) {
+        wireConnectionDirection = Wire::Direction::E;
+        return rightNode;
+    }
+
+    // Check nodes down:
+    else if (downNode && downNode->getNodeType() == Node::Type::END) {
+        wireConnectionDirection = Wire::Direction::S;
+        return downNode;
+    }
+
+    // Check nodes left:
+    else if (leftNode && leftNode->getNodeType() == Node::Type::END) {
+        wireConnectionDirection = Wire::Direction::W;
+        return leftNode;
+    }
+
+    return nullptr;
+}
+
+Gate* Level::findOutputGate(int x, int y, QString tag, Wire::Direction& wireConnectionDirection) {
+
     Gate* upGate = getGate(x, y - 1);
     Gate* rightGate = getGate(x + 1, y);
     Gate* downGate = getGate(x, y + 1);
     Gate* leftGate = getGate(x - 1, y);
 
-    qDebug() << "upGate: " << upGate;
-    qDebug() << "rightGate: " << rightGate;
-    qDebug() << "downGate: " << downGate;
-    qDebug() << "leftGate: " << leftGate;
-
     // Check gates above:
-    if (upGate &&
-        ((upGate->getInputDirection() == Node::Direction::S && headWire) ||
-        (upGate->getOutputDirection() == Node::Direction::S
-        && upGate->isFullyConnected()))) {
+    if (upGate && (upGate->getOutputDirection() == Node::Direction::S
+        && upGate->isFullyConnected() && tag == upGate->getTag())) {
         wireConnectionDirection = Wire::Direction::N;
         return upGate;
     }
 
-    // Check gates to the right:
-    else if (rightGate &&
-            ((rightGate->getInputDirection() == Node::Direction::W && headWire) ||
-            (rightGate->getOutputDirection() == Node::Direction::W
-            && rightGate->isFullyConnected()))) {
+    // Check gates right:
+    else if (rightGate && (rightGate->getOutputDirection() == Node::Direction::W
+            && rightGate->isFullyConnected() && tag == rightGate->getTag())) {
         wireConnectionDirection = Wire::Direction::E;
         return rightGate;
     }
 
     // Check gates below:
-    else if (downGate &&
-            ((downGate->getInputDirection() == Node::Direction::N && headWire) ||
-            (downGate->getOutputDirection() == Node::Direction::N
-            && downGate->isFullyConnected()))) {
+    else if (downGate && (downGate->getOutputDirection() == Node::Direction::N
+            && downGate->isFullyConnected() && tag == downGate->getTag())) {
         wireConnectionDirection = Wire::Direction::S;
         return downGate;
     }
 
     // Check gates left:
-    else if (leftGate &&
-            ((leftGate->getInputDirection() == Node::Direction::E && headWire) ||
-            (leftGate->getOutputDirection() == Node::Direction::E
-            && leftGate->isFullyConnected()))) {
+    else if (leftGate && (leftGate->getOutputDirection() == Node::Direction::E
+            && leftGate->isFullyConnected() && tag == leftGate->getTag())) {
         wireConnectionDirection = Wire::Direction::W;
         return leftGate;
     }
-    qDebug() << "No gate found";
+
+    return nullptr;
+}
+
+Gate* Level::findInputGate(int x, int y, Wire::Direction& wireConnectionDirection) {
+
+    Gate* upGate = getGate(x, y - 1);
+    Gate* rightGate = getGate(x + 1, y);
+    Gate* downGate = getGate(x, y + 1);
+    Gate* leftGate = getGate(x - 1, y);
+
+    // Check gates above:
+    if (upGate && !upGate->isFullyConnected() &&
+        upGate->getInputDirection() == Node::Direction::S) {
+        wireConnectionDirection = Wire::Direction::N;
+        return upGate;
+    }
+
+    // Check gates right:
+    else if (rightGate && !rightGate->isFullyConnected() &&
+               rightGate->getInputDirection() == Node::Direction::W) {
+        wireConnectionDirection = Wire::Direction::E;
+        return rightGate;
+    }
+
+    // Check gates below:
+    else if (downGate && !downGate->isFullyConnected() &&
+               downGate->getInputDirection() == Node::Direction::N) {
+        wireConnectionDirection = Wire::Direction::S;
+        return downGate;
+    }
+
+    // Check gates left:
+    else if (leftGate && !leftGate->isFullyConnected() &&
+               downGate->getInputDirection() == Node::Direction::E) {
+        wireConnectionDirection = Wire::Direction::W;
+        return leftGate;
+    }
+
     return nullptr;
 }
 
@@ -398,64 +433,39 @@ void Level::levelSetup(int levelNum) {
 
     switch (levelNum) {
     case 1:
-        setNode(0, 0, true, "A", Node::Type::ROOT);
-        setNode(0, 7, true, "B", Node::Type::ROOT);
-        for(int x = 1; x < 12; x++) {
-            for(int y = 0; y < 3; y++) {
-                addObstacle(x, y);
-            }
+        setNode(2, 2, true, "A", Node::Type::ROOT);
+        setNode(2, 5, true, "B", Node::Type::ROOT);
+
+        placeBorder();
+        //Bottom and Top lines:
+        for (int x = 3; x <= 8; x++) {
+            addObstacle(x, 2);
+            addObstacle(x, 5);
         }
 
-        for(int x = 1; x < 12; x++) {
-            for(int y = 5; y < 8; y++) {
-                addObstacle(x, y);
-            }
-        }
-
+        addObstacle(9, 5);
+        addObstacle(7, 3);
+        addObstacle(8, 3);
         drawGate(6, 4, Gate::Operator::AND, Gate::Direction::EAST);
-        setNode(11, 4, true, "AB", Node::Type::END);
-        break;
+        setNode(9, 2, true, "AB", Node::Type::END);
         break;
 
     case 2:
         setNode(2, 2, false, "A", Node::Type::ROOT);
-        drawGate(4 ,3, Gate::Operator::NOT, Gate::Direction::SOUTH);
+        drawGate(4, 3, Gate::Operator::NOT, Gate::Direction::SOUTH);
         setNode(2, 5, true, "B", Node::Type::ROOT);
-        addObstacle(6,2);
-        addObstacle(7,2);
-        addObstacle(8,2);
-        addObstacle(9,2);
-        addObstacle(6,3);
-        addObstacle(7,3);
-        addObstacle(8,3);
-        addObstacle(9,3);
-        // Top two rows
-        for(int x = 0; x < 12; x++) {
-            for(int y = 0; y < 2; y++) {
-                addObstacle(x, y);
-            }
-        }
-        // Bottom Row
-        for(int x = 0; x < 12; x++) {
-            for(int y = 6; y < 8; y++) {
-                addObstacle(x, y);
-            }
-        }
-        // Left side
-        for(int x = 0; x < 2; x++) {
-            for(int y = 0; y < 7; y++) {
-                addObstacle(x, y);
-            }
-        }
-        // Right side
-        for(int x = 10; x < 12; x++) {
-            for(int y = 0; y < 7; y++) {
-                addObstacle(x, y);
-            }
-        }
 
-        drawGate(6, 5, Gate::Operator::AND, Gate::Direction::EAST);
-        setNode(9, 5, true, "AB", Node::Type::END);
+        placeBorder();
+        //Top and bottom rows:
+        for (int x = 7; x <= 9; x++) {
+            addObstacle(x,2);
+            addObstacle(x,5);
+        }
+        addObstacle(8,3);
+        // addObstacle(8,3);
+
+        drawGate(7, 4, Gate::Operator::AND, Gate::Direction::EAST);
+        setNode(9, 3, true, "AB", Node::Type::END);
 
         break;
 
@@ -578,6 +588,36 @@ void Level::levelSetup(int levelNum) {
 
     // Reset victory state after setting up new level
     isVictory = false;
+}
+
+void Level::placeBorder(){
+    //Top rows:
+    for(int x = 0; x <= 11; x++) {
+        for(int y = 0; y <= 1; y++) {
+            addObstacle(x, y);
+        }
+    }
+
+    //Right rows:
+    for(int x = 10; x <= 11; x++) {
+        for(int y = 2; y <= 5; y++) {
+            addObstacle(x, y);
+        }
+    }
+
+    //Bottom rows:
+    for(int x = 0; x <= 11; x++) {
+        for(int y = 6; y <= 7; y++) {
+            addObstacle(x, y);
+        }
+    }
+
+    //Left rows:
+    for(int x = 0; x <= 1; x++) {
+        for(int y = 2; y <= 5; y++) {
+            addObstacle(x, y);
+        }
+    }
 }
 
 void Level::removeConfetti() {
