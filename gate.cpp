@@ -2,7 +2,7 @@
 #include "gate.h"
 
 Gate::Gate(int x, int y, Operator type, Ports ports, Direction direction, QObject *parent)
-    : GridComponent{parent}, gateOperator(type), alignment(ports), direction(direction) {
+    : QObject{parent}, gateOperator(type), alignment(ports), direction(direction) {
     outputSignal = false;
     otherHalf = nullptr;
     this->x = x;
@@ -110,10 +110,6 @@ void Gate::setSignal(bool signal) {
     outputSignal = signal;
 }
 
-GridComponent::Type Gate::getType() {
-    return GridComponent::Type::GATE;
-}
-
 void Gate::setOtherHalf(Gate* otherGate) {
     // Conditions wherein this method should do nothing.
     if(this->gateOperator == Operator::NOT || this->gateOperator != otherGate->gateOperator)
@@ -158,15 +154,10 @@ QString Gate::getTag() {
     }
     qDebug() << "getTag branch return";
     return "";
-    // return outputTag;
 }
 
 Node* Gate::getOutputNode() {
     return outputNode;
-}
-
-Wire* Gate::getOutputWire() {
-    return outputNode->getWire();
 }
 
 Node::Direction Gate::getOutputDirection() {

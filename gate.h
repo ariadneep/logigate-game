@@ -12,10 +12,11 @@
 #define GATE_H
 
 #include <QObject>
-#include "gridcomponent.h"
 #include "node.h"
 
-class Gate : public GridComponent {
+class Gate : public QObject {
+
+    Q_OBJECT
 
 public:
     /**
@@ -48,13 +49,16 @@ public:
     };
 
     /**
-     * @brief Gate
-     * @param x
-     * @param y
-     * @param type
-     * @param alignment
-     * @param direction
-     * @param parent
+     * @brief Gate - Complex constructor that initializes most of the values for the Gate object.
+     * @param x - Stores the X-coordinate for the position of this Gate on the game board.
+     * @param y - Stores the Y-coordinate for the position of this Gate on the game board.
+     * @param type - Stores the type this is. Dependent on the Gate::Operator enum. Either
+     * AND, OR, or NOT. AND and OR gates will create a second gate for a second input.
+     * @param alignment - Directs whether or not this gate stores an output Node. Dependent on the
+     * Gate::Ports enum, either being IN or INOUT. INOUT stores the output Node.
+     * @param direction - Orients where the input/output of the Gate will be. Dependent on the
+     * Gate::Direction, being NORTH, SOUTH, EAST, or WEST.
+     * @param parent - Used by the default QObject constructor to set the parent object.
      */
     explicit Gate(int x, int y, Operator type, Ports alignment, Direction direction,
                   QObject *parent = nullptr);
@@ -68,13 +72,13 @@ public:
      * @brief getOperator - Returns either Operator::AND if this gate
      * represents an AND gate, Operator::OR if this gate represents
      * an OR gate, or Operator::NOT if this gate represents a NOT gate.
-     * @return A gate Type
+     * @return The operator type this Gate is.
      */
     Operator getOperator();
 
     /**
-     * @brief getSignal - returns the output signal
-     * @return the current signal the inputs merge into.
+     * @brief getSignal - returns the output signal.
+     * @return The current signal the inputs merge into. Dependent on the Gate Operator.
      */
     bool getSignal();
 
@@ -85,31 +89,24 @@ public:
     void setSignal(bool signal);
 
     /**
-     * @brief convertSignal - sets the output signal after checking the
+     * @brief convertSignal - Sets the output signal after checking the
      * two input pulses and performing a boolean operation on them based
      * on the Type of the gate.
-     * @param firstSignal - the signal of the wire in the gate's first slot
-     * @param secondSignal - the signal of the wire in the gate's second input slot.
-     * @param firstID - the ID linked with the first signal.
-     * @param secondID - the ID linked with the second signal.
+     * @param firstSignal - The signal of the wire in the gate's first slot
+     * @param secondSignal - The signal of the wire in the gate's second input slot.
+     * @param firstID - The ID linked with the first signal.
+     * @param secondID - The ID linked with the second signal.
      */
     void convertSignal(bool firstSignal, bool secondSignal, QString firstID, QString secondID);
 
     /**
-     * @brief convertSignal - sets the output signal to an opertion
+     * @brief convertSignal - Sets the output signal to an opertion
      * based on a compatible gate Type when given only one input. Keeps
      * track of the ID of the input passed into it.
-     * @param input - the boolean signal sent in by the input wire.
-     * @param id - the ID associated with the input signal.
+     * @param input - The boolean signal sent in by the input wire.
+     * @param id - The ID associated with the input signal.
      */
     void convertSignal(bool input, QString id);
-
-    /**
-     * @brief getType - Returns the type of GridComponent object this is as an enum.
-     * By default, this is GATE.
-     * @return A Operator enum.
-     */
-    GridComponent::Type getType() override;
 
     /**
      * @brief setOtherHalf - Sets a pointer to the other half of this gate.
@@ -122,109 +119,98 @@ public:
 
     /**
      * @brief getAlignment - Getter method for this Gate's Ports.
-     * @return the alignment of this Gate relative to the center position.
+     * @return The alignment of this Gate relative to the center position.
      */
     Ports getAlignment();
 
     /**
      * @brief getDirection - Getter method for this Gate's Direction.
-     * @return the direction this Gate has been rotated to face.
+     * @return The direction this Gate has been rotated to face.
      */
     Direction getDirection();
 
     /**
-     * @brief getInputNode - getter for this Gate's inputNode.
-     * @return the inputNode of this Gate.
+     * @brief getInputNode - Getter for this Gate's inputNode.
+     * @return The backing inputNode of this Gate.
      */
     Node* getInputNode();
 
     /**
-     * @brief isFullyConnected - checks if ALL possible input slots of this Gate are connected
-     * @return true if all input slots connected, false otherwise.
+     * @brief isFullyConnected - Checks if ALL possible input slots of this Gate are connected.
+     * @return True if all input slots connected, false otherwise.
      */
     bool isFullyConnected();
 
     /**
-     * @brief getInputDirection
-     * @return
+     * @brief getInputDirection - Getter for the direction necessary to approach the input Node.
+     * @return A Node::Direction denoting which direction the input must be approached by.
      */
     Node::Direction getInputDirection();
 
     /**
-     * @brief getOutputNode - getter for this Gate's outputNode.
-     * @return the outputNode of this Gate.
+     * @brief getOutputNode - Getter for this Gate's outputNode.
+     * @return The backing outputNode of this Gate.
      */
     Node* getOutputNode();
 
     /**
-     * @brief getOutputWire
-     * @return
-     */
-    Wire* getOutputWire();
-
-    /**
-     * @brief getOutputDirection
-     * @return
+     * @brief getOutputDirection - Getter for the direction necessary to start the Output wire from.
+     * @return A Node::Direction denoting which direction the output wire must be drawn from.
      */
     Node::Direction getOutputDirection();
 
     /**
-     * @brief getTag
-     * @return
+     * @brief getTag - Getter for the tag in the output.
+     * @return The tag current stored in the Gate.
      */
     QString getTag();
 
     /**
-     * @brief connectWire
-     * @param connectWire
-     * @param connectionDirection
+     * @brief connectWire - Connects the gieven wire to the Gate. Either an input or an output
+     * depending on the context of the caller. Implements the Node connectWire method.
+     * @param connectWire - The pointer to the Wire to link.
+     * @param connectionDirection - The direction at which the connection is made.
      */
     void connectWire(Wire* connectWire, Wire::Direction connectionDirection);
 
 private:
 
     /**
-     * @brief x
+     * @brief x - The X-coordinate for the position the gate is at on the game baord.
      */
     int x;
 
     /**
-     * @brief y
+     * @brief y - The Y-coordinate for the position the gate is at on the game baord.
      */
     int y;
 
     /**
-     * @brief outputTag
-     */
-    QString outputTag;
-
-    /**
-     * @brief gateOperator - whether this object represents
-     * an AND, OR, or NOT gate.
+     * @brief gateOperator - Whether this object represents an AND, OR, or NOT gate.
      */
     Operator gateOperator;
 
     /**
-     * @brief inputNode - takes in a wire input. Nullptr when no wire is connected
-     * on the input end.
+     * @brief inputNode - Takes in a wire input. Nullptr when no wire is connected on the
+     * input end.
      */
     Node* inputNode;
 
     /**
-     * @brief outputNode - gives out a wire output. Nullptr when
+     * @brief outputNode - Gives out a wire output. Nullptr when
      * no wire is connected on the output end.
      */
     Node* outputNode;
 
     /**
-     * @brief outputSignal - the signal currently output
-     * by this logic gate. False when the gate is dead,
+     * @brief outputSignal - The signal currently output
+     * by this logic gate. False when the gate is dead.
      */
     bool outputSignal;
 
     /**
-     * @brief otherHalf - the other half of the current gate.
-     * Null if the gate is of a 1-block type, like Type::NOT.
+     * @brief otherHalf - The other half of the current gate.
+     * nullptr if the gate is of a 1-block type, i.e, Type::NOT.
      */
     Gate* otherHalf;
 

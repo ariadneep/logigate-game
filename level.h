@@ -28,12 +28,11 @@ class Level : public QObject {
 public:
     /**
      * @brief Level - Default constructor.
-     * @param levelNum - The level chosen to set up.
      * @param graphicsScene - The graphics scene
      * @param box2DWorld - The Box2D world.
      * @param parent - the parent object.
      */
-    explicit Level(int levelNum, QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent);
+    explicit Level(QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent);
 
     /**
      * Destructor for the level class.
@@ -374,6 +373,10 @@ private:
     void calculateGateOffset(Gate::Direction dir, int& xOffset, int& yOffset);
 
 signals:
+
+    /**
+     * @brief update - Denotes that the state of the level has been updated.
+     */
     void update();
 };
 

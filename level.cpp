@@ -5,7 +5,7 @@
 enum class Component;
 class Wire;
 
-Level::Level(int levelNum, QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent)
+Level::Level(QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent)
     : QObject{parent},box2DWorld(box2DWorld), graphicsScene(graphicsScene), isVictory(false) {
 
     confetti = new Confetti(graphicsScene, box2DWorld);
@@ -537,7 +537,6 @@ void Level::calculateGateOffset(Gate::Direction dir, int& xOffset, int& yOffset)
         yOffset = 0;
         break;
     }
-
 }
 
 void Level::addObstacle(int x, int y) {
@@ -567,8 +566,7 @@ void Level::removeTails(Gate* startingGate) {
     if (startingGate->getOutputNode() == nullptr)
         return;
 
-    qDebug() << "output wire found. " << startingGate->getOutputWire();
-    Wire* currentWire = startingGate->getOutputWire()->getTailConnection();
+    Wire* currentWire = startingGate->getOutputNode()->getWire()->getTailConnection();
     while (currentWire) {
         Wire* tailWire = currentWire->getTailConnection();
         int x = currentWire->getX();

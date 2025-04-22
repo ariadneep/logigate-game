@@ -65,7 +65,7 @@ MainWindow::MainWindow(QWidget *parent)
     lessonBody = box2DWorld->CreateBody(&lessonBodyDef);
 
 
-    currentLevel = new Level(levelNum, graphicsScene, box2DWorld, this);
+    currentLevel = new Level(graphicsScene, box2DWorld, this);
 
     currentTag = "";
 
@@ -390,7 +390,7 @@ void MainWindow::changeLevel() {
 
     delete currentLevel;
 
-    currentLevel = new Level(levelNum, graphicsScene, box2DWorld, this);
+    currentLevel = new Level(graphicsScene, box2DWorld, this);
 
     currentLevel->levelSetup(levelNum);
 
