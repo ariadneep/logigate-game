@@ -60,7 +60,7 @@ void Confetti::spawnConfetti() {
     //Spawn confetti at the center of the screen.
     for(int i = 0; i < 30; i++) {
         ConfettiEffect* confettiParticle = new ConfettiEffect(0, 0, box2DWorld);
-        QGraphicsRectItem* confettiRect = new QGraphicsRectItem(-2.5, -1.25, 5, 2.5);
+        QGraphicsRectItem* confettiRect = new QGraphicsRectItem(-5, -2.5, 10, 5);
 
         confettiRect->setPos(0, 0);
         confettiRect->setBrush(confettiParticle->confettiColor);

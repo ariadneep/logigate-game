@@ -330,5 +330,10 @@ private:
      */
     void setLessonText();
 
+    /**
+     * @brief lessonAcceleration - Acceleration for lessonWidget movement.
+     */
+    int lessonAcceleration;
+
 };
 #endif // MAINWINDOW_H
