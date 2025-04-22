@@ -347,7 +347,7 @@ void Level::setWireTemp(int x, int y, QString tag) {
     wireGrid[y * WIDTH + x] = addWire;
 }
 
-void Level::drawNode(int x, int y, bool signal, QString tag, Node::Type type) {
+void Level::setNode(int x, int y, bool signal, QString tag, Node::Type type) {
 
     if (getGate(x, y) || getWire(x, y) || getNode(x, y) || getObstacle(x, y))
         return;
@@ -416,7 +416,7 @@ void Level::levelSetup(int levelNum) {
     case 2:
         setNode(2, 2, false, "A", Node::Type::ROOT);
         drawGate(4 ,3, Gate::Operator::NOT, Gate::Direction::SOUTH);
-        setNode(2, 5, false, "A", Node::Type::ROOT);
+        setNode(2, 5, true, "B", Node::Type::ROOT);
         addObstacle(6,2);
         addObstacle(7,2);
         addObstacle(8,2);
@@ -560,9 +560,9 @@ void Level::levelSetup(int levelNum) {
         break;
 
     default:
-        drawNode(0, 3, true, "A", Node::Type::ROOT);
-        drawNode(0, 5, false, "B", Node::Type::ROOT);
-        drawNode(8, 3, true, "AB", Node::Type::END);
+        setNode(0, 3, true, "A", Node::Type::ROOT);
+        setNode(0, 5, false, "B", Node::Type::ROOT);
+        setNode(8, 3, true, "AB", Node::Type::END);
         addObstacle(0, 0);
 
         drawGate(6, 4, Gate::Operator::AND, Gate::Direction::EAST);

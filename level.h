@@ -99,15 +99,15 @@ public:
     Node* getNode(int x, int y);
 
     /**
-    * @brief drawNode - Adds a node at the specified x and y position into the level.
-    * @brief drawNode - Adds a node at the specified x and y position into the level.
+    * @brief setNode - Adds a node at the specified x and y position into the level.
+    * @brief setNode - Adds a node at the specified x and y position into the level.
     * @param x - The x position.
     * @param y - The y position.
     * @param signal - The output value, true or false.
     * @param tag - The ID of the node.
     * @param type - Specifies whether it is a ROOT or END node.
     */
-    void drawNode(int x, int y, bool signal, QString tag, Node::Type type);
+    void setNode(int x, int y, bool signal, QString tag, Node::Type type);
 
     /**
      * @brief getObstacle
