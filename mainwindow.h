@@ -120,11 +120,6 @@ private slots:
      */
     void lessonCloseButtonClicked();
 
-    /**
-     * @brief closeStartScreen - Closes the starting screen.
-     */
-    void closeStartScreen();
-
 
 private:
     /**

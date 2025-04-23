@@ -7,17 +7,11 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow), box2DWorld(nullptr), box2DBody(nullptr), timer(new QTimer(this)), frameCount(0), levelNum(0)
 {
-    //Adding/setting up the font used.
-    QFontDatabase::addApplicationFont(":/Code 7x5.ttf");
-    // QFont code7x5("Code 7x5", 20);
-
     ui->setupUi(this);
     setMouseTracking(true);
     ui->gameBoard->setMouseTracking(true);
 
     ui->levelSelectMenu->setStyleSheet("background: 3b3e3f");
-    ui->startingScreen->move(0, 0);
-    ui->levelSelectMenu->move(0, 0);
 
     isLevelMenuShowing = false;
     isLessonShowing = false;
@@ -62,14 +56,16 @@ MainWindow::MainWindow(QWidget *parent)
 
     b2BodyDef levelMenuBodyDef;
     levelMenuBodyDef.type = b2_kinematicBody;
-    levelMenuBodyDef.position.Set(-200.0f, 0.0f);
+    levelMenuBodyDef.position.Set(-200.0f / 100.0f, 0.0f);
     levelMenuBody = box2DWorld->CreateBody(&levelMenuBodyDef);
+    ui->levelSelectMenu->move(-200.0f, 90);
 
+    float lessonWidgetHeight = ui->lessonWidget->height() / 100.0f;
     b2BodyDef lessonBodyDef;
     lessonBodyDef.type = b2_kinematicBody;
-    lessonBodyDef.position.Set(0.0f, -200.0f);
+    lessonBodyDef.position.Set(0.0f, -lessonWidgetHeight);
     lessonBody = box2DWorld->CreateBody(&lessonBodyDef);
-
+    ui->lessonWidget->move(90, -ui->lessonWidget->height());
 
     currentLevel = new Level(graphicsScene, box2DWorld, this);
 
@@ -94,9 +90,6 @@ MainWindow::MainWindow(QWidget *parent)
     // Lesson connects
     connect(ui->closeLessonButton, &QPushButton::clicked, this, &MainWindow::lessonCloseButtonClicked);
 
-    // Start menu connects.
-    connect(ui->startButton, &QPushButton::clicked, this, &MainWindow::closeStartScreen);
-
     // World timer
     connect(timer, &QTimer::timeout, this, &MainWindow::updateWorld);
     timer->start(10);
@@ -112,24 +105,25 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::updateWorld() {
-    box2DWorld->Step(2.0f / 60.0f, 6, 2);
+    box2DWorld->Step(1.0f / 60.0f, 6, 2);
 
     b2Vec2 levelMenuPosition = levelMenuBody->GetPosition();
-    ui->levelSelectMenu->move(levelMenuPosition.x * 100.0f, ui->levelSelectMenu->y());
+    ui->levelSelectMenu->move(levelMenuPosition.x * 100.0f, 90);
 
     // Stop levelMenu at specific positions.
-    if(isLevelMenuShowing && levelMenuPosition.x * 100.0f >= 125.0f) {
+    if(isLevelMenuShowing && levelMenuPosition.x * 100.0f >= 0.0f) {
         levelMenuBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
-        levelMenuBody->SetTransform(b2Vec2(125.0f / 100.0f, 0.0f), 0.0f);
-        ui->levelSelectMenu->move(125, ui->levelSelectMenu->y());
+        levelMenuBody->SetTransform(b2Vec2(0.0f / 100.0f, 0.0f), 0.0f);
+        ui->levelSelectMenu->move(0.0f, 90);
     }
     else if (!isLevelMenuShowing && levelMenuPosition.x * 100.0f <= -200.0f) {
         levelMenuBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         levelMenuBody->SetTransform(b2Vec2(-200.0f / 100.0f, 0.0f), 0.0f);
-        ui->levelSelectMenu->move(-200, ui->levelSelectMenu->y());
+        ui->levelSelectMenu->move(-200.0f, 90);
     }
 
     // Acceleration
+    float lessonWidgetHeight = ui->lessonWidget->height();
     if (isLessonShowing) {
         b2Vec2 startingVelocity = lessonBody->GetLinearVelocity();
         float updatedVelocity = startingVelocity.y * 1.075f;
@@ -154,17 +148,17 @@ void MainWindow::updateWorld() {
         // Move the levelMenuBody off the screen.
         levelMenuBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         levelMenuBody->SetTransform(b2Vec2(-200.0f / 100.0f, 0.0f), 0.0f);
-        ui->levelSelectMenu->move(-200, 90);
+        ui->levelSelectMenu->move(-200.0f, 90);
         isLevelMenuShowing = false;
 
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         lessonBody->SetTransform(b2Vec2(0.0f, 60.0f / 100.0f), 0.0f);
         ui->lessonWidget->move(90, 60);
     }
-    else if (!isLessonShowing && lessonPosition.y * 100.0f <= -500.0f) {
+    else if (!isLessonShowing && lessonPosition.y * 100.0f <= -lessonWidgetHeight) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
-        lessonBody->SetTransform(b2Vec2(0.0f, -500.0f / 100.0f), 0.0f);
-        ui->lessonWidget->move(90, -500);
+        lessonBody->SetTransform(b2Vec2(0.0f, -lessonWidgetHeight / 100.0f), 0.0f);
+        ui->lessonWidget->move(90, -lessonWidgetHeight);
     }
 
     currentLevel->updateLevel();
@@ -724,8 +718,4 @@ void MainWindow::setLessonText() {
         lessonText = "Tutorial - Level 0";
         break;
     }
-}
-
-void MainWindow::closeStartScreen() {
-    ui->startingScreen->hide();
 }
