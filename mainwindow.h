@@ -120,6 +120,11 @@ private slots:
      */
     void lessonCloseButtonClicked();
 
+    /**
+     * @brief startGame - Starts the game and gets rid of the starting screen.
+     */
+    void startGame();
+
 
 private:
     /**

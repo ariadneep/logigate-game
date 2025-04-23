@@ -64,7 +64,7 @@ MainWindow::MainWindow(QWidget *parent)
     levelMenuBodyDef.type = b2_kinematicBody;
     levelMenuBodyDef.position.Set(-200.0f / 100.0f, 0.0f);
     levelMenuBody = box2DWorld->CreateBody(&levelMenuBodyDef);
-    ui->levelSelectMenu->move(-200.0f, 90);
+    ui->levelSelectMenu->move(-200.0f, ui->levelSelectMenu->y());
 
     float lessonWidgetHeight = ui->lessonWidget->height() / 100.0f;
     b2BodyDef lessonBodyDef;
@@ -96,6 +96,9 @@ MainWindow::MainWindow(QWidget *parent)
     // Lesson connects
     connect(ui->closeLessonButton, &QPushButton::clicked, this, &MainWindow::lessonCloseButtonClicked);
 
+    // Connect starting screen.
+    connect(ui->startButton, &QPushButton::clicked, this, &MainWindow::startGame);
+
     // World timer
     connect(timer, &QTimer::timeout, this, &MainWindow::updateWorld);
     timer->start(10);
@@ -114,18 +117,18 @@ void MainWindow::updateWorld() {
     box2DWorld->Step(1.0f / 60.0f, 6, 2);
 
     b2Vec2 levelMenuPosition = levelMenuBody->GetPosition();
-    ui->levelSelectMenu->move(levelMenuPosition.x * 100.0f, 90);
+    ui->levelSelectMenu->move(levelMenuPosition.x * 100.0f, ui->levelSelectMenu->y());
 
     // Stop levelMenu at specific positions.
     if(isLevelMenuShowing && levelMenuPosition.x * 100.0f >= 0.0f) {
         levelMenuBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         levelMenuBody->SetTransform(b2Vec2(0.0f / 100.0f, 0.0f), 0.0f);
-        ui->levelSelectMenu->move(0.0f, 90);
+        ui->levelSelectMenu->move(0.0f, ui->levelSelectMenu->y());
     }
     else if (!isLevelMenuShowing && levelMenuPosition.x * 100.0f <= -200.0f) {
         levelMenuBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         levelMenuBody->SetTransform(b2Vec2(-200.0f / 100.0f, 0.0f), 0.0f);
-        ui->levelSelectMenu->move(-200.0f, 90);
+        ui->levelSelectMenu->move(-200.0f, ui->levelSelectMenu->y());
     }
 
     // Acceleration
@@ -154,7 +157,7 @@ void MainWindow::updateWorld() {
         // Move the levelMenuBody off the screen.
         levelMenuBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         levelMenuBody->SetTransform(b2Vec2(-200.0f / 100.0f, 0.0f), 0.0f);
-        ui->levelSelectMenu->move(-200.0f, 90);
+        ui->levelSelectMenu->move(-200.0f, ui->levelSelectMenu->y());
         isLevelMenuShowing = false;
 
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
@@ -530,6 +533,11 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
         return;
 
     qDebug() << "Mouse released";
+}
+
+void MainWindow::startGame(){
+    ui->startingScreen->hide();
+    levelOneButtonClicked();
 }
 
 void MainWindow::levelMenuButtonClicked() {
