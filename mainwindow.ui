@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>704</width>
-    <height>553</height>
+    <width>700</width>
+    <height>500</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -46,17 +46,22 @@ border-image: url(:/sprites/grid-12x8.png);</string>
       <height>41</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+	border-image: url(:/icons/menu.png);
+}
+
+QPushButton::pressed {
+	border-image: url(:/icons/menu-pressed.png);
+}</string>
+    </property>
     <property name="text">
      <string/>
     </property>
-    <property name="icon">
-     <iconset resource="images.qrc">
-      <normaloff>:/icons/menu.png</normaloff>:/icons/menu.png</iconset>
-    </property>
     <property name="iconSize">
      <size>
-      <width>24</width>
-      <height>24</height>
+      <width>32</width>
+      <height>32</height>
      </size>
     </property>
    </widget>
@@ -69,17 +74,22 @@ border-image: url(:/sprites/grid-12x8.png);</string>
       <height>41</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+	border-image: url(:/icons/trash.png);
+}
+
+QPushButton::pressed {
+	border-image: url(:/icons/trash-pressed.png)
+}</string>
+    </property>
     <property name="text">
      <string/>
     </property>
-    <property name="icon">
-     <iconset resource="images.qrc">
-      <normaloff>:/icons/trash.png</normaloff>:/icons/trash.png</iconset>
-    </property>
     <property name="iconSize">
      <size>
-      <width>24</width>
-      <height>24</height>
+      <width>32</width>
+      <height>32</height>
      </size>
     </property>
    </widget>
@@ -95,37 +105,64 @@ border-image: url(:/sprites/grid-12x8.png);</string>
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+	border-image: url(:/icons/arrow.png);
+}
+
+QPushButton::pressed {
+	border-image: url(:/icons/arrow-pressed.png);
+}
+
+QPushButton::disabled {
+	border-image: url(:/icons/arrow-disabled.png);
+}</string>
+    </property>
     <property name="text">
      <string/>
     </property>
-    <property name="icon">
-     <iconset resource="images.qrc">
-      <normaloff>:/icons/arrow.png</normaloff>:/icons/arrow.png</iconset>
-    </property>
     <property name="iconSize">
      <size>
-      <width>36</width>
-      <height>36</height>
+      <width>32</width>
+      <height>32</height>
      </size>
     </property>
    </widget>
    <widget class="QWidget" name="levelSelectMenu" native="true">
     <property name="geometry">
      <rect>
-      <x>-200</x>
+      <x>0</x>
       <y>0</y>
       <width>200</width>
       <height>500</height>
      </rect>
     </property>
     <property name="autoFillBackground">
-     <bool>true</bool>
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+font: 12pt &quot;Code 7x5&quot;;
+color: rgb(162, 255, 167);
+background-color: rgb(0, 0, 31);
+border: 1px solid &quot;lime&quot;;
+}
+
+QPushButton {
+	border-image: url(:/icons/unlocked-level-sprite.png);
+	font: 12pt &quot;Code 7x5&quot;;
+}
+
+QPushButton::disabled {
+	border-image: url(:/icons/locked-level-sprite.png);
+	text: &quot;&quot;;
+}</string>
     </property>
     <widget class="QPushButton" name="levelOneButton">
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>50</y>
+       <y>80</y>
        <width>131</width>
        <height>31</height>
       </rect>
@@ -138,17 +175,17 @@ border-image: url(:/sprites/grid-12x8.png);</string>
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>0</y>
-       <width>191</width>
+       <y>20</y>
+       <width>201</width>
        <height>30</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <family>System</family>
-       <pointsize>9</pointsize>
+       <family>Code 7x5</family>
+       <pointsize>18</pointsize>
        <italic>false</italic>
-       <bold>true</bold>
+       <bold>false</bold>
        <underline>true</underline>
       </font>
      </property>
@@ -156,10 +193,13 @@ border-image: url(:/sprites/grid-12x8.png);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">font: 700 9pt &quot;System&quot;;</string>
+      <string notr="true">font: 18pt &quot;Code 7x5&quot;;
+color: &quot;lime&quot;;
+border: none;
+background-color: none;</string>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#55557f;&quot;&gt;LEVELS&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>LEVELS</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -169,7 +209,7 @@ border-image: url(:/sprites/grid-12x8.png);</string>
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>110</y>
+       <y>140</y>
        <width>131</width>
        <height>31</height>
       </rect>
@@ -182,7 +222,7 @@ border-image: url(:/sprites/grid-12x8.png);</string>
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>170</y>
+       <y>200</y>
        <width>131</width>
        <height>31</height>
       </rect>
@@ -195,7 +235,7 @@ border-image: url(:/sprites/grid-12x8.png);</string>
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>230</y>
+       <y>260</y>
        <width>131</width>
        <height>31</height>
       </rect>
@@ -205,10 +245,13 @@ border-image: url(:/sprites/grid-12x8.png);</string>
      </property>
     </widget>
     <widget class="QPushButton" name="levelFiveButton">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>290</y>
+       <y>320</y>
        <width>131</width>
        <height>31</height>
       </rect>
@@ -222,35 +265,30 @@ border-image: url(:/sprites/grid-12x8.png);</string>
     <property name="geometry">
      <rect>
       <x>120</x>
-      <y>-500</y>
+      <y>0</y>
       <width>601</width>
       <height>401</height>
      </rect>
     </property>
     <property name="autoFillBackground">
-     <bool>true</bool>
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">qproperty-alignment: AlignCenter;
+background-color: rgb(0, 0, 31);
+font: 13pt &quot;Code 7x5&quot;;</string>
     </property>
     <widget class="QPushButton" name="closeLessonButton">
      <property name="geometry">
       <rect>
        <x>260</x>
-       <y>360</y>
+       <y>347</y>
        <width>80</width>
-       <height>18</height>
+       <height>41</height>
       </rect>
      </property>
      <property name="text">
       <string>Close</string>
-     </property>
-    </widget>
-    <widget class="QPlainTextEdit" name="plainTextEdit">
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>20</y>
-       <width>541</width>
-       <height>321</height>
-      </rect>
      </property>
     </widget>
     <widget class="QLabel" name="lessonText">
@@ -261,6 +299,9 @@ border-image: url(:/sprites/grid-12x8.png);</string>
        <width>501</width>
        <height>281</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font-size: 10pt;</string>
      </property>
      <property name="text">
       <string>TextLabel</string>
@@ -275,18 +316,15 @@ border-image: url(:/sprites/grid-12x8.png);</string>
      <rect>
       <x>0</x>
       <y>-500</y>
-      <width>701</width>
-      <height>501</height>
+      <width>700</width>
+      <height>500</height>
      </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(26, 63, 16);</string>
     </property>
     <widget class="QPushButton" name="startButton">
      <property name="geometry">
       <rect>
        <x>250</x>
-       <y>370</y>
+       <y>280</y>
        <width>211</width>
        <height>61</height>
       </rect>
@@ -320,6 +358,41 @@ QPushButton:pressed {
       <string>START GAME</string>
      </property>
     </widget>
+    <widget class="QWidget" name="logo" native="true">
+     <property name="geometry">
+      <rect>
+       <x>79</x>
+       <y>40</y>
+       <width>540</width>
+       <height>360</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/icons/logo.png);
+background-color: transparent;
+border-radius: 10px;</string>
+     </property>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>310</y>
+        <width>471</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-image: none;
+font: 10pt &quot;Code 7x5&quot;;
+color: rgb(99, 0, 8);</string>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;• ARIADNE PETROULAKIS •  EVAN TUCKER •  MAX DONALDSON •&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;•  JASON KHONG •  IAN WELLER •&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+    </widget>
+    <zorder>logo</zorder>
+    <zorder>startButton</zorder>
    </widget>
    <widget class="QWidget" name="backgroundScroll" native="true">
     <property name="geometry">
@@ -331,7 +404,7 @@ QPushButton:pressed {
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-image: url(:/sprites/grid-12x8.png);</string>
+     <string notr="true">background-image: url(:/sprites/circuit-background.png);</string>
     </property>
    </widget>
    <zorder>backgroundScroll</zorder>
@@ -348,15 +421,13 @@ QPushButton:pressed {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>704</width>
-     <height>18</height>
+     <width>700</width>
+     <height>32</height>
     </rect>
    </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources>
-  <include location="images.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

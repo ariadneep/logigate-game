@@ -2,7 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QGraphicsView>
 #include <QTimer>
-#include <QPropertyAnimation>
+#include <QFontDatabase>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -17,6 +17,12 @@ MainWindow::MainWindow(QWidget *parent)
     ui->levelSelectMenu->setStyleSheet("background: 3b3e3f");
     ui->levelSelectMenu->move(0,0);
     ui->startingScreen->move(0,0);
+
+    ui->gameBoard->hide();
+    ui->clearLevelButton->hide();
+    ui->nextLevelButton->hide();
+    ui->levelMenuButton->hide();
+
     isLevelMenuShowing = false;
     isLessonShowing = false;
     lessonText = "";
@@ -33,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent)
     componentLayer = QPixmap(boardWidth, boardHeight);
     backgroundLayer = QPixmap(":/sprites/grid-12x8.png");
     componentLayer.fill(Qt::transparent);
+
 
     // SETTING UP BOX2D
     graphicsScene = new QGraphicsScene(this);
@@ -59,7 +66,8 @@ MainWindow::MainWindow(QWidget *parent)
     lessonBodyDef.type = b2_kinematicBody;
     lessonBodyDef.position.Set(0.0f, -lessonWidgetHeight);
     lessonBody = box2DWorld->CreateBody(&lessonBodyDef);
-    ui->lessonWidget->move(90, -ui->lessonWidget->height());
+    ui->lessonWidget->move(ui->gameBoard->pos().x(), -ui->lessonWidget->height());
+
     currentLevel = new Level(graphicsScene, box2DWorld, this);
     currentTag = "";
     currentLevel->levelSetup(levelNum);
@@ -131,16 +139,16 @@ void MainWindow::updateWorld() {
     float lessonWidgetHeight = ui->lessonWidget->height();
     if (isLessonShowing) {
         b2Vec2 startingVelocity = lessonBody->GetLinearVelocity();
-        float updatedVelocity = startingVelocity.y * 1.075f;
+        float updatedVelocity = startingVelocity.y * 1.085f;
         if (startingVelocity.y == 0.0f) {
-            updatedVelocity = 0.015f;
+            updatedVelocity = 0.05f;
         }
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, updatedVelocity));
     } else if (!isLessonShowing) {
         b2Vec2 startingVelocity = lessonBody->GetLinearVelocity();
-        float updatedVelocity = startingVelocity.y * 1.05f;
+        float updatedVelocity = startingVelocity.y * 1.075f;
         if (startingVelocity.y == 0.0f) {
-            updatedVelocity = -0.03f;
+            updatedVelocity = -0.5f;
         }
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, updatedVelocity));
     }
@@ -157,12 +165,12 @@ void MainWindow::updateWorld() {
 
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         lessonBody->SetTransform(b2Vec2(0.0f, 60.0f / 100.0f), 0.0f);
-        ui->lessonWidget->move(90, 60);
+        ui->lessonWidget->move(ui->gameBoard->pos().x(), 60);
     }
     else if (!isLessonShowing && lessonPosition.y * 100.0f <= -lessonWidgetHeight) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         lessonBody->SetTransform(b2Vec2(0.0f, -lessonWidgetHeight / 100.0f), 0.0f);
-        ui->lessonWidget->move(90, -lessonWidgetHeight);
+        ui->lessonWidget->move(ui->gameBoard->pos().x(), -lessonWidgetHeight);
     }
     currentLevel->updateLevel();
     graphicsScene->update();
@@ -496,6 +504,10 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
 
 void MainWindow::startGame(){
     ui->startingScreen->hide();
+    ui->gameBoard->show();
+    ui->clearLevelButton->show();
+    ui->nextLevelButton->show();
+    ui->levelMenuButton->show();
     levelOneButtonClicked();
 }
 
