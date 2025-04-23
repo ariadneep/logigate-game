@@ -49,5 +49,6 @@
         <file>red_wires/red_wire_NW.png</file>
         <file>red_wires/red_wire_SE.png</file>
         <file>red_wires/red_wire_SW.png</file>
+        <file>circuit-background.png</file>
     </qresource>
 </RCC>
