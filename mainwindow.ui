@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="styleSheet">
-    <string notr="true">font: &quot;8514oem&quot;;</string>
+    <string notr="true">font: 8 &quot;Code 7x5&quot;;</string>
    </property>
    <widget class="QLabel" name="gameBoard">
     <property name="geometry">
@@ -145,14 +145,14 @@ QPushButton::disabled {
     </property>
     <property name="styleSheet">
      <string notr="true">QWidget {
-font: 12pt &quot;8514oem&quot;;
+font: 12pt &quot;Code 7x5&quot;;
 color: rgb(162, 255, 167);
 background-color: rgb(0, 0, 31);
 }
 
 QPushButton {
 	border-image: url(:/icons/unlocked-level-sprite.png);
-	font: 12pt &quot;8514oem&quot;;
+	font: 12pt &quot;Code 7x5&quot;;
 }
 
 QPushButton::disabled {
@@ -183,7 +183,7 @@ QPushButton::disabled {
      </property>
      <property name="font">
       <font>
-       <family>8514oem</family>
+       <family>Code 7x5</family>
        <pointsize>18</pointsize>
        <italic>false</italic>
        <bold>false</bold>
@@ -194,7 +194,7 @@ QPushButton::disabled {
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">font: 18pt &quot;8514oem&quot;;
+      <string notr="true">font: 18pt &quot;Code 7x5&quot;;
 color: &quot;lime&quot;;
 border: none;
 background-color: none;</string>
@@ -278,7 +278,7 @@ background-color: none;</string>
      <string notr="true">qproperty-alignment: AlignCenter;
 color: white;
 background-color: rgb(0, 0, 31);
-font: 13pt &quot;8514oem&quot;;</string>
+font: 13pt &quot;Code 7x5&quot;;</string>
     </property>
     <widget class="QPushButton" name="closeLessonButton">
      <property name="geometry">
@@ -326,7 +326,7 @@ font: 13pt &quot;8514oem&quot;;</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: &quot;8514oem&quot;;</string>
+     <string notr="true">font: 8pt &quot;Code 7x5&quot;;</string>
     </property>
     <widget class="QPushButton" name="startButton">
      <property name="geometry">
@@ -339,7 +339,7 @@ font: 13pt &quot;8514oem&quot;;</string>
      </property>
      <property name="font">
       <font>
-       <family>8514oem</family>
+       <family>Code 7x5</family>
        <pointsize>16</pointsize>
        <italic>false</italic>
        <bold>false</bold>
@@ -351,14 +351,13 @@ font: 13pt &quot;8514oem&quot;;</string>
      <property name="styleSheet">
       <string notr="true">QPushButton {
 	border-image: url(:/icons/start-button.png);
-	font: 16pt ;
-	font: 16pt &quot;8514oem&quot;;
+	font: 16pt &quot;Code 7x5&quot;;
 	color: &quot;white&quot;;
 }
 
 QPushButton:pressed {
 	border-image: url(:/icons/start-button-pressed.png);
-	font: 16pt &quot;8514oem&quot;;
+	font:16pt &quot;Code 7x5&quot;;
 	color: &quot;black&quot;;
 }</string>
      </property>
@@ -379,7 +378,7 @@ QPushButton:pressed {
       <string notr="true">border-image: url(:/icons/logo.png);
 background-color: transparent;
 border-radius: 10px;
-font: &quot;8514oem&quot;;</string>
+font: 16pt &quot;Code 7x5&quot;;</string>
      </property>
      <widget class="QLabel" name="label">
       <property name="geometry">
@@ -390,10 +389,18 @@ font: &quot;8514oem&quot;;</string>
         <height>61</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>Code 7x5</family>
+        <pointsize>12</pointsize>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
       <property name="styleSheet">
        <string notr="true">border-image: none;
-font: 6pt &quot;8514oem&quot;;
-color: rgb(99, 0, 8);</string>
+color: rgb(99, 0, 8);
+font: 12pt &quot;Code 7x5&quot;;</string>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:7pt;&quot;&gt;* ARIADNE PETROULAKIS * EVAN TUCKER * MAX DONALDSON *&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:7pt;&quot;&gt;* JASON KHONG * IAN WELLER *&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -431,7 +438,7 @@ color: rgb(99, 0, 8);</string>
      <x>0</x>
      <y>0</y>
      <width>700</width>
-     <height>18</height>
+     <height>32</height>
     </rect>
    </property>
   </widget>
