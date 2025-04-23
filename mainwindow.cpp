@@ -154,16 +154,16 @@ void MainWindow::updateWorld() {
     float lessonWidgetHeight = ui->lessonWidget->height();
     if (isLessonShowing) {
         b2Vec2 startingVelocity = lessonBody->GetLinearVelocity();
-        float updatedVelocity = startingVelocity.y * 1.075f;
+        float updatedVelocity = startingVelocity.y * 1.085f;
         if (startingVelocity.y == 0.0f) {
-            updatedVelocity = 0.015f;
+            updatedVelocity = 0.05f;
         }
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, updatedVelocity));
     } else if (!isLessonShowing) {
         b2Vec2 startingVelocity = lessonBody->GetLinearVelocity();
-        float updatedVelocity = startingVelocity.y * 1.05f;
+        float updatedVelocity = startingVelocity.y * 1.075f;
         if (startingVelocity.y == 0.0f) {
-            updatedVelocity = -0.03f;
+            updatedVelocity = -0.5f;
         }
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, updatedVelocity));
     }
