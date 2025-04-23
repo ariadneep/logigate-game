@@ -700,19 +700,53 @@ void MainWindow::setLessonText() {
 
     switch (levelNum) {
     case 1:
-        lessonText = "Level 1";
+        lessonText = "AND Gates \n"
+                     "The principle of Boolean algebra is the output of two inputs. \n"
+                     "Here we need to connect every wire to the end node with the color \n"
+                     "<TRUE_COLOR>.\n"
+                     "To combine two nodes, use the AND gate: a gate that produces a \n"
+                     "<TRUE_COLOR> wire if both input colors are <TRUE_COLOR>.\n"
+                     "Use your mouse to draw wires from the starting nodes and gates \n "
+                     "and hook every node to the end.";
         break;
     case 2:
-        lessonText = "Level 2";
+        lessonText = "NOT Gates \n"
+                     "The following board uses an AND gate, requiring two inputs to be \n"
+                     "<TRUE_COLOR>, yet one of our starting nodes is <FALSE_COLOR>. \n"
+                     "Thankfully, by using the triangular NOT gate, you can flip a wire's color by \n"
+                     "putting it through the input side. \n"
+                     "Try it yourself!";
         break;
     case 3:
-        lessonText = "Level 3";
+        lessonText = "OR Gates \n"
+                     "The final operation we'll look at is the OR gate. Similarly to an AND gate, \n"
+                     "however, it will produce a <TRUE_COLOR> wire as long as \n"
+                     "at least ONE input is <TRUE_COLOR>. \n"
+                     "Here, both wires can't be <TRUE_COLOR>, so this principle is necessary to pass.";
         break;
     case 4:
-        lessonText = "Level 4";
+        lessonText = "DeMorgan's Law \n "
+                     "Now that you understand the basics, our final test will demonstrate \n"
+                     "a fun attribute of Boolean algebra. \n "
+                     "For the final node, you need every starting node to combine with a \n"
+                     "<TRUE_COLOR> signal. \n "
+                     "This proves a little trickier than it seems, as every starting node \n"
+                     "is <FLASE_COLOR>. \n"
+                     "DeMorgan's law states that if inputs A and B and C and D combine to false \n "
+                     "(<FLASE_COLOR>), \n"
+                     "then that's logically equivalent to inputs A or B or C or D \n"
+                     "each being false (<FALSE_COLOR>). \n"
+                     "Try this to combine every node, then flip the color of the final result.";
         break;
     case 5:
-        lessonText = "Level 5";
+        lessonText = "XOR Function \n"
+                     "This is a bit of a challenge, and may seem pretty overwhelming from all \n"
+                     "the starting nodes. Try to split up the problem into combining 4 nodes \n"
+                     "and combining 3 nodes before combining both wires at the end. \n"
+                     "Use the cases of XOR to help with the bottom half of the circuit. \n"
+                     "XOR is an \"exclusive or\" function that makes sure both input colors are not equal. \n"
+                     "The XOR function is true if input A is true and B is false, \n"
+                     "or A is false and B is true.";
         break;
     default:
         lessonText = "Tutorial - Level 0";
