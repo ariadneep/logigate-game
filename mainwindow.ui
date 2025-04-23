@@ -131,20 +131,38 @@ QPushButton::disabled {
    <widget class="QWidget" name="levelSelectMenu" native="true">
     <property name="geometry">
      <rect>
-      <x>-200</x>
+      <x>0</x>
       <y>0</y>
       <width>200</width>
       <height>500</height>
      </rect>
     </property>
     <property name="autoFillBackground">
-     <bool>true</bool>
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+font: 12pt &quot;Code 7x5&quot;;
+color: rgb(162, 255, 167);
+background-color: rgb(0, 0, 31);
+border: 1px solid &quot;lime&quot;;
+}
+
+QPushButton {
+	border-image: url(:/icons/unlocked-level-sprite.png);
+	font: 12pt &quot;Code 7x5&quot;;
+}
+
+QPushButton::disabled {
+	border-image: url(:/icons/locked-level-sprite.png);
+	text: &quot;&quot;;
+}</string>
     </property>
     <widget class="QPushButton" name="levelOneButton">
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>50</y>
+       <y>80</y>
        <width>131</width>
        <height>31</height>
       </rect>
@@ -157,17 +175,17 @@ QPushButton::disabled {
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>0</y>
-       <width>191</width>
+       <y>20</y>
+       <width>201</width>
        <height>30</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <family>System</family>
-       <pointsize>9</pointsize>
+       <family>Code 7x5</family>
+       <pointsize>18</pointsize>
        <italic>false</italic>
-       <bold>true</bold>
+       <bold>false</bold>
        <underline>true</underline>
       </font>
      </property>
@@ -175,10 +193,13 @@ QPushButton::disabled {
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">font: 700 9pt &quot;System&quot;;</string>
+      <string notr="true">font: 18pt &quot;Code 7x5&quot;;
+color: &quot;lime&quot;;
+border: none;
+background-color: none;</string>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#55557f;&quot;&gt;LEVELS&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>LEVELS</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -188,7 +209,7 @@ QPushButton::disabled {
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>110</y>
+       <y>140</y>
        <width>131</width>
        <height>31</height>
       </rect>
@@ -201,7 +222,7 @@ QPushButton::disabled {
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>170</y>
+       <y>200</y>
        <width>131</width>
        <height>31</height>
       </rect>
@@ -214,7 +235,7 @@ QPushButton::disabled {
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>230</y>
+       <y>260</y>
        <width>131</width>
        <height>31</height>
       </rect>
@@ -224,10 +245,13 @@ QPushButton::disabled {
      </property>
     </widget>
     <widget class="QPushButton" name="levelFiveButton">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>290</y>
+       <y>320</y>
        <width>131</width>
        <height>31</height>
       </rect>
@@ -382,7 +406,7 @@ color: rgb(99, 0, 8);</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-image: url(:/sprites/grid-12x8.png);</string>
+     <string notr="true">background-image: url(:/sprites/circuit-background.png);</string>
     </property>
    </widget>
    <zorder>backgroundScroll</zorder>
