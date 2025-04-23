@@ -145,7 +145,6 @@ QPushButton::disabled {
 font: 12pt &quot;Code 7x5&quot;;
 color: rgb(162, 255, 167);
 background-color: rgb(0, 0, 31);
-border: 1px solid &quot;lime&quot;;
 }
 
 QPushButton {
@@ -155,7 +154,6 @@ QPushButton {
 
 QPushButton::disabled {
 	border-image: url(:/icons/locked-level-sprite.png);
-	text: &quot;&quot;;
 }</string>
     </property>
     <widget class="QPushButton" name="levelOneButton">

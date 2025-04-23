@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->gameBoard->setMouseTracking(true);
 
     // Add custom font
-    QFontDatabase::addApplicationFont(":/Code 7x5.ttf");
+    QFontDatabase::addApplicationFont(":/5x7-typeface.otf");
     ui->levelSelectMenu->setStyleSheet("background: 3b3e3f");
     ui->levelSelectMenu->move(0,0);
     ui->startingScreen->move(0,0);
