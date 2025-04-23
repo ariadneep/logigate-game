@@ -13,6 +13,7 @@
         <file>arrow-pressed.png</file>
         <file>unlocked-level-sprite.png</file>
         <file>locked-level-sprite.png</file>
+        <file>logo.png</file>
     </qresource>
     <qresource prefix="/sprites">
         <file>grid-12x8.png</file>

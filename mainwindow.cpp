@@ -20,6 +20,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->levelSelectMenu->move(0,0);
     ui->startingScreen->move(0,0);
 
+    ui->gameBoard->hide();
+    ui->clearLevelButton->hide();
+    ui->nextLevelButton->hide();
+    ui->levelMenuButton->hide();
+
     isLevelMenuShowing = false;
     isLessonShowing = false;
     lessonText = "";
@@ -550,6 +555,10 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
 
 void MainWindow::startGame(){
     ui->startingScreen->hide();
+    ui->gameBoard->show();
+    ui->clearLevelButton->show();
+    ui->nextLevelButton->show();
+    ui->levelMenuButton->show();
     levelOneButtonClicked();
 }
 
