@@ -104,6 +104,13 @@ MainWindow::MainWindow(QWidget *parent)
     // Connect starting screen.
     connect(ui->startButton, &QPushButton::clicked, this, &MainWindow::startGame);
 
+    // Background mover
+    scrollAnimation = new QPropertyAnimation(ui->backgroundScroll, "geometry");
+    scrollAnimation->setDuration(SCROLL_DURATION);
+    scrollAnimation->setStartValue(QRect(0, -250, 1400, 750));
+    scrollAnimation->setEndValue(QRect(-700, 0, 1400, 750));
+    QTimer::singleShot(0, this, &MainWindow::moveBackground);
+
     // World timer
     connect(timer, &QTimer::timeout, this, &MainWindow::updateWorld);
     timer->start(10);
@@ -116,6 +123,12 @@ MainWindow::~MainWindow()
     delete box2DWorld;
     delete graphicsScene;
     delete graphicsView;
+    delete scrollAnimation;
+}
+
+void MainWindow::moveBackground() {
+    scrollAnimation->start();
+    QTimer::singleShot(SCROLL_DURATION, this, &MainWindow::moveBackground);
 }
 
 void MainWindow::updateWorld() {
