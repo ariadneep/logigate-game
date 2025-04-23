@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QGraphicsView>
 #include <QTimer>
+#include <QFontDatabase>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
