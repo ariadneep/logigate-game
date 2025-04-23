@@ -5,7 +5,7 @@
  * @authors Max Donaldson, Jason Khong,
  * Ariadne Petroulakis, Evan Tucker, and Ian Weller
  *
- * @version 7 April 2025
+ * @version 22 April 2025
  */
 
 #ifndef LEVEL_H
@@ -28,7 +28,7 @@ class Level : public QObject {
 public:
     /**
      * @brief Level - Default constructor.
-     * @param graphicsScene - The graphics scene
+     * @param graphicsScene - The graphics scene.
      * @param box2DWorld - The Box2D world.
      * @param parent - the parent object.
      */
@@ -68,38 +68,30 @@ public:
     static const int HEIGHT = 8;
 
     /**
-     * @brief getWire
-     * @param x
-     * @param y
-     * @return
+     * @brief getWire - Gets the wire from the wireGrid.
+     * @param x - X position on the grid.
+     * @param y - Y position on the grid.
+     * @return The wire in question.
      */
     Wire* getWire(int x, int y);
 
     /**
-     * @brief setWireTemp TEMP METHOD, REMOVE LATER
-     * @param x
-     * @param y
-     */
-    void setWireTemp(int x, int y, QString tag);
-
-    /**
-     * @brief getGate
-     * @param x
-     * @param y
-     * @return
+     * @brief getGate - Gets the gate from the gateGrid.
+     * @param x - X position on the grid.
+     * @param y - Y position on the grid.
+     * @return The gate in question.
      */
     Gate* getGate(int x, int y);
 
     /**
-     * @brief getNode
-     * @param x
-     * @param y
-     * @return
+     * @brief getNode - Gets the node from the nodeGrid.
+     * @param x - X position on the grid.
+     * @param y - Y position on the grid.
+     * @return The node in question.
      */
     Node* getNode(int x, int y);
 
     /**
-    * @brief setNode - Adds a node at the specified x and y position into the level.
     * @brief setNode - Adds a node at the specified x and y position into the level.
     * @param x - The x position.
     * @param y - The y position.
@@ -110,21 +102,12 @@ public:
     void setNode(int x, int y, bool signal, QString tag, Node::Type type);
 
     /**
-     * @brief getObstacle
-     * @param x
-     * @param y
-     * @return
+     * @brief getObstacle - Gets the obstacle from the obstacleGrid.
+     * @param x - X position on the grid.
+     * @param y - Y position on the grid.
+     * @return The wire in question.
      */
     Obstacle* getObstacle(int x, int y);
-
-    /**
-     * @brief nodeConnect
-     * @param x
-     * @param y
-     * @param tag
-     * @param currentWire
-     */
-    void nodeConnect(int x, int y, QString tag, Wire* currentWire);
 
     /**
      * @brief updateLevel - Updates the level to initial start-up procedure.
@@ -142,23 +125,25 @@ public:
     void clearLevel();
 
     /**
-     * @brief removeTails
-     * @param startingNode
+     * @brief removeTails - Removes the tails from concurrently connected gates.
+     * Started via calling it from a node
+     * @param startingNode - The node which was deleted from.
      */
     void removeTails(Node* startingNode);
 
     /**
-     * @brief removeTails
-     * @param startingGate
+     * @brief removeTails - Removes the tails from concurrently connected gates.
+     * Started via calling it from a node
+     * @param startingGate - The gate which was deleted from.
      */
     void removeTails(Gate* startingGate);
 
     /**
-     * @brief drawGate - Draws the Gate at a certain X and Y Coordinate
-     * @param x - Given X Coordinate
-     * @param y - Given Y Coordinate
-     * @param op - Given Operator to use
-     * @param rot - The direction the gate faces.
+     * @brief drawGate - Draws the Gate at a certain X and Y Coordinate.
+     * @param x - Given X Coordinate.
+     * @param y - Given Y Coordinate.
+     * @param op - Given Operator to use.
+     * @param dir - The direction the gate faces.
      */
     void drawGate(int x, int y, Gate::Operator op, Gate::Direction dir);
 
@@ -193,12 +178,6 @@ public:
     void clearNodes();
 
 private:
-
-    /**
-     * @brief description - The prefacing paragraph for the level.
-     */
-    QString description;
-
     /**
      * @brief box2DWorld - The Box2D World.
      */
@@ -250,17 +229,8 @@ private:
     void wireCheck(Wire* currentWire, Wire* checkingWire);
 
     /**
-     * @brief wireConnect
-     * @param x
-     * @param y
-     * @param tag
-     * @param currentWire
-     */
-    void wireConnect(int x, int y, QString tag, Wire* currentWire);
-
-    /**
-     * @brief wireRemove
-     * @param currentWire
+     * @brief wireRemove - Remove the current wire.
+     * @param currentWire - The pointer to the wire you want to remove.
      */
     void wireRemove(Wire* currentWire);
 
@@ -355,7 +325,7 @@ private:
     void addDoubleGate(int x, int y, Gate::Operator gateType, Gate::Direction dir);
 
     /**
-     * @brief addSingleGate - Adds a single gate (NOT) at the specified x and y position
+     * @brief addSingleGate - Adds a single gate (NOT) at the specified x and y position.
      * @param x - The x position.
      * @param y - The y position.
      * @param gateType - The type of gate.
@@ -388,12 +358,6 @@ private:
     void placeBorder();
 
 signals:
-
-    /**
-     * @brief update - Denotes that the state of the level has been updated.
-     */
-    void update();
-
     /**
      * @brief levelCompleted - Signal to enable nextLevel button.
      */

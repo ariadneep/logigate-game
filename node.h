@@ -7,7 +7,7 @@
  * @authors Max Donaldson, Jason Khong,
  * Ariadne Petroulakis, Evan Tucker, and Ian Weller
  *
- * @version 7 April 2025
+ * @version 22 April 2025
  */
 
 #ifndef NODE_H
@@ -19,7 +19,6 @@
 #include "wire.h"
 
 class Node : public QObject {
-
     Q_OBJECT
 
 public:
@@ -71,17 +70,9 @@ public:
 
     /**
      * @brief getNodeType - The type of the node.
-     * @return A Type representing whether the node is a ROOT or END.
+     * @return A type representing whether the node is a ROOT or END.
      */
     Node::Type getNodeType();
-
-    /**
-     * @brief checkSignal - Determines the END value of a node.
-     * @param tag - The tag to compare against the input node.
-     * @param signal - The input node's value.
-     * @return A bool representing if the tags match and it is an end node.
-     */
-    bool checkSignal(QString& tag, bool signal);
 
     /**
      * @brief getDirection - Getter method for the direction the Node requires output/input
@@ -110,7 +101,7 @@ public:
     int getY();
 
     /**
-     * @brief getConnected - Returns if the node has been connected
+     * @brief getConnected - Returns if the node has been connected.
      * @return Bool of if it's connected
      */
     bool getConnected();
@@ -130,7 +121,6 @@ public:
     void connectWire(Wire* connectWire, Wire::Direction nodeConnectionDirection);
 
 private:
-
     /**
      * @brief direction - Stores the direction the Node requires output/input from. NONE does not
      * limit the node direction.
@@ -152,11 +142,6 @@ private:
      * @brief nodeType - Determines if it is a ROOT or END node.
      */
     Node::Type nodeType;
-
-    /**
-     * @brief sprite - The sprite of the node.
-     */
-    QGraphicsPixmapItem* sprite;
 };
 
 #endif // NODE_H

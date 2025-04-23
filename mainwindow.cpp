@@ -14,8 +14,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Add custom font
     QFontDatabase::addApplicationFont(":/Code 7x5.ttf");
-
-
     ui->levelSelectMenu->setStyleSheet("background: 3b3e3f");
     ui->levelSelectMenu->move(0,0);
     ui->startingScreen->move(0,0);
@@ -28,7 +26,6 @@ MainWindow::MainWindow(QWidget *parent)
     isLevelMenuShowing = false;
     isLessonShowing = false;
     lessonText = "";
-
     gameBoardX = 0;
     gameBoardY = 0;
     newPosition = true;
@@ -37,13 +34,10 @@ MainWindow::MainWindow(QWidget *parent)
     loadWirePixmaps();
     loadNodePixmaps();
     loadGatePixmaps();
-    
     int boardWidth = ui->gameBoard->width();
     int boardHeight = ui->gameBoard->height();
-
     componentLayer = QPixmap(boardWidth, boardHeight);
     backgroundLayer = QPixmap(":/sprites/grid-12x8.png");
-
     componentLayer.fill(Qt::transparent);
 
 
@@ -54,24 +48,19 @@ MainWindow::MainWindow(QWidget *parent)
     graphicsScene->setSceneRect(-400, -300, 800, 600);
     graphicsView->setStyleSheet("background: transparent");
     graphicsView->setAttribute(Qt::WA_TransparentForMouseEvents);
-
-
     b2Vec2 gravity(0.0f, 9.8f);
     box2DWorld = new b2World(gravity);
-
     b2BodyDef groundBodyDef;
     groundBodyDef.position.Set(0.0f, 5.6f);
     b2Body* groundBody = box2DWorld->CreateBody(&groundBodyDef);
     b2PolygonShape groundBox;
     groundBox.SetAsBox(9.5f, 0.1f);
     groundBody->CreateFixture(&groundBox, 0.0f);
-
     b2BodyDef levelMenuBodyDef;
     levelMenuBodyDef.type = b2_kinematicBody;
     levelMenuBodyDef.position.Set(-200.0f / 100.0f, 0.0f);
     levelMenuBody = box2DWorld->CreateBody(&levelMenuBodyDef);
     ui->levelSelectMenu->move(-200.0f, ui->levelSelectMenu->y());
-
     float lessonWidgetHeight = ui->lessonWidget->height() / 100.0f;
     b2BodyDef lessonBodyDef;
     lessonBodyDef.type = b2_kinematicBody;
@@ -80,11 +69,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->lessonWidget->move(ui->gameBoard->pos().x(), -ui->lessonWidget->height());
 
     currentLevel = new Level(graphicsScene, box2DWorld, this);
-
     currentTag = "";
-
     currentLevel->levelSetup(levelNum);
-
     repaint();
 
     // Level Selection
@@ -134,7 +120,6 @@ void MainWindow::moveBackground() {
 
 void MainWindow::updateWorld() {
     box2DWorld->Step(1.0f / 60.0f, 6, 2);
-
     b2Vec2 levelMenuPosition = levelMenuBody->GetPosition();
     ui->levelSelectMenu->move(levelMenuPosition.x * 100.0f, ui->levelSelectMenu->y());
 
@@ -167,7 +152,6 @@ void MainWindow::updateWorld() {
         }
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, updatedVelocity));
     }
-
     b2Vec2 lessonPosition = lessonBody->GetPosition();
     ui->lessonWidget->move(ui->lessonWidget->x(), lessonPosition.y * 100.0f);
 
@@ -188,9 +172,7 @@ void MainWindow::updateWorld() {
         lessonBody->SetTransform(b2Vec2(0.0f, -lessonWidgetHeight / 100.0f), 0.0f);
         ui->lessonWidget->move(ui->gameBoard->pos().x(), -lessonWidgetHeight);
     }
-
     currentLevel->updateLevel();
-
     graphicsScene->update();
     graphicsView->update();
     graphicsView->viewport()->update();
@@ -234,8 +216,6 @@ void MainWindow::loadNodePixmaps() {
 }
 
 void MainWindow::repaint() {
-    qDebug() << "repainting the board";
-
     //Must remove everything already in the layers.
     componentLayer.fill(Qt::transparent);
 
@@ -252,7 +232,6 @@ void MainWindow::repaint() {
             currentGate = currentLevel->getGate(x, y);
             currentNode = currentLevel->getNode(x, y);
             currentObstacle = currentLevel->getObstacle(x, y);
-
             if(currentWire)
                 paintWire(x, y, currentWire->getDirection(), currentWire->getSignal());
             if(currentGate)
@@ -263,7 +242,6 @@ void MainWindow::repaint() {
                 paintObstacle(x, y);
         }
     }
-
 }
 
 void MainWindow::paintWire(int x, int y, Wire::Direction direction, bool signal) {
@@ -432,28 +410,14 @@ void MainWindow::paintObstacle(int x, int y) {
 }
 
 void MainWindow::changeLevel() {
-    /**
-     * Procedure: clear level, create a new instance of currentLevel, and then
-     * set up the level.
-     */
-
     ui->nextLevelButton->setDisabled(true);
-
     currentLevel->clearLevel();
-
     delete currentLevel;
-
     currentLevel = new Level(graphicsScene, box2DWorld, this);
-
     connect(currentLevel, &Level::levelCompleted, this, [this]() {
-        qDebug() << "Level completed signal received!";
         ui->nextLevelButton->setEnabled(true);
     });
-
     currentLevel->levelSetup(levelNum);
-
-
-    qDebug() << "Changed to level:" << levelNum;
     repaint();
     currentTag = "";
 }
@@ -462,7 +426,6 @@ void MainWindow::changeLevel() {
 void MainWindow::mouseMoveEvent(QMouseEvent *event) {
     double mouseX = event->position().x();
     double mouseY = event->position().y();
-
     int oldGameBoardX = gameBoardX;
     int oldGameBoardY = gameBoardY;
     QLabel* gameBoard = ui->gameBoard;
@@ -474,7 +437,6 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event) {
         mouseY = mouseY - gameBoard->pos().y();
 
         // Project into Canvas Coords
-        // TODO: add in a divisor of the level's width
         gameBoardX = (int)(mouseX / (gameBoard->width() / currentLevel->WIDTH));
         gameBoardY = (int)(mouseY / (gameBoard->height() / currentLevel->HEIGHT));
 
@@ -487,8 +449,6 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event) {
     if (newPosition) {
         currentLevel->drawWire(gameBoardX, gameBoardY, currentTag);
         newPosition = false;
-
-        //redraw the board.
         repaint();
     }
 }
@@ -496,16 +456,12 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event) {
 void MainWindow::mousePressEvent(QMouseEvent *event) {
     double mouseX = event->position().x();
     double mouseY = event->position().y();
-
     int oldGameBoardX = gameBoardX;
     int oldGameBoardY = gameBoardY;
-  
     QLabel* gameBoard = ui->gameBoard;
-
     if (isInGameBoard(mouseX, mouseY)) {
         mouseX = mouseX - gameBoard->pos().x();
         mouseY = mouseY - gameBoard->pos().y();
-
         gameBoardX = (int)(mouseX / (gameBoard->width() / currentLevel->WIDTH));
         gameBoardY = (int)(mouseY / (gameBoard->height() / currentLevel->HEIGHT));
 
@@ -515,24 +471,18 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
         else
             newPosition = false;
     }
-
     if (newPosition) {
         if (Node* selectedNode = currentLevel->getNode(gameBoardX, gameBoardY)){
-            qDebug() << "Removed tails called.";
             currentTag = selectedNode->getTag();
             currentLevel->removeTails(selectedNode);
         }
         else if (Gate* selectedGate = currentLevel->getGate(gameBoardX, gameBoardY)) {
-            qDebug() << "Removed tails called for gate.";
             currentTag = selectedGate->getTag();
             currentLevel->removeTails(selectedGate);
-            qDebug() << "Removed tails called for gate is DONE.";
         }
         else
             currentLevel->drawWire(gameBoardX, gameBoardY, currentTag);
         newPosition = false;
-
-
         repaint();
     }
 }
@@ -550,8 +500,6 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event){
     //if the mouse is not in the canvas, we don't care.
     if(!isInGameBoard(mouseX, mouseY))
         return;
-
-    qDebug() << "Mouse released";
 }
 
 void MainWindow::startGame(){
@@ -564,10 +512,6 @@ void MainWindow::startGame(){
 }
 
 void MainWindow::levelMenuButtonClicked() {
-    /*
-     * Slide the menu to the right if bool isLevelMenuVisible is false upon clicked.
-     * Slide the menu to the left if the bool isLevelMenuVisible is true upon clicked.
-     */
     if(!isLevelMenuShowing) {
         levelMenuBody->SetLinearVelocity(b2Vec2(2.0f, 0.0f));
         isLevelMenuShowing = true;
@@ -578,25 +522,16 @@ void MainWindow::levelMenuButtonClicked() {
 }
 
 void MainWindow::levelOneButtonClicked() {
-    /*
-     * Procedure:
-     * 1. Call the clearLevel method.
-     * 2. Call levelLayout(levelNum), based on which button was clicked.
-     * Do the same for the other level button clicked public slots.
-     */
     levelNum = 1;
     changeLevel();
     setLessonText();
     ui->nextLevelButton->setDisabled(false);
-
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         isLessonShowing = true;
         ui->lessonText->setText(lessonText);
     }
-
     ui->nextLevelButton->setDisabled(true);
-
     repaint();
 }
 
@@ -605,15 +540,12 @@ void MainWindow::levelTwoButtonClicked() {
     changeLevel();
     setLessonText();
     ui->nextLevelButton->setDisabled(false);
-
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         isLessonShowing = true;
         ui->lessonText->setText(lessonText);
     }
-
     ui->nextLevelButton->setDisabled(true);
-
     repaint();
 }
 
@@ -622,15 +554,12 @@ void MainWindow::levelThreeButtonClicked() {
     changeLevel();
     setLessonText();
     ui->nextLevelButton->setDisabled(false);
-
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         isLessonShowing = true;
         ui->lessonText->setText(lessonText);
     }
-
     ui->nextLevelButton->setDisabled(true);
-
     repaint();
 }
 
@@ -639,15 +568,12 @@ void MainWindow::levelFourButtonClicked() {
     changeLevel();
     setLessonText();
     ui->nextLevelButton->setDisabled(false);
-
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         isLessonShowing = true;
         ui->lessonText->setText(lessonText);
     }
-
     ui->nextLevelButton->setDisabled(true);
-
     repaint();
 }
 
@@ -656,67 +582,44 @@ void MainWindow::levelFiveButtonClicked() {
     changeLevel();
     setLessonText();
     ui->nextLevelButton->setDisabled(true);
-
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         isLessonShowing = true;
         ui->lessonText->setText(lessonText);
     }
-
     ui->nextLevelButton->setDisabled(true);
-
     repaint();
 }
 
 void MainWindow::clearLevelButtonClicked() {
-    /*
-     * Procedure: Clear the level, and set it up again.
-     * or, don't clear it at all, and only reset all wires from nodes A and B?
-     */
-    // changeLevel();
     currentLevel->clearWires();
     currentLevel->clearGates();
     currentLevel->clearNodes();
     currentLevel->removeConfetti();
-
-    qDebug() << "SETTING LEVEL" << levelNum;
-
     setLessonText();
-
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         isLessonShowing = true;
-
         ui->lessonText->setText(lessonText);
     }
-
     repaint();
-    qDebug() << "clearing level";
 }
 
 void MainWindow::nextLevelButtonClicked() {
-
-    qDebug() << "next level loading";
-    /*
-     * Procedure: Clear the level, and then set up the next one.
-     */
     levelNum++;
+
     //If already on highest level, loop back to level one.
     if(levelNum >= 5) {
         levelNum = 5;
         ui->nextLevelButton->setDisabled(true);
     }
-
     setLessonText();
-
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         isLessonShowing = true;
 
         ui->lessonText->setText(lessonText);
     }
-
-    qDebug() << "levelNum: " << levelNum;
     changeLevel();
     repaint();
 }
@@ -730,11 +633,6 @@ void MainWindow::lessonCloseButtonClicked() {
 }
 
 void MainWindow::setLessonText() {
-    /*
-     * TODO: Change lessonText to be the description for each level.
-     */
-    qDebug() << "SETTING LEVEL" << levelNum;
-
     switch (levelNum) {
     case 1:
         lessonText = "AND Gates \n"

@@ -5,7 +5,7 @@
  * @authors Max Donaldson, Jason Khong,
  * Ariadne Petroulakis, Evan Tucker, and Ian Weller
  *
- * @version 7 April 2025
+ * @version 22 April 2025
  */
 
 #ifndef MAINWINDOW_H
@@ -33,30 +33,30 @@ class MainWindow : public QMainWindow {
 
 protected:
     /**
-     * @brief mouseMoveEvent - updates the canvas coordinates whenever
+     * @brief mouseMoveEvent - Updates the canvas coordinates whenever
      * the mouse has moved while hovering over the canvas.
-     * @param event - mouse movement.
+     * @param event - Mouse movement.
      */
     void mouseMoveEvent(QMouseEvent *event);
 
     /**
-     * @brief mousePressEvent - draws on the canvas at the given coordinates
+     * @brief mousePressEvent - Draws on the canvas at the given coordinates
      * if the mouse is pressed while on the canvas.
-     * @param event - mouse clicks.
+     * @param event - Mouse clicks.
      */
     void mousePressEvent(QMouseEvent *event);
 
     /**
-     * @brief mouseReleaseEvent - triggers version history update
+     * @brief mouseReleaseEvent - Triggers version history update
      * when the mouse is released.
-     * @param event - mouse released.
+     * @param event - Mouse released.
      */
     void mouseReleaseEvent(QMouseEvent *event);
 
 public:
     /**
-     * @brief MainWindow - creates a main window object.
-     * @param parent - the parent object
+     * @brief MainWindow - Creates a main window object.
+     * @param parent - The parent object.
      */
     MainWindow(QWidget *parent = nullptr);
 
@@ -155,27 +155,27 @@ private:
     bool newPosition;
 
     /**
-     * @brief componentLayer -
+     * @brief componentLayer - The component layer where game components are drawn.
      */
     QPixmap componentLayer;
 
     /**
-     * @brief backgroundLayer -
+     * @brief backgroundLayer - The background layer where the grid is drawn.
      */
     QPixmap backgroundLayer;
 
     /**
-     * @brief scrollAnimation
+     * @brief scrollAnimation - The scroll animation.
      */
     QPropertyAnimation* scrollAnimation;
 
     /**
-     * @brief scrollDuration
+     * @brief scrollDuration - The duration of the scroll.
      */
     const int SCROLL_DURATION = 100000;
 
     /**
-    * @brief FALSE_COLOR - the color used for false inputs.
+    * @brief FALSE_COLOR - The color used for false inputs.
     */
     const QString FALSE_COLOR = "red";
 
@@ -197,11 +197,6 @@ private:
     QHash<QPair<bool, Node::Type>, QPixmap> nodePixmaps;
 
     /**
-     * @brief obstaclePixmaps - Holds the obstacle sprite
-     */
-    QPixmap obstaclePixmaps;
-
-    /**
      * @brief wirePixmaps - Holds the Gate pixmaps with direction-color pairs as keys
      * and image Pixmaps as values.
      */
@@ -220,7 +215,7 @@ private:
     void loadNodePixmaps();
 
     /**
-     * @brief loadGatePixmaps - Hellper method to load all the gates to pixmaps
+     * @brief loadGatePixmaps - Helper method to load all the gates to pixmaps.
      */
     void loadGatePixmaps();
 
@@ -231,39 +226,39 @@ private:
     void repaint();
 
     /**
-     * @brief paintWire - paints a Wire with the appropriate attributes at the
+     * @brief paintWire - Paints a Wire with the appropriate attributes at the
      * given x, y position.
-     * @param x - the horizontal grid square index to draw the wire on.
-     * @param y - the vertical grid square index to draw the wire on.
-     * @param direction - the direction of the wire.
-     * @param signal - the signal associated with the wire color.
+     * @param x - The horizontal grid square index to draw the wire on.
+     * @param y - The vertical grid square index to draw the wire on.
+     * @param direction - The direction of the wire.
+     * @param signal - The signal associated with the wire color.
      */
     void paintWire(int x, int y, Wire::Direction direction, bool signal);
 
     /**
-     * @brief paintGate - paints a Gate with the appropriate attributes at the
+     * @brief paintGate - Paints a Gate with the appropriate attributes at the
      * given x, y position.
-     * @param x - the horizontal grid square index to draw the gate on.
-     * @param y - the vertical grid square index to draw the gate on.
-     * @param align - the alignment of the gate.
+     * @param x - The horizontal grid square index to draw the gate on.
+     * @param y - The vertical grid square index to draw the gate on.
+     * @param align - The alignment of the gate.
      */
     void paintGate(int x, int y, Gate::Operator op, Gate::Ports align, Gate::Direction dir);
 
     /**
-     * @brief paintNode - paints a node with the appropriate attributes at the
+     * @brief paintNode - Paints a node with the appropriate attributes at the
      * given x, y position.
-     * @param x - the horizontal grid square index to draw the node on.
-     * @param y - the vertical grid square index to draw the node on.
-     * @param signal - the signal associated with the color of the Node
-     * @param nodeType - this determines if this node will be a root or end.
+     * @param x - The horizontal grid square index to draw the node on.
+     * @param y - The vertical grid square index to draw the node on.
+     * @param signal - The signal associated with the color of the Node
+     * @param nodeType -This determines if this node will be a root or end.
      */
     void paintNode(int x, int y, bool signal, Node::Type nodeType);
 
     /**
-     * @brief paintObstacle - paints an obstacle with the appropriate attributes at the
+     * @brief paintObstacle - Paints an obstacle with the appropriate attributes at the
      * given x, y position.
-     * @param x - the horizontal grid square index to draw the obstacle on.
-     * @param y - the vertical grid square index to draw the obstacle on.
+     * @param x - The horizontal grid square index to draw the obstacle on.
+     * @param y - The vertical grid square index to draw the obstacle on.
      */
     void paintObstacle(int x, int y);
 
@@ -280,8 +275,8 @@ private:
     /**
      * @brief isInGameBoard - Boolean statement to declare whether or not an x-y position
      *  is within the bounds of the game board.
-     * @param x - the x position to check.
-     * @param y - the y position to check.
+     * @param x - The x position to check.
+     * @param y - The y position to check.
      * @return True if the mouse is inside of the QLabel (board game) widget.
      */
     bool isInGameBoard(int x, int y);

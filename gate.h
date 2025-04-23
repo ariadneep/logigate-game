@@ -5,7 +5,7 @@
  * @authors Max Donaldson, Jason Khong,
  * Ariadne Petroulakis, Evan Tucker, and Ian Weller
  *
- * @version 7 April 2025
+ * @version 22 April 2025
  */
 
 #ifndef GATE_H
@@ -21,9 +21,7 @@ class Gate : public QObject {
 public:
     /**
     * @brief The Operator enum - Holds the operation type performed
-    * by this gate.
-    *
-    * Represents the different types of logic gates.
+    * by this gate. Represents the different types of logic gates.
     */
     enum class Operator {
         AND, OR, NOT
@@ -31,18 +29,16 @@ public:
 
     /**
      * @brief The Ports enum - Holds information on where wires can connect to this Gate.
-     * IN means they can only connect to the input side, INOUT means they can connect to both
-     * the input AND the output side.
+     * IN means they can only connect to the input side.
+     * INOUT means they can connect to both the input AND the output side.
      */
     enum class Ports {
         IN, INOUT
     };
 
     /**
-     * @brief The Direction enum - Describes the direction tthe output side of this
-     * Gate is facing.
-     *
-     * A gate and its otherHalf must share a rotation.
+     * @brief The Direction enum - Describes the direction the output side of this
+     * Gate is facing. A gate and its otherHalf must share a rotation.
      */
     enum class Direction {
         NORTH, EAST, SOUTH, WEST
@@ -120,7 +116,7 @@ public:
      * This should hold a nullptr value when the gate is of a single-block
      * Type like OR and a Gate* of the same Type when the gate is of a two-block Type,
      * like AND or OR.
-     * @param otherGate - A Gate pointer to a Gate of the same Gate::Type
+     * @param otherGate - A Gate pointer to a Gate of the same Gate::Type.
      */
     void setOtherHalf(Gate* otherGate);
 
@@ -181,7 +177,6 @@ public:
     void connectWire(Wire* connectWire, Wire::Direction connectionDirection);
 
 private:
-
     /**
      * @brief x - The X-coordinate for the position the gate is at on the game baord.
      */

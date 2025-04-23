@@ -1,4 +1,3 @@
-
 #include "level.h"
 #include "wire.h"
 
@@ -7,8 +6,8 @@ class Wire;
 
 Level::Level(QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent)
     : QObject{parent},box2DWorld(box2DWorld), graphicsScene(graphicsScene), isVictory(false) {
-
     confetti = new Confetti(graphicsScene, box2DWorld);
+
     // Initializes the grids to nullptrs.
     for (int i = 0; i < WIDTH * HEIGHT; i++) {
         wireGrid[i] = nullptr;
@@ -16,9 +15,6 @@ Level::Level(QGraphicsScene* graphicsScene, b2World* box2DWorld, QObject *parent
         nodeGrid[i] = nullptr;
         obstacleGrid[i] = nullptr;
     }
-
-    //Setup the level based on the chosen level.
-    // levelSetup(levelNum);
 }
 
 Level::~Level() {
@@ -34,25 +30,16 @@ Level::~Level() {
 }
 
 void Level::drawWire(int x, int y, QString tag) {
-
-    qDebug() << "///////////\nChecked at (" << x << ", " << y << ")";
-    qDebug() << "Tag = " << tag;
-
     if ((x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
         || tag == "") {
-        qDebug() << "Draw wire skipped. (tag: " << tag << ")";
         return;
     }
-
     Wire* currentWire = getWire(x, y);
-
     if (isEmptySpace(x, y)) {
-
         // Search for surrounding grid elements and initialize directions:
         Wire::Direction wireConnectionDirection = Wire::Direction::NONE;
         Wire::Direction nodeConnectionDirection = Wire::Direction::NONE;
         Wire::Direction gateConnectionDirection = Wire::Direction::NONE;
-
         Wire* currentWire = nullptr;
         Wire* headWire = findWire(x, y, tag, wireConnectionDirection);
         Node* headNode = findOutputNode(x, y, tag, nodeConnectionDirection);
@@ -71,7 +58,6 @@ void Level::drawWire(int x, int y, QString tag) {
             else if (headGate && headGate->getAlignment() == Gate::Ports::INOUT)
                 headGate->connectWire(currentWire, gateConnectionDirection);
 
-
             // Tail connection (Note: tails should only be made if the currentWire has a head):
             Node* tailNode = findInputNode(x, y, tag, currentWire->getSignal(),
                                            nodeConnectionDirection);
@@ -84,20 +70,14 @@ void Level::drawWire(int x, int y, QString tag) {
     }
     else if (currentWire && currentWire->getTailConnection() != nullptr
              && currentWire->getTailConnection()->getTailConnection() == nullptr) {
-
         // Is this wire directly connected to an incomplete end?
         // If so, "go back" one wire.
         wireRemove(currentWire);
     }
-
-    qDebug() << "//////////////";
-
     victory();
 }
 
 Wire* Level::findWire(int x, int y, QString tag, Wire::Direction& wireConnectionDirection) {
-
-    qDebug() << "In find wire";
     Wire* upWire = getWire(x, y - 1);
     Wire* rightWire = getWire(x + 1, y);
     Wire* downWire = getWire(x, y + 1);
@@ -106,8 +86,6 @@ Wire* Level::findWire(int x, int y, QString tag, Wire::Direction& wireConnection
     // Check the above component:
     if (upWire != nullptr && upWire->getTag() == tag
         && !upWire->isFullyConnected()) {
-
-        qDebug() << "Created new wire, connected to above.";
         wireConnectionDirection = Wire::Direction::N;
         return upWire;
     }
@@ -115,8 +93,6 @@ Wire* Level::findWire(int x, int y, QString tag, Wire::Direction& wireConnection
     // Check the right component:
     else if (rightWire != nullptr && rightWire->getTag() == tag
              && !rightWire->isFullyConnected()) {
-
-        qDebug() << "Created new wire, connected to right.";
         wireConnectionDirection = Wire::Direction::E;
         return rightWire;
     }
@@ -124,8 +100,6 @@ Wire* Level::findWire(int x, int y, QString tag, Wire::Direction& wireConnection
     // Check the below component:
     else if (downWire != nullptr && downWire->getTag() == tag
              && !downWire->isFullyConnected()) {
-
-        qDebug() << "Created new wire, connected to below.";
         wireConnectionDirection = Wire::Direction::S;
         return downWire;
     }
@@ -133,13 +107,9 @@ Wire* Level::findWire(int x, int y, QString tag, Wire::Direction& wireConnection
     // Check the left component:
     else if (leftWire != nullptr && leftWire->getTag() == tag
              && !leftWire->isFullyConnected()) {
-
-        qDebug() << "Created new wire, connected to left.";
         wireConnectionDirection = Wire::Direction::W;
         return leftWire;
     }
-
-    qDebug() << "No wire link found. Return.";
     return nullptr;
 }
 
@@ -150,31 +120,22 @@ void Level::wireRemove(Wire* currentWire) {
     int tailY = currentWire->getTailConnection()->getY();
     int headX = currentWire->getHeadConnection()->getX();
     int headY = currentWire->getHeadConnection()->getY();
-
     setWire(tailX, tailY, nullptr);
-    // currentWire->setTailConnection(nullptr);
-
-    // Draw N
     if (currentY - headY == 1) {
         currentWire->setDirection(Wire::Direction::N);
     }
-    // Draw E
     else if (headX - currentX == 1) {
         currentWire->setDirection(Wire::Direction::E);
     }
-    // Draw S
     else if (headY - currentY == 1) {
         currentWire->setDirection(Wire::Direction::S);
     }
-    // Draw W
-    // Refactor this later if no errors occurs
     else if (currentX - headX == 1) {
         currentWire->setDirection(Wire::Direction::W);
     }
 }
 
 Node* Level::findOutputNode(int x, int y, QString tag, Wire::Direction& wireConnectionDirection) {
-
     Node* upNode = getNode(x, y - 1);
     Node* rightNode = getNode(x + 1, y);
     Node* downNode = getNode(x, y + 1);
@@ -215,12 +176,10 @@ Node* Level::findOutputNode(int x, int y, QString tag, Wire::Direction& wireConn
         wireConnectionDirection = Wire::Direction::W;
         return leftNode;
     }
-
     return nullptr;
 }
 
 Node* Level::findInputNode(int x, int y, QString tag, bool signal, Wire::Direction& wireConnectionDirection) {
-
     Node* upNode = getNode(x, y - 1);
     Node* rightNode = getNode(x + 1, y);
     Node* downNode = getNode(x, y + 1);
@@ -253,12 +212,10 @@ Node* Level::findInputNode(int x, int y, QString tag, bool signal, Wire::Directi
         wireConnectionDirection = Wire::Direction::W;
         return leftNode;
     }
-
     return nullptr;
 }
 
 Gate* Level::findOutputGate(int x, int y, QString tag, Wire::Direction& wireConnectionDirection) {
-
     Gate* upGate = getGate(x, y - 1);
     Gate* rightGate = getGate(x + 1, y);
     Gate* downGate = getGate(x, y + 1);
@@ -291,12 +248,10 @@ Gate* Level::findOutputGate(int x, int y, QString tag, Wire::Direction& wireConn
         wireConnectionDirection = Wire::Direction::W;
         return leftGate;
     }
-
     return nullptr;
 }
 
 Gate* Level::findInputGate(int x, int y, Wire::Direction& wireConnectionDirection) {
-
     Gate* upGate = getGate(x, y - 1);
     Gate* rightGate = getGate(x + 1, y);
     Gate* downGate = getGate(x, y + 1);
@@ -329,7 +284,6 @@ Gate* Level::findInputGate(int x, int y, Wire::Direction& wireConnectionDirectio
         wireConnectionDirection = Wire::Direction::W;
         return leftGate;
     }
-
     return nullptr;
 }
 
@@ -345,19 +299,15 @@ void Level::setWire(int x, int y, Wire* newWire) {
         || getNode(x, y) || getObstacle(x, y) || getGate(x, y)) {
         return;
     }
-
     if (wireGrid[y * WIDTH + x]) {
         if (Wire* headWire = wireGrid[y * WIDTH + x]->getHeadConnection())
             headWire->setTailConnection(newWire);
         if (Wire* tailWire = wireGrid[y * WIDTH + x]->getTailConnection())
             tailWire->setHeadConnection(newWire);
-
         delete wireGrid[y * WIDTH + x];
     }
-
     if (newWire)
         newWire->setPosition(x, y);
-
     wireGrid[y * WIDTH + x] = newWire;
 }
 
@@ -382,32 +332,17 @@ Obstacle* Level::getObstacle(int x, int y) {
     return obstacleGrid[y * WIDTH + x];
 }
 
-void Level::setWireTemp(int x, int y, QString tag) {
-    Wire* addWire = new Wire();
-    addWire->setHeadConnection(addWire);
-    addWire->setTag(tag);
-    wireGrid[y * WIDTH + x] = addWire;
-}
-
 void Level::setNode(int x, int y, bool signal, QString tag, Node::Type type) {
-
     if (getGate(x, y) || getWire(x, y) || getNode(x, y) || getObstacle(x, y))
         return;
-
-
     Node* newNode = new Node(this, x, y, type, signal, tag);
     nodeGrid[y * WIDTH + x] = newNode;
 }
 
 void Level::victory() {
-    /*
-     * erm... should we change this to say "victoryCheck"?
-     * probably
-     */
     bool victory = true;
     for (int i = 0; i < WIDTH * HEIGHT; i++) {
         if (nodeGrid[i] != nullptr && nodeGrid[i]->getConnected() == false) {
-            qDebug() << "was false!";
             victory = false;
         }
     }
@@ -415,7 +350,6 @@ void Level::victory() {
         spawnConfetti();
         isVictory = true;
         emit levelCompleted();
-
     }
 }
 
@@ -430,50 +364,38 @@ void Level::updateLevel() {
 }
 
 void Level::levelSetup(int levelNum) {
-    /*
-     * TODO: hardcoded grid values of where to place obstacles, nodes, and etc.
-     */
-
-    // clearLevel();
-
     switch (levelNum) {
     case 1:
         setNode(2, 2, true, "A", Node::Type::ROOT);
         setNode(2, 5, true, "B", Node::Type::ROOT);
-
         placeBorder();
+
         //Bottom and Top lines:
         for (int x = 3; x <= 8; x++) {
             addObstacle(x, 2);
             addObstacle(x, 5);
         }
-
         addObstacle(9, 5);
         addObstacle(7, 3);
         addObstacle(8, 3);
         drawGate(6, 4, Gate::Operator::AND, Gate::Direction::EAST);
         setNode(9, 2, true, "AB", Node::Type::END);
         break;
-
     case 2:
         setNode(2, 2, false, "A", Node::Type::ROOT);
         drawGate(4, 3, Gate::Operator::NOT, Gate::Direction::SOUTH);
         setNode(2, 5, true, "B", Node::Type::ROOT);
-
         placeBorder();
+
         //Top and bottom rows:
         for (int x = 7; x <= 9; x++) {
             addObstacle(x,2);
             addObstacle(x,5);
         }
         addObstacle(8,3);
-        // addObstacle(8,3);
-
         drawGate(7, 4, Gate::Operator::AND, Gate::Direction::EAST);
         setNode(9, 3, true, "AB", Node::Type::END);
-
         break;
-
     case 3:
         // Top Row
         for(int x = 0; x <= 11; x++) {
@@ -481,6 +403,7 @@ void Level::levelSetup(int levelNum) {
                 addObstacle(x, y);
             }
         }
+
         // Left Side
         for(int x = 0; x <= 1; x++) {
             for(int y = 0; y < 8; y++) {
@@ -499,31 +422,23 @@ void Level::levelSetup(int levelNum) {
         for(int x = 0; x <= 11; x++) {
             addObstacle(x, 7);
         }
-
         addObstacle(8, 5);
         addObstacle(8, 6);
         addObstacle(8, 4);
         addObstacle(8, 7);
         addObstacle(2, 2);
         addObstacle(3, 2);
-
         setNode(6, 6, false, "B", Node::Type::ROOT);
         setNode(9, 2, false, "A", Node::Type::ROOT);
         setNode(9, 6, true, "AB", Node::Type::END);
-
         drawGate(3, 5, Gate::Operator::OR, Gate::Direction::EAST);
         drawGate(7, 5, Gate::Operator::NOT, Gate::Direction::NORTH);
-
         break;
-
     case 4:
         placeBorder();
-
-        // Right line:
         for (int y = 2; y <= 5; y++) {
             addObstacle(9, y);
         }
-
         setNode(5, 2, false, "A", Node::Type::ROOT);
         setNode(6, 2, false, "B", Node::Type::ROOT);
         setNode(4, 4, false, "C", Node::Type::ROOT);
@@ -531,9 +446,7 @@ void Level::levelSetup(int levelNum) {
         drawGate(2, 4, Gate::Operator::OR, Gate::Direction::SOUTH);
         drawGate(7, 5, Gate::Operator::OR, Gate::Direction::EAST);
         drawGate(8, 3, Gate::Operator::NOT, Gate::Direction::NORTH);
-
         break;
-
     case 5:
         setNode(0, 0, false, "A", Node::Type::ROOT);
         setNode(0, 3, true, "B", Node::Type::ROOT);
@@ -554,7 +467,6 @@ void Level::levelSetup(int levelNum) {
         drawGate(9, 4, Gate::Operator::NOT, Gate::Direction::EAST);
         drawGate(10, 6, Gate::Operator::AND, Gate::Direction::SOUTH);
         setNode(11, 7, true, "ABCDEFG", Node::Type::END);
-
         addObstacle(6,6);
         addObstacle(7,6);
         addObstacle(7,5);
@@ -563,19 +475,15 @@ void Level::levelSetup(int levelNum) {
         addObstacle(7,3);
         addObstacle(7,2);
         addObstacle(10,1);
-
         break;
-
     default:
         setNode(0, 3, true, "A", Node::Type::ROOT);
         setNode(0, 5, false, "B", Node::Type::ROOT);
         setNode(8, 3, true, "AB", Node::Type::END);
         addObstacle(0, 0);
-
         drawGate(6, 4, Gate::Operator::AND, Gate::Direction::EAST);
         drawGate(7, 1, Gate::Operator::OR, Gate::Direction::SOUTH);
         drawGate(8, 7, Gate::Operator::NOT, Gate::Direction::EAST);
-
         break;
     }
 
@@ -621,47 +529,38 @@ void Level::removeConfetti() {
 // Did not use this for Clear Button. But could use this for moving to the next level.
 void Level::clearLevel() {
     removeConfetti();
-
     for(int i = 0; i < WIDTH * HEIGHT; i++) {
         if (wireGrid[i]) {
             delete wireGrid[i];
             wireGrid[i] = nullptr;
         }
-
         if(gateGrid[i]) {
             delete gateGrid[i];
             gateGrid[i] = nullptr;
         }
-
         if(nodeGrid[i]) {
             delete nodeGrid[i];
             nodeGrid[i] = nullptr;
         }
-
         if(obstacleGrid[i]) {
             delete obstacleGrid[i];
             obstacleGrid[i] = nullptr;
         }
     }
-
     isVictory = false;
 }
 
 void Level::addDoubleGate(int x, int y, Gate::Operator gateType, Gate::Direction dir) {
-    // Later, these will depend on a direction (horizontal or vertical) passed into the method.
     int xOffset = 0;
     int yOffset = 0; // Below this Y coordinate.
-
     calculateGateOffset(dir, xOffset, yOffset);
 
     // Check Location for the second gate
     if (x + xOffset < 0 || x + xOffset >= WIDTH || y + yOffset < 0 || y + yOffset >= HEIGHT )
         return;
-
     if (getGate(x + xOffset, y + yOffset) || getWire(x + xOffset, y + yOffset) ||
         getNode(x + xOffset, y + yOffset) || getObstacle(x + xOffset, y + yOffset))
         return;
-
     Gate::Ports firstAlignment = Gate::Ports::INOUT;
     Gate::Ports secondAlignment = Gate::Ports::IN;
 
@@ -688,7 +587,6 @@ void Level::addSingleGate(int x, int y, Gate::Operator gateType, Gate::Direction
 
     // Draw a gate at the given x, y position
     gateGrid[y * WIDTH + x] = newNotGate;
-    qDebug() << "single gate added: " << gateGrid[y * WIDTH + x];
 }
 
 void Level::calculateGateOffset(Gate::Direction dir, int& xOffset, int& yOffset) {
@@ -734,7 +632,6 @@ void Level::removeTails(Node* startingNode) {
             return;
         else if (getGate(x, y)) {
             Gate* checkGate = getGate(x, y);
-            qDebug() << "found gate: " << checkGate;
 
             // Gets the valid output wire:
             if (checkGate->getAlignment() == Gate::Ports::INOUT)
@@ -756,10 +653,8 @@ void Level::removeTails(Node* startingNode) {
 }
 
 void Level::removeTails(Gate* startingGate) {
-
     if (startingGate->getOutputNode() == nullptr)
         return;
-
     Wire* currentWire = startingGate->getOutputNode()->getWire()->getTailConnection();
     while (currentWire) {
         Wire* tailWire = currentWire->getTailConnection();
@@ -769,7 +664,6 @@ void Level::removeTails(Gate* startingGate) {
             return;
         else if (getGate(x, y)) {
             Gate* checkGate = getGate(x, y);
-            qDebug() << "found gate: " << checkGate;
 
             // Gets the valid output wire:
             if (checkGate->getAlignment() == Gate::Ports::INOUT)
@@ -798,10 +692,8 @@ bool Level::isEmptySpace(int x, int y) {
 
     
 void Level::drawGate(int x, int y, Gate::Operator op, Gate::Direction dir) {
-
     if (x < 0 || x >= WIDTH  || y < 0 || y >= HEIGHT )
         return;
-
 
     // Ensure there is nothing already in this grid square.
     if (getGate(x, y) || getWire(x, y) || getNode(x, y) || getObstacle(x, y))
@@ -819,7 +711,6 @@ void Level::drawGate(int x, int y, Gate::Operator op, Gate::Direction dir) {
 void Level::clearWires() {
     for (int i = 0; i < WIDTH * HEIGHT; i++) {
         Wire* wire = wireGrid[i];
-
         bool isNodeWire = false;
         for (int j = 0; j < WIDTH * HEIGHT; j++) {
             if (nodeGrid[j] && nodeGrid[j]->getWire() == wire) {
@@ -827,11 +718,9 @@ void Level::clearWires() {
                 break;
             }
         }
-
         if (!isNodeWire && wire) {
             delete wire;
         }
-
         wireGrid[i] = nullptr;
     }
 
@@ -848,7 +737,6 @@ void Level::clearWires() {
             }
         }
     }
-
     isVictory = false;
 }
 
@@ -857,7 +745,6 @@ void Level::clearGates() {
         if (gateGrid[i]) {
             Gate* gate = gateGrid[i];
             gate->setSignal(false);
-
             Node* inputNode = gate->getInputNode();
             if (inputNode) {
                 Wire* inputWire = inputNode->getWire();
@@ -891,16 +778,12 @@ void Level::clearNodes() {
             Wire* backWire = node->getWire();
             if (!backWire)
                 continue;
-
             int bx = backWire->getX();
             int by = backWire->getY();
-
             if (bx < 0 || bx >= WIDTH || by < 0 || by >= HEIGHT)
                 continue;
-
             if (wireGrid[by * WIDTH + bx] != backWire)
                 continue;
-
             if (node->getNodeType() == Node::Type::ROOT) {
                 backWire->setHeadConnection(backWire);
                 backWire->setTailConnection(nullptr);
@@ -908,10 +791,7 @@ void Level::clearNodes() {
                 backWire->setHeadConnection(nullptr);
                 backWire->setTailConnection(backWire);
             }
-
             wireGrid[by * WIDTH + bx] = backWire;
         }
     }
 }
-
-

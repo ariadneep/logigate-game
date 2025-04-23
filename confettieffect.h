@@ -5,7 +5,7 @@
  * @authors Max Donaldson, Jason Khong,
  * Ariadne Petroulakis, Evan Tucker, and Ian Weller
  *
- * @version 7 April 2025
+ * @version 22 April 2025
  */
 
 #ifndef CONFETTIEFFECT_H
@@ -19,9 +19,9 @@ class ConfettiEffect {
 
 public:
     /**
-     * @brief ConfettiEffect - The default ConfettiEffect constructor
-     * @param x - the x position of the confetti
-     * @param y - the y position of the confetti
+     * @brief ConfettiEffect - The default ConfettiEffect constructor.
+     * @param x - The x position of the confetti.
+     * @param y - The y position of the confetti.
      * @param box2DWorld - The Box2D world.
      */
     ConfettiEffect(float x, float y, b2World* box2DWorld);
@@ -42,7 +42,7 @@ public:
     QColor confettiColor;
 
     /**
-     * @brief box2DBody - The Box2D body
+     * @brief box2DBody - The Box2D body.
      */
     b2Body* box2DBody;
 
@@ -52,8 +52,8 @@ class Confetti {
 
 public:
     /**
-     * @brief Confetti - default constructor for internal class.
-     * @param scene - Manages the scene
+     * @brief Confetti - Default constructor for internal class.
+     * @param graphicsScene - Manages the scene.
      * @param box2DWorld - Manages the Box2D world.
      */
     Confetti(QGraphicsScene* graphicsScene, b2World* box2DWorld);

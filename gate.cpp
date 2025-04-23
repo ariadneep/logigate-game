@@ -1,4 +1,3 @@
-
 #include "gate.h"
 
 Gate::Gate(int x, int y, Operator type, Ports ports, Direction direction, QObject *parent)
@@ -11,7 +10,6 @@ Gate::Gate(int x, int y, Operator type, Ports ports, Direction direction, QObjec
     inputNode = nullptr;
 
     // Add a switch statement to accurately add Node pointers depending on orientation/type.
-
     inputNode = new Node(this, x, y, Node::Type::END, true, "");
     switch (direction) {
     case Gate::Direction::NORTH :
@@ -27,7 +25,6 @@ Gate::Gate(int x, int y, Operator type, Ports ports, Direction direction, QObjec
         inputNode->setDirection(Node::Direction::E);
         break;
     }
-
     if (ports == Ports::INOUT) {
         outputNode = new Node(this, x, y, Node::Type::ROOT, false, "");
         switch (direction) {
@@ -45,15 +42,11 @@ Gate::Gate(int x, int y, Operator type, Ports ports, Direction direction, QObjec
             break;
         }
     }
-
-    // inputNode = new Node();
-    // if(location == Gate::Location::NORTH)
-    //     outputNode = new Node();
 }
 
 Gate::~Gate() {
-    //delete inputNode;
-    //delete outputNode;
+    delete inputNode;
+    delete outputNode;
 }
 
 Gate::Operator Gate::getOperator() {
@@ -64,16 +57,14 @@ void Gate::convertSignal(bool firstSignal, bool secondSignal, QString firstID, Q
     bool newOutput;
     QString newID = firstID;
     newID.append(secondID);
-
     std::sort(newID.begin(), newID.end());
+
     //calls the specific helper method based on the Type
     switch(gateOperator) {
     case Operator::AND:
-        qDebug() << "twas a AND gate! It's signals were " << firstSignal << " & " << secondSignal;
         newOutput = firstSignal && secondSignal;
         break;
     case Operator::OR:
-        qDebug() << "twas a OR gate! It's signals were " << firstSignal << " & " << secondSignal;
         newOutput = firstSignal || secondSignal;
         break;
     default:
@@ -81,10 +72,6 @@ void Gate::convertSignal(bool firstSignal, bool secondSignal, QString firstID, Q
     }
 
     //sets outputSignal to the resulting boolean.
-    qDebug() << "Converting double-gate signals " << firstSignal << " and " << secondSignal <<
-        " (tags " << firstID << " and " << secondID << ")" << " to signal " << newOutput <<
-        " with tag " << newID;
-
     if(outputNode) {
         outputNode->setSignal(newOutput);
         outputNode->setTag(newID);
@@ -98,14 +85,9 @@ void Gate::convertSignal(bool firstSignal, bool secondSignal, QString firstID, Q
 void Gate::convertSignal(bool input, QString id) {
     if(gateOperator != Operator::NOT)
         return;
-
     bool newOutput = !input;
 
     //sets outputSignal to the resulting boolean.
-    qDebug() << "this should fire right before bug";
-
-    qDebug() << "Converting single-gate signal " << input << " to signal " << newOutput << " with tag " << id;
-
     if(outputNode){
         outputNode->setSignal(newOutput);
         outputNode->setTag(id);
@@ -157,16 +139,12 @@ Node::Direction Gate::getInputDirection() {
 }
 
 QString Gate::getTag() {
-    // Change this later?
     if (outputNode == nullptr && otherHalf->getOutputNode()) {
-        qDebug() << "getTag branch 1: " << otherHalf->getOutputNode()->getTag();
         return otherHalf->getOutputNode()->getTag();
     }
     else if (outputNode) {
-        qDebug() << "getTag branch 2: " << outputNode->getTag();
         return outputNode->getTag();
     }
-    qDebug() << "getTag branch return";
     return "";
 }
 
@@ -188,27 +166,20 @@ void Gate::connectWire(Wire* connectWire, Wire::Direction connectionDirection) {
     }
     else {
         Node::Direction outputDirection = outputNode->getDirection();
-        // DO A DIRECTION CHECK: ensure the wire connects to the right side of the gate.
-        // Runs when something has connected to the output-only side.
         if ((connectionDirection == Wire::Direction::N && outputDirection == Node::Direction::S) ||
             (connectionDirection == Wire::Direction::E && outputDirection == Node::Direction::W) ||
             (connectionDirection == Wire::Direction::S && outputDirection == Node::Direction::N) ||
             (connectionDirection == Wire::Direction::W && outputDirection == Node::Direction::E)) {
-
             outputNode->setTag(getTag());
             outputNode->connectWire(connectWire, connectionDirection); //also sets signal
-
         }
         else if (connectWire->getHeadConnection()) {
             inputNode->setTag(connectWire->getTag());
             inputNode->connectWire(connectWire, connectionDirection);
         }
     }
-
     if(!connectWire->getHeadConnection())
         return;
-
-    //no matter which port type is connected, this should run.
     bool firstSignal = inputNode->getSignal();
     QString firstTag = inputNode->getTag();
 
