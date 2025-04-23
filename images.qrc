@@ -5,6 +5,14 @@
         <file>trash.png</file>
         <file>start-button-pressed.png</file>
         <file>start-button.png</file>
+        <file>arrow-disabled.png</file>
+        <file>menu-disabled.png</file>
+        <file>trash-disabled.png</file>
+        <file>menu-pressed.png</file>
+        <file>trash-pressed.png</file>
+        <file>arrow-pressed.png</file>
+        <file>unlocked-level-sprite.png</file>
+        <file>locked-level-sprite.png</file>
     </qresource>
     <qresource prefix="/sprites">
         <file>grid-12x8.png</file>
