@@ -100,11 +100,6 @@ private:
     QGraphicsRectItem* rectItems[30];
 
     /**
-     * @brief confettiOpacities - Manages the confetti opacities.
-     */
-    float confettiOpacities[30];
-
-    /**
      * @brief existingConfetti - Manages the confetti particles which still exist in scene.
      */
     int existingConfetti;
