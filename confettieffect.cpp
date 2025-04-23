@@ -23,23 +23,18 @@ ConfettiEffect::ConfettiEffect(float xPos, float yPos, b2World* box2DWorld) : xP
         QRandomGenerator::global()->bounded(256),
         QRandomGenerator::global()->bounded(256)
         );
-
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
     bodyDef.position.Set(xPos / 30.0f, (yPos / 30.0f) - 7.5);
     box2DBody = box2DWorld->CreateBody(&bodyDef);
-
     b2PolygonShape box2DShape;
     box2DShape.SetAsBox(0.1f, 0.05f);
-
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &box2DShape;
     fixtureDef.density = 0.1f;
     fixtureDef.friction = 0.3f;
     fixtureDef.restitution = 0.2f;
     box2DBody->CreateFixture(&fixtureDef);
-
-
 }
 
 Confetti::Confetti(QGraphicsScene* graphicsScene, b2World* box2DWorld) : graphicsScene(graphicsScene), box2DWorld(box2DWorld), existingConfetti(0) {
@@ -57,11 +52,9 @@ Confetti::~Confetti() {
 }
 
 void Confetti::spawnConfetti() {
-    //Spawn confetti at the center of the screen.
     for(int i = 0; i < 30; i++) {
         ConfettiEffect* confettiParticle = new ConfettiEffect(0, 0, box2DWorld);
         QGraphicsRectItem* confettiRect = new QGraphicsRectItem(-5, -2.5, 10, 5);
-
         confettiRect->setPos(0, 0);
         confettiRect->setBrush(confettiParticle->confettiColor);
         graphicsScene->addItem(confettiRect);

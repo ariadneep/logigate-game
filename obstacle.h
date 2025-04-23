@@ -5,7 +5,7 @@
  * @authors Max Donaldson, Jason Khong,
  * Ariadne Petroulakis, Evan Tucker, and Ian Weller
  *
- * @version 7 April 2025
+ * @version 22 April 2025
  */
 
 #ifndef OBSTACLE_H
@@ -17,8 +17,8 @@ class Obstacle : public QObject {
 
 public:
     /**
-     * @brief Obstacle - creates an Obstacle object
-     * @param parent - the parent object.
+     * @brief Obstacle - Creates an Obstacle object.
+     * @param parent - The parent object.
      */
     explicit Obstacle(QObject *parent = nullptr);
 

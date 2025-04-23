@@ -10,7 +10,6 @@ Node::Node(QObject *parent, int x, int y, Node::Type type, bool signal, QString 
     backingWire->setTag(tag);
     backingWire->setSignal(signal);
     backingWire->setPosition(x, y);
-
     switch (nodeType) {
     case Node::Type::ROOT :
         backingWire->setHeadConnection(backingWire);
@@ -19,7 +18,6 @@ Node::Node(QObject *parent, int x, int y, Node::Type type, bool signal, QString 
         backingWire->setTailConnection(backingWire);
     }
 }
-
 
 Node::~Node() {
     delete backingWire;
@@ -54,13 +52,6 @@ void Node::setDirection(Node::Direction newDirection) {
     direction = newDirection;
 }
 
-bool Node::checkSignal(QString& tag, bool signal) {
-    if(nodeType != Node::Type::END) {
-        return false;
-    }
-    return (tag == this->tag && signal);
-}
-
 bool Node::getConnected() {
     return backingWire->isFullyConnected();
 }
@@ -72,15 +63,11 @@ Wire* Node::getWire() {
 void Node::connectWire(Wire* connectWire, Wire::Direction nodeConnectionDirection) {
     if (connectWire == nullptr)
         return;
-
     switch (nodeType) {
     case Node::Type::ROOT :
-        // connectWire->setDirection(connectionDirection);
         backingWire->connectTail(connectWire, nodeConnectionDirection);
         break;
     case Node::Type::END :
-        qDebug() << "End Node found";
-
         // Flip the direction:
         switch (nodeConnectionDirection) {
         case Wire::Direction::N :
