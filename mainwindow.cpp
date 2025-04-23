@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 #include <QGraphicsView>
 #include <QTimer>
-#include <QPropertyAnimation>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -46,6 +45,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     componentLayer.fill(Qt::transparent);
 
+
     // SETTING UP BOX2D
     graphicsScene = new QGraphicsScene(this);
     graphicsView = new QGraphicsView(graphicsScene, this);
@@ -76,7 +76,7 @@ MainWindow::MainWindow(QWidget *parent)
     lessonBodyDef.type = b2_kinematicBody;
     lessonBodyDef.position.Set(0.0f, -lessonWidgetHeight);
     lessonBody = box2DWorld->CreateBody(&lessonBodyDef);
-    ui->lessonWidget->move(90, -ui->lessonWidget->height());
+    ui->lessonWidget->move(ui->gameBoard->pos().x(), -ui->lessonWidget->height());
 
     currentLevel = new Level(graphicsScene, box2DWorld, this);
 
@@ -104,13 +104,6 @@ MainWindow::MainWindow(QWidget *parent)
     // Connect starting screen.
     connect(ui->startButton, &QPushButton::clicked, this, &MainWindow::startGame);
 
-    // Background mover
-    scrollAnimation = new QPropertyAnimation(ui->backgroundScroll, "geometry");
-    scrollAnimation->setDuration(SCROLL_DURATION);
-    scrollAnimation->setStartValue(QRect(0, -250, 1400, 750));
-    scrollAnimation->setEndValue(QRect(-700, 0, 1400, 750));
-    QTimer::singleShot(0, this, &MainWindow::moveBackground);
-
     // World timer
     connect(timer, &QTimer::timeout, this, &MainWindow::updateWorld);
     timer->start(10);
@@ -123,12 +116,6 @@ MainWindow::~MainWindow()
     delete box2DWorld;
     delete graphicsScene;
     delete graphicsView;
-    delete scrollAnimation;
-}
-
-void MainWindow::moveBackground() {
-    scrollAnimation->start();
-    QTimer::singleShot(SCROLL_DURATION, this, &MainWindow::moveBackground);
 }
 
 void MainWindow::updateWorld() {
@@ -180,12 +167,12 @@ void MainWindow::updateWorld() {
 
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         lessonBody->SetTransform(b2Vec2(0.0f, 60.0f / 100.0f), 0.0f);
-        ui->lessonWidget->move(90, 60);
+        ui->lessonWidget->move(ui->gameBoard->pos().x(), 60);
     }
     else if (!isLessonShowing && lessonPosition.y * 100.0f <= -lessonWidgetHeight) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         lessonBody->SetTransform(b2Vec2(0.0f, -lessonWidgetHeight / 100.0f), 0.0f);
-        ui->lessonWidget->move(90, -lessonWidgetHeight);
+        ui->lessonWidget->move(ui->gameBoard->pos().x(), -lessonWidgetHeight);
     }
 
     currentLevel->updateLevel();
