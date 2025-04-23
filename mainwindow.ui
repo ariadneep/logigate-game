@@ -321,6 +321,27 @@ QPushButton:pressed {
      </property>
     </widget>
    </widget>
+   <widget class="QWidget" name="backgroundScroll" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>-250</y>
+      <width>2800</width>
+      <height>1500</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/sprites/grid-12x8.png);</string>
+    </property>
+   </widget>
+   <zorder>backgroundScroll</zorder>
+   <zorder>gameBoard</zorder>
+   <zorder>levelMenuButton</zorder>
+   <zorder>clearLevelButton</zorder>
+   <zorder>nextLevelButton</zorder>
+   <zorder>levelSelectMenu</zorder>
+   <zorder>lessonWidget</zorder>
+   <zorder>startingScreen</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

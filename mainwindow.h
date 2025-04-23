@@ -17,6 +17,7 @@
 #include <QGraphicsScene>
 #include <QPushButton>
 #include <QLabel>
+#include <QPropertyAnimation>
 
 #include "level.h"
 
@@ -74,6 +75,11 @@ private slots:
      * @brief updateWorld - Updates the world when events trigger.
      */
     void updateWorld();
+
+    /**
+     * @brief moveBackground - Manages the background scrolling.
+     */
+    void moveBackground();
 
     /**
      * @brief nextLevelButtonClicked - Event for when nextLevelButton is clicked.
@@ -157,6 +163,16 @@ private:
      * @brief backgroundLayer -
      */
     QPixmap backgroundLayer;
+
+    /**
+     * @brief scrollAnimation
+     */
+    QPropertyAnimation* scrollAnimation;
+
+    /**
+     * @brief scrollDuration
+     */
+    const int SCROLL_DURATION = 100000;
 
     /**
     * @brief FALSE_COLOR - the color used for false inputs.

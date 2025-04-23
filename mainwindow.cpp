@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QGraphicsView>
 #include <QTimer>
+#include <QPropertyAnimation>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -39,7 +40,6 @@ MainWindow::MainWindow(QWidget *parent)
     backgroundLayer = QPixmap(":/sprites/grid-12x8.png");
 
     componentLayer.fill(Qt::transparent);
-
 
     // SETTING UP BOX2D
     graphicsScene = new QGraphicsScene(this);
@@ -97,6 +97,13 @@ MainWindow::MainWindow(QWidget *parent)
     // Start menu connects.
     connect(ui->startButton, &QPushButton::clicked, this, &MainWindow::closeStartScreen);
 
+    // Background mover
+    scrollAnimation = new QPropertyAnimation(ui->backgroundScroll, "geometry");
+    scrollAnimation->setDuration(SCROLL_DURATION);
+    scrollAnimation->setStartValue(QRect(0, -250, 1400, 750));
+    scrollAnimation->setEndValue(QRect(-700, 0, 1400, 750));
+    QTimer::singleShot(0, this, &MainWindow::moveBackground);
+
     // World timer
     connect(timer, &QTimer::timeout, this, &MainWindow::updateWorld);
     timer->start(10);
@@ -109,6 +116,12 @@ MainWindow::~MainWindow()
     delete box2DWorld;
     delete graphicsScene;
     delete graphicsView;
+    delete scrollAnimation;
+}
+
+void MainWindow::moveBackground() {
+    scrollAnimation->start();
+    QTimer::singleShot(SCROLL_DURATION, this, &MainWindow::moveBackground);
 }
 
 void MainWindow::updateWorld() {
