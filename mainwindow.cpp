@@ -93,10 +93,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Background mover
     scrollAnimation = new QPropertyAnimation(ui->backgroundScroll, "geometry");
+    scrollAnimation->setLoopCount(-1);
+    ui->backgroundScroll->move(0, -250);
     scrollAnimation->setDuration(SCROLL_DURATION);
     scrollAnimation->setStartValue(QRect(0, -250, 1400, 750));
     scrollAnimation->setEndValue(QRect(-700, 0, 1400, 750));
-    QTimer::singleShot(0, this, &MainWindow::moveBackground);
+    scrollAnimation->start();
 
     // World timer
     connect(timer, &QTimer::timeout, this, &MainWindow::updateWorld);
@@ -111,11 +113,6 @@ MainWindow::~MainWindow()
     delete graphicsScene;
     delete graphicsView;
     delete scrollAnimation;
-}
-
-void MainWindow::moveBackground() {
-    scrollAnimation->start();
-    QTimer::singleShot(SCROLL_DURATION, this, &MainWindow::moveBackground);
 }
 
 void MainWindow::updateWorld() {

@@ -77,11 +77,6 @@ private slots:
     void updateWorld();
 
     /**
-     * @brief moveBackground - Manages the background scrolling.
-     */
-    void moveBackground();
-
-    /**
      * @brief nextLevelButtonClicked - Event for when nextLevelButton is clicked.
      */
     void nextLevelButtonClicked();
