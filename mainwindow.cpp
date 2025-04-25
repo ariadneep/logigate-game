@@ -408,7 +408,8 @@ void MainWindow::paintObstacle(int x, int y) {
 }
 
 void MainWindow::changeLevel() {
-    ui->nextLevelButton->setDisabled(true);
+    if(!completedLevels.contains(levelNum))
+        ui->nextLevelButton->setDisabled(true);
 
     currentLevel->clearLevel();
     delete currentLevel;
@@ -424,7 +425,6 @@ void MainWindow::changeLevel() {
 
 void MainWindow::unlockNextLevel() {
     completedLevels.insert(levelNum);
-    completedLevels.insert(levelNum + 1);
 
     ui->levelOneButton->setDisabled(true);
     ui->levelTwoButton->setDisabled(true);
@@ -547,13 +547,13 @@ void MainWindow::levelOneButtonClicked() {
     levelNum = 1;
     changeLevel();
     setLessonText();
-    ui->nextLevelButton->setDisabled(false);
+    // ui->nextLevelButton->setDisabled(false);
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         isLessonShowing = true;
         ui->lessonText->setText(lessonText);
     }
-    ui->nextLevelButton->setDisabled(true);
+    // ui->nextLevelButton->setDisabled(true);
     repaint();
 }
 
@@ -561,13 +561,13 @@ void MainWindow::levelTwoButtonClicked() {
     levelNum = 2;
     changeLevel();
     setLessonText();
-    ui->nextLevelButton->setDisabled(false);
+    // ui->nextLevelButton->setDisabled(false);
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         isLessonShowing = true;
         ui->lessonText->setText(lessonText);
     }
-    ui->nextLevelButton->setDisabled(true);
+    // ui->nextLevelButton->setDisabled(true);
     repaint();
 }
 
@@ -575,13 +575,13 @@ void MainWindow::levelThreeButtonClicked() {
     levelNum = 3;
     changeLevel();
     setLessonText();
-    ui->nextLevelButton->setDisabled(false);
+    // ui->nextLevelButton->setDisabled(false);
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         isLessonShowing = true;
         ui->lessonText->setText(lessonText);
     }
-    ui->nextLevelButton->setDisabled(true);
+    // ui->nextLevelButton->setDisabled(true);
     repaint();
 }
 
@@ -589,13 +589,13 @@ void MainWindow::levelFourButtonClicked() {
     levelNum = 4;
     changeLevel();
     setLessonText();
-    ui->nextLevelButton->setDisabled(false);
+    // ui->nextLevelButton->setDisabled(false);
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         isLessonShowing = true;
         ui->lessonText->setText(lessonText);
     }
-    ui->nextLevelButton->setDisabled(true);
+    // ui->nextLevelButton->setDisabled(true);
     repaint();
 }
 
@@ -609,7 +609,6 @@ void MainWindow::levelFiveButtonClicked() {
         isLessonShowing = true;
         ui->lessonText->setText(lessonText);
     }
-    ui->nextLevelButton->setDisabled(true);
     repaint();
 }
 
