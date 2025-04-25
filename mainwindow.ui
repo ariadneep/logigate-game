@@ -15,7 +15,8 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="styleSheet">
-    <string notr="true">font: 8 &quot;Code 7x5&quot;;</string>
+    <string notr="true">font: 16pt &quot;Code 7x5&quot;;
+qproperty-alignment: AlignCenter AlignVCenter;</string>
    </property>
    <widget class="QLabel" name="gameBoard">
     <property name="geometry">
@@ -145,14 +146,14 @@ QPushButton::disabled {
     </property>
     <property name="styleSheet">
      <string notr="true">QWidget {
-font: 12pt &quot;Code 7x5&quot;;
+font-size: 12pt;
 color: rgb(162, 255, 167);
 background-color: rgb(0, 0, 31);
 }
 
 QPushButton {
 	border-image: url(:/icons/unlocked-level-sprite.png);
-	font: 12pt &quot;Code 7x5&quot;;
+	font-size: 12pt;
 }
 
 QPushButton::disabled {
@@ -325,9 +326,6 @@ font: 13pt &quot;Code 7x5&quot;;</string>
       <height>500</height>
      </rect>
     </property>
-    <property name="styleSheet">
-     <string notr="true">font: 8pt &quot;Code 7x5&quot;;</string>
-    </property>
     <widget class="QPushButton" name="startButton">
      <property name="geometry">
       <rect>
@@ -351,13 +349,13 @@ font: 13pt &quot;Code 7x5&quot;;</string>
      <property name="styleSheet">
       <string notr="true">QPushButton {
 	border-image: url(:/icons/start-button.png);
-	font: 16pt &quot;Code 7x5&quot;;
+	font-size: 16pt;
 	color: &quot;white&quot;;
 }
 
 QPushButton:pressed {
 	border-image: url(:/icons/start-button-pressed.png);
-	font:16pt &quot;Code 7x5&quot;;
+	font-size: 16pt;
 	color: &quot;black&quot;;
 }</string>
      </property>
@@ -378,32 +376,25 @@ QPushButton:pressed {
       <string notr="true">border-image: url(:/icons/logo.png);
 background-color: transparent;
 border-radius: 10px;
-font: 16pt &quot;Code 7x5&quot;;</string>
+font-size: 16pt;</string>
      </property>
      <widget class="QLabel" name="label">
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>300</y>
+        <y>320</y>
         <width>471</width>
-        <height>61</height>
+        <height>41</height>
        </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Code 7x5</family>
-        <pointsize>12</pointsize>
-        <italic>false</italic>
-        <bold>false</bold>
-       </font>
       </property>
       <property name="styleSheet">
        <string notr="true">border-image: none;
 color: rgb(99, 0, 8);
-font: 12pt &quot;Code 7x5&quot;;</string>
+font-size: 10pt;</string>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:7pt;&quot;&gt;* ARIADNE PETROULAKIS * EVAN TUCKER * MAX DONALDSON *&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:7pt;&quot;&gt;* JASON KHONG * IAN WELLER *&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>* ARIADNE PETROULAKIS * EVAN TUCKER * MAX DONALDSON *
+* JASON KHONG * IAN WELLER *</string>
       </property>
      </widget>
     </widget>
