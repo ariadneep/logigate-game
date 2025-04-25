@@ -13,7 +13,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->gameBoard->setMouseTracking(true);
 
     // Add custom font
-    QFontDatabase::addApplicationFont(":/5x7-typeface.otf");
+    // QFontDatabase::addApplicationFont(":/5x7-typeface.otf");
+
     ui->levelSelectMenu->setStyleSheet("background: 3b3e3f");
     ui->levelSelectMenu->move(0,0);
     ui->startingScreen->move(0,0);
@@ -407,16 +408,45 @@ void MainWindow::paintObstacle(int x, int y) {
 }
 
 void MainWindow::changeLevel() {
-    ui->nextLevelButton->setDisabled(true);
+    if(!completedLevels.contains(levelNum) || levelNum == 5)
+        ui->nextLevelButton->setDisabled(true);
+    else
+        ui->nextLevelButton->setEnabled(true);
+
     currentLevel->clearLevel();
     delete currentLevel;
     currentLevel = new Level(graphicsScene, box2DWorld, this);
     connect(currentLevel, &Level::levelCompleted, this, [this]() {
-        ui->nextLevelButton->setEnabled(true);
+        if(levelNum == 5)
+            ui->nextLevelButton->setDisabled(true);
+        else
+            ui->nextLevelButton->setEnabled(true);
+        unlockNextLevel();
     });
     currentLevel->levelSetup(levelNum);
     repaint();
     currentTag = "";
+}
+
+void MainWindow::unlockNextLevel() {
+    completedLevels.insert(levelNum);
+
+    ui->levelOneButton->setDisabled(true);
+    ui->levelTwoButton->setDisabled(true);
+    ui->levelThreeButton->setDisabled(true);
+    ui->levelFourButton->setDisabled(true);
+    ui->levelFiveButton->setDisabled(true);
+
+    if(completedLevels.contains(1))
+        ui->levelOneButton->setEnabled(true);
+    if(completedLevels.contains(2))
+        ui->levelTwoButton->setEnabled(true);
+    if(completedLevels.contains(3))
+        ui->levelThreeButton->setEnabled(true);
+    if(completedLevels.contains(4))
+        ui->levelFourButton->setEnabled(true);
+    if(completedLevels.contains(5))
+        ui->levelFiveButton->setEnabled(true);
 }
 
 // MOUSE EVENTS
@@ -522,13 +552,11 @@ void MainWindow::levelOneButtonClicked() {
     levelNum = 1;
     changeLevel();
     setLessonText();
-    ui->nextLevelButton->setDisabled(false);
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         isLessonShowing = true;
         ui->lessonText->setText(lessonText);
     }
-    ui->nextLevelButton->setDisabled(true);
     repaint();
 }
 
@@ -536,13 +564,11 @@ void MainWindow::levelTwoButtonClicked() {
     levelNum = 2;
     changeLevel();
     setLessonText();
-    ui->nextLevelButton->setDisabled(false);
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         isLessonShowing = true;
         ui->lessonText->setText(lessonText);
     }
-    ui->nextLevelButton->setDisabled(true);
     repaint();
 }
 
@@ -550,13 +576,11 @@ void MainWindow::levelThreeButtonClicked() {
     levelNum = 3;
     changeLevel();
     setLessonText();
-    ui->nextLevelButton->setDisabled(false);
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         isLessonShowing = true;
         ui->lessonText->setText(lessonText);
     }
-    ui->nextLevelButton->setDisabled(true);
     repaint();
 }
 
@@ -564,13 +588,11 @@ void MainWindow::levelFourButtonClicked() {
     levelNum = 4;
     changeLevel();
     setLessonText();
-    ui->nextLevelButton->setDisabled(false);
     if(!isLessonShowing) {
         lessonBody->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
         isLessonShowing = true;
         ui->lessonText->setText(lessonText);
     }
-    ui->nextLevelButton->setDisabled(true);
     repaint();
 }
 
@@ -584,7 +606,6 @@ void MainWindow::levelFiveButtonClicked() {
         isLessonShowing = true;
         ui->lessonText->setText(lessonText);
     }
-    ui->nextLevelButton->setDisabled(true);
     repaint();
 }
 

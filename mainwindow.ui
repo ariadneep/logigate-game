@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="styleSheet">
-    <string notr="true">font: 8 &quot;Code 7x5&quot;;</string>
+    <string notr="true">font: 16pt &quot;Code 7x5&quot;;</string>
    </property>
    <widget class="QLabel" name="gameBoard">
     <property name="geometry">
@@ -49,6 +49,9 @@ border-image: url(:/sprites/grid-12x8.png);</string>
       <height>41</height>
      </rect>
     </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
     <property name="styleSheet">
      <string notr="true">QPushButton {
 	border-image: url(:/icons/menu.png);
@@ -77,6 +80,9 @@ QPushButton::pressed {
       <height>41</height>
      </rect>
     </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
     <property name="styleSheet">
      <string notr="true">QPushButton {
 	border-image: url(:/icons/trash.png);
@@ -104,6 +110,9 @@ QPushButton::pressed {
       <width>41</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="autoFillBackground">
      <bool>false</bool>
@@ -145,21 +154,25 @@ QPushButton::disabled {
     </property>
     <property name="styleSheet">
      <string notr="true">QWidget {
-font: 12pt &quot;Code 7x5&quot;;
+font-size: 12pt;
 color: rgb(162, 255, 167);
 background-color: rgb(0, 0, 31);
 }
 
 QPushButton {
 	border-image: url(:/icons/unlocked-level-sprite.png);
-	font: 12pt &quot;Code 7x5&quot;;
+	font-size: 12pt;
 }
 
 QPushButton::disabled {
 	border-image: url(:/icons/locked-level-sprite.png);
+	color: transparent;
 }</string>
     </property>
     <widget class="QPushButton" name="levelOneButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>30</x>
@@ -167,6 +180,9 @@ QPushButton::disabled {
        <width>131</width>
        <height>31</height>
       </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
      </property>
      <property name="text">
       <string>Level 1</string>
@@ -207,6 +223,9 @@ background-color: none;</string>
      </property>
     </widget>
     <widget class="QPushButton" name="levelTwoButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>30</x>
@@ -215,11 +234,17 @@ background-color: none;</string>
        <height>31</height>
       </rect>
      </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
      <property name="text">
       <string>Level 2</string>
      </property>
     </widget>
     <widget class="QPushButton" name="levelThreeButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>30</x>
@@ -228,11 +253,17 @@ background-color: none;</string>
        <height>31</height>
       </rect>
      </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
      <property name="text">
       <string>Level 3</string>
      </property>
     </widget>
     <widget class="QPushButton" name="levelFourButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>30</x>
@@ -241,13 +272,16 @@ background-color: none;</string>
        <height>31</height>
       </rect>
      </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
      <property name="text">
       <string>Level 4</string>
      </property>
     </widget>
     <widget class="QPushButton" name="levelFiveButton">
      <property name="enabled">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="geometry">
       <rect>
@@ -256,6 +290,9 @@ background-color: none;</string>
        <width>131</width>
        <height>31</height>
       </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
      </property>
      <property name="text">
       <string>Level 5</string>
@@ -275,8 +312,7 @@ background-color: none;</string>
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">qproperty-alignment: AlignCenter;
-color: white;
+     <string notr="true">color: white;
 background-color: rgb(0, 0, 31);
 font: 13pt &quot;Code 7x5&quot;;</string>
     </property>
@@ -288,6 +324,9 @@ font: 13pt &quot;Code 7x5&quot;;</string>
        <width>80</width>
        <height>41</height>
       </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
      </property>
      <property name="styleSheet">
       <string notr="true"/>
@@ -306,10 +345,14 @@ font: 13pt &quot;Code 7x5&quot;;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">font-size: 10pt;</string>
+      <string notr="true">font: 12pt &quot;Courier New&quot;;
+qproperty-alignment: AlignCenter AlignVCenter;</string>
      </property>
      <property name="text">
       <string>TextLabel</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
      </property>
     </widget>
    </widget>
@@ -324,9 +367,6 @@ font: 13pt &quot;Code 7x5&quot;;</string>
       <width>700</width>
       <height>500</height>
      </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 8pt &quot;Code 7x5&quot;;</string>
     </property>
     <widget class="QPushButton" name="startButton">
      <property name="geometry">
@@ -351,13 +391,13 @@ font: 13pt &quot;Code 7x5&quot;;</string>
      <property name="styleSheet">
       <string notr="true">QPushButton {
 	border-image: url(:/icons/start-button.png);
-	font: 16pt &quot;Code 7x5&quot;;
+	font-size: 16pt;
 	color: &quot;white&quot;;
 }
 
 QPushButton:pressed {
 	border-image: url(:/icons/start-button-pressed.png);
-	font:16pt &quot;Code 7x5&quot;;
+	font-size: 16pt;
 	color: &quot;black&quot;;
 }</string>
      </property>
@@ -378,32 +418,26 @@ QPushButton:pressed {
       <string notr="true">border-image: url(:/icons/logo.png);
 background-color: transparent;
 border-radius: 10px;
-font: 16pt &quot;Code 7x5&quot;;</string>
+font-size: 16pt;</string>
      </property>
      <widget class="QLabel" name="label">
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>300</y>
+        <y>320</y>
         <width>471</width>
-        <height>61</height>
+        <height>41</height>
        </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Code 7x5</family>
-        <pointsize>12</pointsize>
-        <italic>false</italic>
-        <bold>false</bold>
-       </font>
       </property>
       <property name="styleSheet">
        <string notr="true">border-image: none;
 color: rgb(99, 0, 8);
-font: 12pt &quot;Code 7x5&quot;;</string>
+font-size: 10pt;
+qproperty-alignment: AlignCenter AlignVCenter;</string>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:7pt;&quot;&gt;* ARIADNE PETROULAKIS * EVAN TUCKER * MAX DONALDSON *&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:7pt;&quot;&gt;* JASON KHONG * IAN WELLER *&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>* ARIADNE PETROULAKIS * EVAN TUCKER * MAX DONALDSON *
+* JASON KHONG * IAN WELLER *</string>
       </property>
      </widget>
     </widget>

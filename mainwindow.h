@@ -198,6 +198,11 @@ private:
     QHash<QPair<Gate::Operator, QPair<Gate::Ports, Gate::Direction>>, QPixmap> gatePixmaps;
 
     /**
+     * @brief completedLevels - holds the numbers of all levels completed thus far.
+     */
+    QSet<int> completedLevels;
+
+    /**
      * @brief loadWirePixmaps - Helper method to load all the pixmaps
      * for the wires.
      */
@@ -256,6 +261,12 @@ private:
      * @param y - The vertical grid square index to draw the obstacle on.
      */
     void paintObstacle(int x, int y);
+
+    /**
+     * @brief unlockNextLevel - Allows the user to select the next level.
+     * Unlocks the next level and ensures the rest are still locked.
+     */
+    void unlockNextLevel();
 
     /**
      * @brief currentTag - The tag associated with the current wire being drawn.
