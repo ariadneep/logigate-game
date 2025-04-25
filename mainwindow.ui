@@ -332,7 +332,7 @@ font: 13pt &quot;Code 7x5&quot;;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">font: 12pt &quot;Courier&quot;;
+      <string notr="true">font: 12pt &quot;Courier New&quot;;
 qproperty-alignment: AlignCenter AlignVCenter;</string>
      </property>
      <property name="text">
