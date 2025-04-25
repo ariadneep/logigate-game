@@ -408,7 +408,7 @@ void MainWindow::paintObstacle(int x, int y) {
 }
 
 void MainWindow::changeLevel() {
-    if(!completedLevels.contains(levelNum))
+    if(!completedLevels.contains(levelNum) || levelNum == 5)
         ui->nextLevelButton->setDisabled(true);
     else
         ui->nextLevelButton->setEnabled(true);
@@ -417,7 +417,10 @@ void MainWindow::changeLevel() {
     delete currentLevel;
     currentLevel = new Level(graphicsScene, box2DWorld, this);
     connect(currentLevel, &Level::levelCompleted, this, [this]() {
-        ui->nextLevelButton->setEnabled(true);
+        if(levelNum == 5)
+            ui->nextLevelButton->setDisabled(true);
+        else
+            ui->nextLevelButton->setEnabled(true);
         unlockNextLevel();
     });
     currentLevel->levelSetup(levelNum);

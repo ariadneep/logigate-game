@@ -351,6 +351,9 @@ qproperty-alignment: AlignCenter AlignVCenter;</string>
      <property name="text">
       <string>TextLabel</string>
      </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
     </widget>
    </widget>
    <widget class="QWidget" name="startingScreen" native="true">
