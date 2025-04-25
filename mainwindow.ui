@@ -50,6 +50,9 @@ border-image: url(:/sprites/grid-12x8.png);</string>
       <height>41</height>
      </rect>
     </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
     <property name="styleSheet">
      <string notr="true">QPushButton {
 	border-image: url(:/icons/menu.png);
@@ -78,6 +81,9 @@ QPushButton::pressed {
       <height>41</height>
      </rect>
     </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
     <property name="styleSheet">
      <string notr="true">QPushButton {
 	border-image: url(:/icons/trash.png);
@@ -105,6 +111,9 @@ QPushButton::pressed {
       <width>41</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="autoFillBackground">
      <bool>false</bool>
@@ -169,6 +178,9 @@ QPushButton::disabled {
        <height>31</height>
       </rect>
      </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
      <property name="text">
       <string>Level 1</string>
      </property>
@@ -216,6 +228,9 @@ background-color: none;</string>
        <height>31</height>
       </rect>
      </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
      <property name="text">
       <string>Level 2</string>
      </property>
@@ -229,6 +244,9 @@ background-color: none;</string>
        <height>31</height>
       </rect>
      </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
      <property name="text">
       <string>Level 3</string>
      </property>
@@ -241,6 +259,9 @@ background-color: none;</string>
        <width>131</width>
        <height>31</height>
       </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
      </property>
      <property name="text">
       <string>Level 4</string>
@@ -257,6 +278,9 @@ background-color: none;</string>
        <width>131</width>
        <height>31</height>
       </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
      </property>
      <property name="text">
       <string>Level 5</string>
@@ -289,6 +313,9 @@ font: 13pt &quot;Code 7x5&quot;;</string>
        <width>80</width>
        <height>41</height>
       </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
      </property>
      <property name="styleSheet">
       <string notr="true"/>
