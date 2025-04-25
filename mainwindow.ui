@@ -166,9 +166,13 @@ QPushButton {
 
 QPushButton::disabled {
 	border-image: url(:/icons/locked-level-sprite.png);
+	color: transparent;
 }</string>
     </property>
     <widget class="QPushButton" name="levelOneButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>30</x>
@@ -219,6 +223,9 @@ background-color: none;</string>
      </property>
     </widget>
     <widget class="QPushButton" name="levelTwoButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>30</x>
@@ -235,6 +242,9 @@ background-color: none;</string>
      </property>
     </widget>
     <widget class="QPushButton" name="levelThreeButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>30</x>
@@ -251,6 +261,9 @@ background-color: none;</string>
      </property>
     </widget>
     <widget class="QPushButton" name="levelFourButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>30</x>
@@ -268,7 +281,7 @@ background-color: none;</string>
     </widget>
     <widget class="QPushButton" name="levelFiveButton">
      <property name="enabled">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="geometry">
       <rect>

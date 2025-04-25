@@ -409,15 +409,39 @@ void MainWindow::paintObstacle(int x, int y) {
 
 void MainWindow::changeLevel() {
     ui->nextLevelButton->setDisabled(true);
+
     currentLevel->clearLevel();
     delete currentLevel;
     currentLevel = new Level(graphicsScene, box2DWorld, this);
     connect(currentLevel, &Level::levelCompleted, this, [this]() {
         ui->nextLevelButton->setEnabled(true);
+        unlockNextLevel();
     });
     currentLevel->levelSetup(levelNum);
     repaint();
     currentTag = "";
+}
+
+void MainWindow::unlockNextLevel() {
+    completedLevels.insert(levelNum);
+    completedLevels.insert(levelNum + 1);
+
+    ui->levelOneButton->setDisabled(true);
+    ui->levelTwoButton->setDisabled(true);
+    ui->levelThreeButton->setDisabled(true);
+    ui->levelFourButton->setDisabled(true);
+    ui->levelFiveButton->setDisabled(true);
+
+    if(completedLevels.contains(1))
+        ui->levelOneButton->setEnabled(true);
+    if(completedLevels.contains(2))
+        ui->levelTwoButton->setEnabled(true);
+    if(completedLevels.contains(3))
+        ui->levelThreeButton->setEnabled(true);
+    if(completedLevels.contains(4))
+        ui->levelFourButton->setEnabled(true);
+    if(completedLevels.contains(5))
+        ui->levelFiveButton->setEnabled(true);
 }
 
 // MOUSE EVENTS
