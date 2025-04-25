@@ -15,8 +15,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="styleSheet">
-    <string notr="true">font: 16pt &quot;Code 7x5&quot;;
-qproperty-alignment: AlignCenter AlignVCenter;</string>
+    <string notr="true">font: 16pt &quot;Code 7x5&quot;;</string>
    </property>
    <widget class="QLabel" name="gameBoard">
     <property name="geometry">
@@ -300,8 +299,7 @@ background-color: none;</string>
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">qproperty-alignment: AlignCenter;
-color: white;
+     <string notr="true">color: white;
 background-color: rgb(0, 0, 31);
 font: 13pt &quot;Code 7x5&quot;;</string>
     </property>
@@ -334,7 +332,8 @@ font: 13pt &quot;Code 7x5&quot;;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">font-size: 10pt;</string>
+      <string notr="true">font: 12pt &quot;Courier&quot;;
+qproperty-alignment: AlignCenter AlignVCenter;</string>
      </property>
      <property name="text">
       <string>TextLabel</string>
@@ -417,7 +416,8 @@ font-size: 16pt;</string>
       <property name="styleSheet">
        <string notr="true">border-image: none;
 color: rgb(99, 0, 8);
-font-size: 10pt;</string>
+font-size: 10pt;
+qproperty-alignment: AlignCenter AlignVCenter;</string>
       </property>
       <property name="text">
        <string>* ARIADNE PETROULAKIS * EVAN TUCKER * MAX DONALDSON *
